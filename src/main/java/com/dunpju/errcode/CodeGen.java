@@ -2,23 +2,16 @@ package com.dunpju.errcode;
 
 import com.dunpju.gen.IGen;
 import com.dunpju.stubs.CodeStub;
-import lombok.Data;
 import org.yaml.snakeyaml.Yaml;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.InputStream;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.io.*;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-@Data
 public class CodeGen implements IGen {
     /**
      * yaml文件目录
@@ -33,14 +26,53 @@ public class CodeGen implements IGen {
      */
     private String outDir;
     /**
-     * 输出类
+     * 输出类文件，绝对路径
      */
-    private String outClass;
+    private String outClassFile;
+    private String importClass;
+    private List<String> files;
+
     @Override
     public void run() {
         try {
             this.scan(this.yamlDir);
-        } catch (FileNotFoundException e) {
+            Yaml yaml = new Yaml();
+            CodeStub codeStub = new CodeStub();
+            codeStub.setOutPackage(this.outPackage);
+
+            File file = new File(this.outClassFile);
+            String fileName = file.getName();
+
+            this.outDir = file.getParent();
+
+            String regex = "(.*)\\.(java)";
+            Pattern pattern = Pattern.compile(regex);
+            Matcher matcher = pattern.matcher(fileName);
+            String className = null;
+            if (matcher.find()) {
+                className = matcher.group(1);
+            }
+
+            codeStub.setClassName(className);
+            codeStub.setCodeClass(this.importClass);
+            for (String filename : this.files) {
+                InputStream inputStream = new FileInputStream(filename);
+                Map<String, Object> map = yaml.load(inputStream);
+                regex = "(\\d+)\\.(.*)";
+                pattern = Pattern.compile(regex);
+                matcher = pattern.matcher(filename);
+                if (matcher.find()) {
+                    String name = matcher.group(1);
+                    codeStub.setCodeMessage(map);
+                    codeStub.setCurrentCode(Long.parseLong(name));
+                    codeStub.buildProperty();
+                }
+            }
+            String stub = codeStub.stub();
+            BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(this.outClassFile));
+            bufferedWriter.write(stub);
+            bufferedWriter.flush();
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
@@ -52,26 +84,28 @@ public class CodeGen implements IGen {
         }
         List<String> files = new ArrayList<>();
         getFileNames(file, files);
-        System.out.println(files);
-        Yaml yaml = new Yaml();
-        CodeStub codeStub = new CodeStub();
-        codeStub.setCodeClass("ErrCode");
-        for (String filename : files) {
-            InputStream inputStream = new FileInputStream(filename);
-            Map<String,Object> map =  yaml.load(inputStream);
-            System.out.println(map);
-            String regex = "(\\d+)\\.(.*)";
-            Pattern pattern = Pattern.compile(regex);
-            Matcher matcher = pattern.matcher(filename);
-            if (matcher.find()) {
-                String name = matcher.group(1);
-                codeStub.setCodeMessage(map);
-                codeStub.setCurrentCode(Long.parseLong(name));
-                codeStub.buildProperty();
+        files.sort(new Comparator<String>() {
+            @Override
+            public int compare(String o1, String o2) {
+                String regex = "(\\d+)\\.(.*)";
+                Pattern pattern = Pattern.compile(regex);
+                Matcher matcher1 = pattern.matcher(o1);
+                String group1 = null;
+                if (matcher1.find()) {
+                    group1 = matcher1.group(1);
+                }
+                Matcher matcher2 = pattern.matcher(o2);
+                String group2 = null;
+                if (matcher2.find()) {
+                    group2 = matcher2.group(1);
+                }
+                assert group1 != null;
+                assert group2 != null;
+                return (int) (Long.parseLong(group1) - Long.parseLong(group2));
             }
-        }
-        String stub = codeStub.stub();
-        System.out.println(stub);
+        });
+
+        this.files = files;
     }
 
     private void getFileNames(File file, List<String> fileNames) {
@@ -84,5 +118,21 @@ public class CodeGen implements IGen {
                 fileNames.add(f.getAbsolutePath());
             }
         }
+    }
+
+    public void setYamlDir(String yamlDir) {
+        this.yamlDir = yamlDir;
+    }
+
+    public void setOutPackage(String outPackage) {
+        this.outPackage = outPackage;
+    }
+
+    public void setOutClassFile(String outClassFile) {
+        this.outClassFile = outClassFile;
+    }
+
+    public void setImportClass(String importClass) {
+        this.importClass = importClass;
     }
 }

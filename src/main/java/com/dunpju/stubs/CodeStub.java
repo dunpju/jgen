@@ -6,29 +6,35 @@ import java.util.Map;
 
 public class CodeStub {
 
-    String constProperty = "    public final static %CODE_CLASS% %PROPERTY% = new %CODE_CLASS%(%CODE%, \"%MESSAGE%\");\n";
-    Map<String, Object> codeMessage = new HashMap<>();
+    String outPackage;
     String codeClass;
-    Long currentCode;
-    Long code;
-    String message;
+    String className;
     StringBuffer property = new StringBuffer();
+    String constProperty = "    public final static %SHORT_CODE_CLASS% %PROPERTY% = new %SHORT_CODE_CLASS%(%CODE%, \"%MESSAGE%\");\n";
+    Map<String, Object> codeMessage = new HashMap<>();
+    Long currentCode;
 
     public String stub() {
-        return "package %PACKAGE%;\n" +
+        String tpl = "package %PACKAGE%;\n" +
                 "\n" +
-                "import %CODE_PACKAGE%.%CODE_CLASS%;\n" +
+                "import %CODE_CLASS%;\n" +
                 "\n" +
-                "public class %CLASS% {\n" +
-                this.property + "\n" +
+                "public class %CLASS_NAME% {\n" +
+                this.property.toString() + "\n" +
                 "}\n";
+        tpl = tpl.replaceAll("%PACKAGE%", this.outPackage);
+        tpl = tpl.replaceAll("%CODE_CLASS%", this.codeClass);
+        tpl = tpl.replaceAll("%CLASS_NAME%", this.className);
+        return tpl;
     }
 
-    public String buildProperty() {
+    public void buildProperty() {
         Long currentCode = this.currentCode;
+        String[] shortCodeClassArr = this.codeClass.split("\\.");
+        String shortCodeClass = shortCodeClassArr[shortCodeClassArr.length - 1];
         for (String key : this.codeMessage.keySet()) {
             String property = this.constProperty;
-            property = property.replaceAll("%CODE_CLASS%", this.codeClass);
+            property = property.replaceAll("%SHORT_CODE_CLASS%", shortCodeClass);
             property = property.replaceAll("%PROPERTY%", key.toUpperCase());
             Object message = null;
             if (this.codeMessage.get(key) instanceof LinkedHashMap) {
@@ -54,11 +60,9 @@ public class CodeStub {
 
             property = property.replaceAll("%CODE%", String.valueOf(currentCode));
             property = property.replaceAll("%MESSAGE%", (String) message);
-            System.out.println(property);
             this.property.append(property);
             currentCode++;
         }
-        return this.property.toString();
     }
 
     public void setCodeMessage(Map<String, Object> codeMessage) {
@@ -71,5 +75,13 @@ public class CodeStub {
 
     public void setCurrentCode(Long currentCode) {
         this.currentCode = currentCode;
+    }
+
+    public void setClassName(String className) {
+        this.className = className;
+    }
+
+    public void setOutPackage(String outPackage) {
+        this.outPackage = outPackage;
     }
 }
