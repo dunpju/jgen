@@ -22,10 +22,6 @@ public class CodeGen implements IGen {
      */
     private String outPackage;
     /**
-     * 输出目录
-     */
-    private String outDir;
-    /**
      * 输出类文件，绝对路径
      */
     private String outClassFile;
@@ -42,8 +38,6 @@ public class CodeGen implements IGen {
 
             File file = new File(this.outClassFile);
             String fileName = file.getName();
-
-            this.outDir = file.getParent();
 
             String regex = "(.*)\\.(java)";
             Pattern pattern = Pattern.compile(regex);

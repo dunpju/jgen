@@ -1,0 +1,15 @@
+primary_id_error:
+    message: '主键%s错误'
+not_exist_error:
+    message: '%s不存在'
+sms_temple_code_error:
+    message: 短信模板code未定义
+sms_code_error:
+    message: 短信码错误
+sms_send_error:
+    message: 短信码发送失败
+sms_send_limit_error:
+    message: 获取验证码太频繁
+affiliation_error:
+    message: '%s不归属您,无权限修改'
+desc_error:
