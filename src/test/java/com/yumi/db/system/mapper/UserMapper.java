@@ -2,7 +2,6 @@ package com.yumi.db.system.mapper;
 
 import com.yumi.db.system.entity.User;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.yumi.db.system.service.Tst;
 import org.apache.ibatis.annotations.Select;
 
 import java.util.List;

@@ -1,5 +1,7 @@
 package com.yumi.db.system.controller;
 
+import com.yumi.db.system.dao.UserDao;
+import com.yumi.db.system.entity.User;
 import com.yumi.db.system.service.IUserService;
 import com.yumi.db.system.service.impl.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,10 +23,13 @@ public class UserController {
 
     @Autowired
     UserServiceImpl userService;
+    @Autowired
+    UserDao userDao;
 
     @GetMapping("test")
-    public void test() {
+    public User test() {
         userService.getById();
+        return userDao.getById();
     }
 
 }
