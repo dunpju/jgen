@@ -13,7 +13,7 @@ public class UserDao extends ServiceImpl<UserMapper, User> {
         Builder query = new Builder();
 
         query.SELECT("id", "uname", "u_tel", "score");
-        query.FROM(getEntityClass().getAnnotation(TableName.class).value());
+        query.FROM(getEntityClass());
         query.WHERE("id", "=", String.valueOf(1001));
 
         User user = this.baseMapper.first(query.map());

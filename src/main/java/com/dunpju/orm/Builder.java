@@ -1,5 +1,6 @@
 package com.dunpju.orm;
 
+import com.baomidou.mybatisplus.annotation.TableName;
 import org.apache.ibatis.jdbc.SQL;
 
 import java.util.HashMap;
@@ -71,6 +72,11 @@ public class Builder {
 
     public Builder DELETE_FROM(String table) {
         this.sql.DELETE_FROM(table);
+        return this;
+    }
+
+    public Builder FROM(Class<?> table) {
+        this.sql.FROM(table.getAnnotation(TableName.class).value());
         return this;
     }
 
