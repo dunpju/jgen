@@ -231,8 +231,9 @@ public class Builder {
     }
 
     public Builder BETWEEN(String column, Object begin, Object end) {
-        this.WHERE(column, "BETWEEN", String.format("%s AND %s", begin, end));
-//        this.sql.WHERE(String.format("%s BETWEEN %s AND %s", column, begin, end));
+        this.sql.WHERE(String.format("%s BETWEEN #{%s} AND #{%s}", column, "_begin_", "_end_"));
+        this.parameters.put("_begin_", begin);
+        this.parameters.put("_end_", end);
         return this;
     }
 
@@ -242,7 +243,7 @@ public class Builder {
     }
 
     public Map<String, Object> map() {
-        this.parameters.put("_sql", this.sql.toString());
+        this.parameters.put("_sql_", this.sql.toString());
         Map<String, Object> map = this.parameters;
         this.parameters = new HashMap<>();
         this.sql = new SQL();
