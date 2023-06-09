@@ -17,9 +17,9 @@ import java.util.Map;
  */
 public interface UserMapper extends BaseMapper<User> {
 
-    @Select("${sql}")
+    @Select("${_sql}")
     public User first(Map<String, Object> map);
-    @Select("${sql}")
+    @Select("${_sql}")
     public List<User> get(Map<String, Object> map);
 
 }

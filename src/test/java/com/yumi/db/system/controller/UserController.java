@@ -28,7 +28,7 @@ public class UserController {
 
     @GetMapping("test")
     public User test() {
-        userService.getById();
+//        userService.getById();
         return userDao.getById();
     }
 

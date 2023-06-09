@@ -9,10 +9,11 @@ import java.util.Map;
 public class Builder {
     SQL sql;
     Map<String, Object> map;
+    Map<String, Object> parameters;
 
     public Builder() {
         this.sql = new SQL();
-        this.map = new HashMap<>();
+        this.parameters = new HashMap<>();
     }
 
     public Builder UPDATE(String table) {
@@ -140,9 +141,9 @@ public class Builder {
         return this;
     }
 
-    public Builder WHERE(String column, String operator, String value) {
-        this.sql.WHERE(column + " " + operator + " #{" + column + "}");
-        this.map.put(column, value);
+    public Builder WHERE(String column, String operator, Object value) {
+        this.sql.WHERE(String.format("%s %s #{%s}", column, operator, column));
+        this.parameters.put(column, value);
         return this;
     }
 
@@ -229,9 +230,22 @@ public class Builder {
         return this;
     }
 
+    public Builder BETWEEN(String column, Object begin, Object end) {
+        this.WHERE(column, "BETWEEN", String.format("%s AND %s", begin, end));
+//        this.sql.WHERE(String.format("%s BETWEEN %s AND %s", column, begin, end));
+        return this;
+    }
+
+    public Builder LIKE(String column, Object value) {
+        this.WHERE(column, "LIKE", value);
+        return this;
+    }
 
     public Map<String, Object> map() {
-        this.map.put("sql", this.sql.toString());
+        this.parameters.put("_sql", this.sql.toString());
+        Map<String, Object> map = this.parameters;
+        this.parameters = new HashMap<>();
+        this.sql = new SQL();
         return map;
     }
 

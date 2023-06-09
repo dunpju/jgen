@@ -12,12 +12,22 @@ public class UserDao extends ServiceImpl<UserMapper, User> {
     public User getById() {
         Builder query = new Builder();
 
-        query.SELECT("id", "uname", "u_tel", "score");
+        /*query.SELECT("id", "uname", "u_tel", "score");
         query.FROM(getEntityClass());
-        query.WHERE("id", "=", String.valueOf(1001));
+        query.WHERE("id", "=", 1001);
 
         User user = this.baseMapper.first(query.map());
         System.out.println(user);
-        return user;
+
+        query.SELECT("id", "uname");
+        query.FROM(getEntityClass());
+        System.out.println(this.baseMapper.get(query.map()));*/
+
+        query.SELECT("id", "uname", "u_tel");
+        query.FROM(getEntityClass());
+        query.BETWEEN("id", 3, 6);
+        System.out.println(this.baseMapper.get(query.map()));
+
+        return null;
     }
 }
