@@ -2,6 +2,7 @@ package com.yumi.db.system.dao;
 
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.baomidou.mybatisplus.generator.jdbc.DatabaseMetaDataWrapper;
 import com.dunpju.orm.Builder;
 import com.yumi.db.system.entity.User;
 import com.yumi.db.system.mapper.UserMapper;

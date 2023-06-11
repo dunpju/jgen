@@ -28,7 +28,7 @@ public class EnumGen implements IGen {
             String stub = enumStub.stub();
             String outClassFile = this.outDir + "/" + enumStub.getClassName() + ".java";
             File file = new File(outClassFile);
-            if (file.exists()) {
+            if (!file.exists()) {
                 BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(outClassFile));
                 bufferedWriter.write(stub);
                 bufferedWriter.flush();
