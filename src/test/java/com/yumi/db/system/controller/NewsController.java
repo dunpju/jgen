@@ -1,5 +1,6 @@
 package com.yumi.db.system.controller;
 
+import io.swagger.annotations.ApiModel;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.stereotype.Controller;
 

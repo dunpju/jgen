@@ -53,47 +53,6 @@ public class ModelStub {
                     @TableId(value = "%TABLE_PRIMARY_KEY%", type = IdType.AUTO)
                     private %PROPERTY_TYPE% %PROPERTY_NAME%;
                                 
-                    @ApiModelProperty("%API_MODEL_PROPERTY%")
-                    private String title;
-                                
-                    @ApiModelProperty("点击量")
-                    private Integer clicknum;
-                                
-                    @ApiModelProperty("创建时间")
-                    private LocalDateTime createTime;
-                                
-                    public Integer getNewsId() {
-                        return newsId;
-                    }
-                                
-                    public void setNewsId(Integer newsId) {
-                        this.newsId = newsId;
-                    }
-                                
-                    public String getTitle() {
-                        return title;
-                    }
-                                
-                    public void setTitle(String title) {
-                        this.title = title;
-                    }
-                                
-                    public Integer getClicknum() {
-                        return clicknum;
-                    }
-                                
-                    public void setClicknum(Integer clicknum) {
-                        this.clicknum = clicknum;
-                    }
-                                
-                    public LocalDateTime getCreateTime() {
-                        return createTime;
-                    }
-                                
-                    public void setCreateTime(LocalDateTime createTime) {
-                        this.createTime = createTime;
-                    }
-                                
                     @Override
                     public String toString() {
                         return "%CLASS_NAME%{" +
@@ -111,5 +70,9 @@ public class ModelStub {
         tpl = tpl.replaceAll("%API_MODEL_DESCRIPTION%", this.apiModel.getDescription());
         tpl = tpl.replaceAll("%CLASS_NAME%", this.className);
         return tpl;
+    }
+
+    public void processProperty() {
+
     }
 }

@@ -26,7 +26,7 @@ public class UserController {
     @Autowired
     UserDao userDao;
 
-    @GetMapping("test")
+    @GetMapping("/test")
     public User test() {
 //        userService.getById();
         return userDao.getById();
