@@ -10,6 +10,8 @@ import com.baomidou.mybatisplus.generator.jdbc.DatabaseMetaDataWrapper;
 import com.baomidou.mybatisplus.generator.type.TypeRegistry;
 import com.baomidou.mybatisplus.test.autoconfigure.MybatisPlusTest;
 import com.dunpju.gen.Gen;
+import com.dunpju.model.ModelGen;
+import com.dunpju.stubs.ModelStub;
 import com.yumi.db.system.mapper.UserMapper;
 import com.yumi.db.system.service.IUserService;
 import com.yumi.db.system.service.impl.UserServiceImpl;
@@ -18,6 +20,7 @@ import org.apache.ibatis.type.JdbcType;
 import org.junit.jupiter.api.Assertions;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import javax.sql.DataSource;
 import java.sql.*;
 import java.util.Collections;
 import java.util.Map;
@@ -55,31 +58,29 @@ public class Test {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
             DataSourceConfig dataSourceConfig = new DataSourceConfig.Builder("jdbc:mysql://192.168.8.99:3306/test?characterEncoding=UTF-8", "root", "1qaz2wsx").build();
+            System.out.println(dataSourceConfig.getConn().getSchema());
             DatabaseMetaDataWrapper databaseMetaDataWrapper = new DatabaseMetaDataWrapper(dataSourceConfig.getConn(), dataSourceConfig.getSchemaName());
-//            System.out.println(dataSourceConfig.getConn().getMetaData().getTables());
-//            PreparedStatement ps = dataSourceConfig.getConn().prepareStatement("SHOW TABLE STATUS");
-//            ResultSet tableResult = ps.executeQuery();
             DatabaseMetaData metaData = dataSourceConfig.getConn().getMetaData();
 
-            PackageConfig packageInfo = new PackageConfig.Builder().parent("com.yumi.db").moduleName("system").build();
-            StrategyConfig strategy = new StrategyConfig.Builder().addInclude("users").addTablePrefix("ts_").build();
+            PackageConfig packageInfo = new PackageConfig.Builder().build();
+            StrategyConfig strategy = new StrategyConfig.Builder().build();
             TemplateConfig template = new TemplateConfig.Builder().build();
-            GlobalConfig globalConfig = new GlobalConfig.Builder().author("ffff") // 设置作者
-                    .enableSwagger() // 开启 swagger 模式
-                    .fileOverride() // 覆盖已生成文件
-                    .outputDir("E:\\share\\jgen\\src\\test\\java").build();
+            GlobalConfig globalConfig = new GlobalConfig.Builder().build();
             InjectionConfig injection = new InjectionConfig();
 
             TypeRegistry typeRegistry = new TypeRegistry(globalConfig);
+
+            ConfigBuilder configBuilder = new ConfigBuilder(packageInfo, dataSourceConfig, strategy, template, globalConfig, injection);
 
             ResultSet tableResultSet = metaData.getTables("test", "test", null, new String[]{"TABLE"});
             while (tableResultSet.next()) {
                 String tableName = tableResultSet.getString("TABLE_NAME");
                 Map<String, DatabaseMetaDataWrapper.Column> columnsInfo = databaseMetaDataWrapper.getColumnsInfo("test", "test", tableName,true);
                 System.out.println("=============");
+                DatabaseMetaDataWrapper.Table table = databaseMetaDataWrapper.getTableInfo(tableName);
 
                 System.out.println(tableName);
-                for (String key : columnsInfo.keySet()) {
+                /*for (String key : columnsInfo.keySet()) {
                     System.out.println(columnsInfo.get(key).getName());
                     System.out.println(columnsInfo.get(key).getJdbcType());
                     System.out.println(columnsInfo.get(key).isPrimaryKey());
@@ -87,7 +88,6 @@ public class Test {
                     System.out.println(columnsInfo.get(key).isAutoIncrement());
                     System.out.println(columnsInfo.get(key).getDefaultValue());
 
-                    ConfigBuilder configBuilder = new ConfigBuilder(packageInfo, dataSourceConfig, strategy, template, globalConfig, injection);
                     // 设置字段的元数据信息
                     TableInfo tableInfo = new TableInfo(configBuilder, tableName);
                     TableField.MetaInfo metaInfo = new TableField.MetaInfo(columnsInfo.get(key), tableInfo);
@@ -95,7 +95,18 @@ public class Test {
                     System.out.println(iColumnType.getType());
                     System.out.println(iColumnType.getPkg());
                     System.out.println();
-                }
+                }*/
+
+                ModelGen modelGen = new ModelGen();
+                modelGen.setOutPackage("com.yumi.db.system.model");
+                modelGen.setOutDir("E:\\share\\jgen\\src\\test\\java\\com\\yumi\\db\\system\\model");
+                modelGen.setTableName(tableName);
+                modelGen.setTableRemarks(table.getRemarks());
+                modelGen.setTablePrefix("ts_");
+                modelGen.setColumnsInfo(columnsInfo);
+                modelGen.setConfigBuilder(configBuilder);
+                modelGen.setTypeRegistry(typeRegistry);
+                modelGen.run();
             }
 
             /*Map<String, DatabaseMetaDataWrapper.Column> columnsInfo = databaseMetaDataWrapper.getColumnsInfo("test", "test", "users",true);
