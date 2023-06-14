@@ -53,7 +53,7 @@ public class ModelStub {
                     @Serial
                     private static final long serialVersionUID = 1L;
                     
-                    public static enum FIELD {
+                    public enum FIELD {
                         %FIELD%;
 
                         public String As(String alias) {
