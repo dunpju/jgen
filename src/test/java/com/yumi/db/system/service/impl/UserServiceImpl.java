@@ -46,7 +46,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
 //                WHERE("id", "=", String.valueOf(1002)).
         query.LIKE("uname", "%d%");
 
-        List<User> user = this.baseMapper.get(query.map());
+        List<User> user = this.baseMapper.get(query.toSql());
         System.out.println(user);
     }
 

@@ -3,6 +3,7 @@ import com.baomidou.mybatisplus.generator.config.builder.ConfigBuilder;
 import com.baomidou.mybatisplus.generator.jdbc.DatabaseMetaDataWrapper;
 import com.baomidou.mybatisplus.generator.type.TypeRegistry;
 import com.dunpju.model.ModelGen;
+import com.yumi.db.system.dao.NewsDao;
 import com.yumi.db.system.entity.NewsEntity;
 import com.yumi.db.system.model.News;
 
@@ -48,6 +49,7 @@ public class Test {
         newsEntity = new NewsEntity();
         System.out.println(newsEntity.currentFlag());
         System.out.println(newsEntity.getNewsId());
+
 
         // https://blog.csdn.net/weixin_42629433/article/details/124151645
         try {

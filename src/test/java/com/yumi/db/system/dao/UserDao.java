@@ -27,7 +27,7 @@ public class UserDao extends ServiceImpl<UserMapper, User> {
         query.SELECT("id", "uname", "u_tel");
         query.FROM(getEntityClass());
         query.BETWEEN("id", 3, 6);
-        System.out.println(this.baseMapper.get(query.map()));
+        System.out.println(this.baseMapper.get(query.toSql()));
 
         return null;
     }

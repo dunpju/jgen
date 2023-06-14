@@ -10,6 +10,7 @@ public class Builder {
     SQL sql;
     Map<String, Object> map;
     Map<String, Object> parameters;
+    String table;
 
     public Builder() {
         this.sql = new SQL();
@@ -77,7 +78,8 @@ public class Builder {
     }
 
     public Builder FROM(Class<?> table) {
-        this.sql.FROM(table.getAnnotation(TableName.class).value());
+        this.table = table.getAnnotation(TableName.class).value();
+        this.sql.FROM(this.table);
         return this;
     }
 
@@ -242,11 +244,12 @@ public class Builder {
         return this;
     }
 
-    public Map<String, Object> map() {
+    public Map<String, Object> toSql() {
         this.parameters.put("_sql_", this.sql.toString());
         Map<String, Object> map = this.parameters;
         this.parameters = new HashMap<>();
         this.sql = new SQL();
+        this.sql.FROM(this.table);
         return map;
     }
 

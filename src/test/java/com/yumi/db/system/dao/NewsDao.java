@@ -5,22 +5,25 @@ import com.dunpju.orm.Builder;
 import com.yumi.db.system.entity.NewsEntity;
 import com.yumi.db.system.mapper.NewsMapper;
 import com.yumi.db.system.model.News;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Repository;
 
 @Repository
+@Scope("prototype")
 public class NewsDao extends ServiceImpl<NewsMapper, News> {
-    {
-        this.query.FROM(getEntityClass());
-    }
 
     News news = new News();
     Builder query = new Builder();
+
+    public NewsDao() {
+        this.query.FROM(getEntityClass());
+    }
 
     public void setData(NewsEntity newsEntity) {
         NewsEntity.Flag flag = newsEntity.currentFlag();
         if (null != flag) { // 编辑
             query.SELECT("*").WHERE(News.FIELD.news_id, "=", newsEntity.getNewsId());
-            news = this.baseMapper.first(query.map());
+            news = this.baseMapper.first(query.toSql());
             if (null == news) {
                 throw new RuntimeException("News数据不存在");
             }
@@ -44,13 +47,11 @@ public class NewsDao extends ServiceImpl<NewsMapper, News> {
      */
     public Integer add() {
         this.baseMapper.insert(this.news);
-        Integer id = this.news.getNewsId();
-        this.news = null; // 销毁对象
-        return id;
+        return this.news.getNewsId();
     }
 
     /**
-     * 更新
+     * 修改
      *
      * @return int
      */
@@ -60,7 +61,7 @@ public class NewsDao extends ServiceImpl<NewsMapper, News> {
 
     public News getByNewsId(Integer newsId) {
         this.query.SELECT("*").WHERE(News.FIELD.news_id, "=", newsId);
-        return this.baseMapper.first(this.query.map());
+        return this.baseMapper.first(this.query.toSql());
     }
 
 
@@ -81,7 +82,7 @@ public class NewsDao extends ServiceImpl<NewsMapper, News> {
         query.SELECT("id", "uname", "u_tel");
         query.FROM(getEntityClass());
         query.BETWEEN("id", 3, 6);
-        System.out.println(this.baseMapper.get(query.map()));
+        System.out.println(this.baseMapper.get(query.toSql()));
 
         return null;
     }
