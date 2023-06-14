@@ -23,6 +23,7 @@ public class ModelStub {
     private final String apiModelPropertyStub = "    @ApiModelProperty(\"%API_MODEL_PROPERTY%\")\n";
     private final String tableIdStub = "    @TableId(value = \"%TABLE_PRIMARY_KEY%\", type = IdType.AUTO)\n";
     private final String propertyStub = "    private %PROPERTY_TYPE% %PROPERTY_NAME%;\n";
+    private final StringBuffer field = new StringBuffer();
     private final StringBuffer property = new StringBuffer();
     private final StringBuffer to_str = new StringBuffer();
     private ConfigBuilder configBuilder;
@@ -51,6 +52,14 @@ public class ModelStub {
                                 
                     @Serial
                     private static final long serialVersionUID = 1L;
+                    
+                    public static enum FIELD {
+                        %FIELD%;
+
+                        public String As(String alias) {
+                            return String.format("%s AS %s", this, alias);
+                        }
+                    }
                                 
                     %PROPERTY%
                     @Override
@@ -62,6 +71,7 @@ public class ModelStub {
                 }""";
         this.processProperty();
         tpl = tpl.replaceAll("%PACKAGE%", this.outPackage);
+        tpl = tpl.replaceAll("%FIELD%", this.field.toString());
         tpl = tpl.replaceAll("%PROPERTY%", this.property.toString());
         tpl = tpl.replaceAll("%IMPORTS%", String.join("\n", this.imports));
         tpl = tpl.replaceAll("%TABLE_NAME%", this.tableName);
@@ -94,14 +104,21 @@ public class ModelStub {
             if (iColumnType.getPkg() != null) {
                 this.imports.add("import " + iColumnType.getPkg() + ";");
             }
+
             if (i == 0) {
                 this.to_str.append(String.format("\"%s = \" + %s +\n", camelCasePropertyName, camelCasePropertyName));
+                this.field.append(key);
             } else {
                 if (columnsInfo.size() - 1 > i) {
                     this.to_str.append(String.format("            \", %s = \" + %s +\n", camelCasePropertyName, camelCasePropertyName));
                 } else {
                     this.to_str.append(String.format("            \", %s = \" + %s +", camelCasePropertyName, camelCasePropertyName));
                 }
+                this.field.append("        ").append(key);
+            }
+            if (i < columnsInfo.size() - 1) {
+                this.field.append(",");
+                this.field.append("\n");
             }
             i++;
         }

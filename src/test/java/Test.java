@@ -1,31 +1,14 @@
-import com.baomidou.mybatisplus.generator.FastAutoGenerator;
 import com.baomidou.mybatisplus.generator.config.*;
 import com.baomidou.mybatisplus.generator.config.builder.ConfigBuilder;
-import com.baomidou.mybatisplus.generator.config.po.TableField;
-import com.baomidou.mybatisplus.generator.config.po.TableInfo;
-import com.baomidou.mybatisplus.generator.config.rules.DbColumnType;
-import com.baomidou.mybatisplus.generator.config.rules.IColumnType;
-import com.baomidou.mybatisplus.generator.engine.FreemarkerTemplateEngine;
 import com.baomidou.mybatisplus.generator.jdbc.DatabaseMetaDataWrapper;
 import com.baomidou.mybatisplus.generator.type.TypeRegistry;
-import com.baomidou.mybatisplus.test.autoconfigure.MybatisPlusTest;
-import com.dunpju.gen.Gen;
 import com.dunpju.model.ModelGen;
-import com.dunpju.stubs.ModelStub;
-import com.yumi.db.system.mapper.UserMapper;
-import com.yumi.db.system.service.IUserService;
-import com.yumi.db.system.service.impl.UserServiceImpl;
-import com.yumi.enums.EnumYesOrNo;
-import org.apache.ibatis.type.JdbcType;
-import org.junit.jupiter.api.Assertions;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.yumi.db.system.model.News;
 
-import javax.sql.DataSource;
-import java.sql.*;
-import java.util.Collections;
+import java.sql.DatabaseMetaData;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class Test {
     public static void main(String[] args) {
@@ -53,6 +36,7 @@ public class Test {
                 "D:\\php\\jgen\\src\\test\\java\\com\\yumi\\enums");
         System.out.println(EnumYesOrNo.NO.getCode());*/
 
+        System.out.println(News.FIELD.news_id.As("b"));
 
         // https://blog.csdn.net/weixin_42629433/article/details/124151645
         try {
@@ -99,7 +83,7 @@ public class Test {
 
                 ModelGen modelGen = new ModelGen();
                 modelGen.setOutPackage("com.yumi.db.system.model");
-                modelGen.setOutDir("E:\\share\\jgen\\src\\test\\java\\com\\yumi\\db\\system\\model");
+                modelGen.setOutDir("D:\\php\\jgen\\src\\test\\java\\com\\yumi\\db\\system\\model");
                 modelGen.setTableName(tableName);
                 modelGen.setTableRemarks(table.getRemarks());
                 modelGen.setTablePrefix("ts_");
