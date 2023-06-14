@@ -13,17 +13,15 @@ import org.springframework.stereotype.Repository;
 public class NewsDao extends ServiceImpl<NewsMapper, News> {
 
     News news = new News();
-    Builder query = new Builder();
 
-    public NewsDao() {
-        this.query.FROM(getEntityClass());
+    public Builder<NewsMapper, News> model() {
+         return new Builder<>(this.baseMapper).FROM(getEntityClass());
     }
 
     public void setData(NewsEntity newsEntity) {
         NewsEntity.Flag flag = newsEntity.currentFlag();
         if (null != flag) { // 编辑
-            query.SELECT("*").WHERE(News.FIELD.news_id, "=", newsEntity.getNewsId());
-            news = this.baseMapper.first(query.toSql());
+            news = this.model().SELECT("*").WHERE(News.FIELD.news_id, "=", newsEntity.getNewsId()).first();
             if (null == news) {
                 throw new RuntimeException("News数据不存在");
             }
@@ -45,7 +43,7 @@ public class NewsDao extends ServiceImpl<NewsMapper, News> {
      *
      * @return Integer
      */
-    public Integer add() {
+    public Integer Add() {
         this.baseMapper.insert(this.news);
         return this.news.getNewsId();
     }
@@ -55,18 +53,18 @@ public class NewsDao extends ServiceImpl<NewsMapper, News> {
      *
      * @return int
      */
-    public int modify() {
+    public int Update() {
         return this.baseMapper.updateById(this.news);
     }
 
     public News getByNewsId(Integer newsId) {
-        this.query.SELECT("*").WHERE(News.FIELD.news_id, "=", newsId);
-        return this.baseMapper.first(this.query.toSql());
+        return this.model().SELECT("*").WHERE(News.FIELD.news_id, "=", newsId).first();
+//        return this.baseMapper.first(this.query.toSql());
     }
 
 
     public News getById() {
-        Builder query = new Builder();
+        Builder<NewsMapper, News> query = new Builder<>(this.baseMapper);
 
         /*query.SELECT("id", "uname", "u_tel", "score");
         query.FROM(getEntityClass());
@@ -82,7 +80,7 @@ public class NewsDao extends ServiceImpl<NewsMapper, News> {
         query.SELECT("id", "uname", "u_tel");
         query.FROM(getEntityClass());
         query.BETWEEN("id", 3, 6);
-        System.out.println(this.baseMapper.get(query.toSql()));
+//        System.out.println(this.baseMapper.get(query.toSql()));
 
         return null;
     }

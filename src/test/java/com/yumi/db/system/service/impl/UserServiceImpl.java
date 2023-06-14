@@ -40,14 +40,14 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         User user = this.baseMapper.get(map);*/
 
 
-        Builder query = new Builder();
+        Builder<UserMapper, User> query = new Builder<>(this.baseMapper);
         query.SELECT("id", "uname", "u_tel", "score");
         query.FROM(getEntityClass().getAnnotation(TableName.class).value());
 //                WHERE("id", "=", String.valueOf(1002)).
         query.LIKE("uname", "%d%");
 
-        List<User> user = this.baseMapper.get(query.toSql());
-        System.out.println(user);
+//        List<User> user = this.baseMapper.get(query.toSql());
+//        System.out.println(user);
     }
 
 }

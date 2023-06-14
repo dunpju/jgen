@@ -11,7 +11,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class UserDao extends ServiceImpl<UserMapper, User> {
     public User getById() {
-        Builder query = new Builder();
+        Builder<UserMapper, User> query = new Builder<>(this.baseMapper);
 
         /*query.SELECT("id", "uname", "u_tel", "score");
         query.FROM(getEntityClass());
@@ -27,7 +27,7 @@ public class UserDao extends ServiceImpl<UserMapper, User> {
         query.SELECT("id", "uname", "u_tel");
         query.FROM(getEntityClass());
         query.BETWEEN("id", 3, 6);
-        System.out.println(this.baseMapper.get(query.toSql()));
+//        System.out.println(this.baseMapper.get(query.toSql()));
 
         return null;
     }

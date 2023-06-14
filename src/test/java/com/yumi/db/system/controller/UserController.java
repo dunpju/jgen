@@ -45,7 +45,7 @@ public class UserController {
         // 测试插入
         newsEntity.setTitle("ggghh");
         newsDao.setData(newsEntity);
-        Integer id = newsDao.add();
+        Integer id = newsDao.Add();
         System.out.println(id);
 
         // 测试查询
@@ -54,9 +54,9 @@ public class UserController {
         // 测试修改
         newsEntity.setFlag(NewsEntity.Flag.Update);
         newsEntity.setNewsId(id);
-        newsEntity.setTitle("ggghh");
+        newsEntity.setTitle("ggghh111");
         newsDao.setData(newsEntity);
-        newsDao.modify();
+        newsDao.Update();
         System.out.println(newsDao.getByNewsId(id));
         return userDao.getById();
     }
