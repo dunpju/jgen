@@ -141,9 +141,9 @@ public class Builder {
         return this;
     }
 
-    public Builder WHERE(String column, String operator, Object value) {
-        this.sql.WHERE(String.format("%s %s #{%s}", column, operator, column));
-        this.parameters.put(column, value);
+    public Builder WHERE(Object column, String operator, Object value) {
+        this.sql.WHERE(String.format("%s %s #{%s}", column.toString(), operator, column));
+        this.parameters.put(column.toString(), value);
         return this;
     }
 

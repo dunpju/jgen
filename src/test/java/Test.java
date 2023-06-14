@@ -3,6 +3,7 @@ import com.baomidou.mybatisplus.generator.config.builder.ConfigBuilder;
 import com.baomidou.mybatisplus.generator.jdbc.DatabaseMetaDataWrapper;
 import com.baomidou.mybatisplus.generator.type.TypeRegistry;
 import com.dunpju.model.ModelGen;
+import com.yumi.db.system.entity.NewsEntity;
 import com.yumi.db.system.model.News;
 
 import java.sql.DatabaseMetaData;
@@ -37,6 +38,16 @@ public class Test {
         System.out.println(EnumYesOrNo.NO.getCode());*/
 
         System.out.println(News.FIELD.news_id.As("b"));
+        System.out.println(NewsEntity.Flag.Delete);
+        NewsEntity newsEntity = new NewsEntity();
+        newsEntity.setFlag(NewsEntity.Flag.Delete);
+        System.out.println(newsEntity.currentFlag());
+        System.out.println(newsEntity.currentFlag());
+        newsEntity.setFlag(NewsEntity.Flag.Update);
+        System.out.println(newsEntity.currentFlag());
+        newsEntity = new NewsEntity();
+        System.out.println(newsEntity.currentFlag());
+        System.out.println(newsEntity.getNewsId());
 
         // https://blog.csdn.net/weixin_42629433/article/details/124151645
         try {

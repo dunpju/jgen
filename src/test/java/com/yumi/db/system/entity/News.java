@@ -19,9 +19,12 @@ import io.swagger.annotations.ApiModelProperty;
  * @author ffff
  * @since 2023-06-08
  */
-@TableName("ts_news")
-@ApiModel(value = "News对象", description = "")
+@ApiModel(value = "News实体", description = "")
 public class News implements Serializable {
+
+    public enum flag {
+        Delete
+    }
 
     @Serial
     private static final long serialVersionUID = 1L;
