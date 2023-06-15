@@ -7,6 +7,7 @@ import com.dunpju.utils.CamelizeUtil;
 import org.apache.ibatis.jdbc.SQL;
 import org.apache.tomcat.util.buf.StringUtils;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -308,8 +309,16 @@ public class Builder<M extends BaseModel<T>, T> {
         return null;
     }
 
-    public int sum() {
-        
+    public BigDecimal sum(Object column) {
+        this.sql.SELECT(String.format("sum(%s) _sum_", column));
+        Map<String, Object> map = this.baseMapper.first(this.map());
+        return (BigDecimal) map.get("_sum_");
+    }
+
+    public Long count() {
+        this.sql.SELECT("count(1) _count_");
+        Map<String, Object> map = this.baseMapper.first(this.map());
+        return (Long) map.get("_count_");
     }
 
     public String toString() {

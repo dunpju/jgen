@@ -66,6 +66,8 @@ public class UserController {
         newsIds.add(1);
         newsIds.add(2);
         System.out.println(newsDao.getByNewsIds(newsIds));
+        System.out.println(newsDao.sumClickNumByNewsIds(newsIds));
+        System.out.println(newsDao.countByNewsIds(newsIds));
         return userDao.getById();
     }
 

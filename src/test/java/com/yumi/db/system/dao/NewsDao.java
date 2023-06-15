@@ -8,6 +8,7 @@ import com.yumi.db.system.model.News;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Repository;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,7 +38,6 @@ public class NewsDao extends ServiceImpl<NewsMapper, News> {
             } else if (NewsEntity.Flag.Update == flag) {
                 // TODO::映射入库字段
                 this.model.setTitle(newsEntity.getTitle());
-                this.model.setClicknum(newsEntity.getTitle());
             }
         } else { // 新增
             //TODO::修改入库字段
@@ -73,15 +73,17 @@ public class NewsDao extends ServiceImpl<NewsMapper, News> {
         return this.model().SELECT("*").WHERE_IN(News.FIELD.news_id, newsIds).get(News.class);
     }
 
-    public Integer sumClickNumByNewsIds(List<Object> newsIds) {
-        this.baseMapper.selectCount()
-        return null;
-    }
-
     public int deleteByNewsId(Integer newsId) {
         return this.baseMapper.deleteById(newsId);
     }
 
+    public BigDecimal sumClickNumByNewsIds(List<Object> newsIds) {
+        return this.model().WHERE_IN(News.FIELD.news_id, newsIds).sum(News.FIELD.clicknum);
+    }
+
+    public Long countByNewsIds(List<Object> newsIds) {
+        return this.model().WHERE_IN(News.FIELD.news_id, newsIds).count();
+    }
 
     public News getById() {
         Builder<NewsMapper, News> query = new Builder<>(this.baseMapper);
