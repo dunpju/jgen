@@ -8,7 +8,7 @@ import java.util.Map;
 
 public interface BaseModel<T> extends BaseMapper<T> {
     @Select("${_sql_}")
-    public T first(Map<String, Object> map);
+    public Map<String, Object> first(Map<String, Object> map);
     @Select("${_sql_}")
-    public List<T> get(Map<String, Object> map);
+    public List<Map<String, Object>> get(Map<String, Object> map);
 }

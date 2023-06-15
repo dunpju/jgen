@@ -13,6 +13,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.stereotype.Controller;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * <p>
  *  前端控制器
@@ -58,6 +61,11 @@ public class UserController {
         newsDao.setData(newsEntity);
         newsDao.Update();
         System.out.println(newsDao.getByNewsId(id));
+        // 测试批量查询
+        List<Object> newsIds = new ArrayList<>();
+        newsIds.add(1);
+        newsIds.add(2);
+        System.out.println(newsDao.getByNewsIds(newsIds));
         return userDao.getById();
     }
 

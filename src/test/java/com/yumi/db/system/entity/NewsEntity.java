@@ -62,7 +62,7 @@ public class NewsEntity {
     }
 
     public LocalDateTime getCreateTime() {
-        return createTime;
+        return createTime = LocalDateTime.now();
     }
 
     public void setCreateTime(LocalDateTime createTime) {

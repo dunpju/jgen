@@ -3,23 +3,16 @@ package com.yumi.db.system.model;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
-
-import java.io.Serial;
-import java.io.Serializable;
 import com.dunpju.annotations.Message;
 import lombok.Data;
 
-import java.lang.reflect.Field;
+import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.Objects;
 
 @TableName("ts_news")
 @Message(value = "")
 @Data
 public class News implements Serializable {
-
-//    @Serial
-//    private static final long serialVersionUID = 1L;
 
     public enum FIELD implements Serializable {
         news_id,

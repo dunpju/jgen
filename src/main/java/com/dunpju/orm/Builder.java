@@ -1,8 +1,13 @@
 package com.dunpju.orm;
 
+import com.alibaba.fastjson2.JSON;
+import com.alibaba.fastjson2.JSONObject;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.dunpju.utils.CamelizeUtil;
 import org.apache.ibatis.jdbc.SQL;
+import org.apache.tomcat.util.buf.StringUtils;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -234,6 +239,26 @@ public class Builder<M extends BaseModel<T>, T> {
         return this;
     }
 
+    public Builder<M, T> WHERE_IN(Object column, List<Object> value) {
+        List<String> inStr = new ArrayList<>();
+        inStr.add(column.toString());
+        inStr.add("IN");
+        inStr.add("(");
+        int i = 0;
+        for (Object v : value) {
+            String key = String.format("#{%s_%s}", column, i);
+            inStr.add(key);
+            if (value.size() - 1 > i) {
+                inStr.add(",");
+            }
+            this.parameters.put(String.format("%s_%s", column, i), v);
+            i++;
+        }
+        inStr.add(")");
+        this.sql.WHERE(String.join(" ", inStr));
+        return this;
+    }
+
     public Builder<M, T> BETWEEN(String column, Object begin, Object end) {
         this.sql.WHERE(String.format("%s BETWEEN #{%s} AND #{%s}", column, "_begin_", "_end_"));
         this.parameters.put("_begin_", begin);
@@ -245,7 +270,7 @@ public class Builder<M extends BaseModel<T>, T> {
         this.WHERE(column, "LIKE", value);
         return this;
     }
-    
+
     private Map<String, Object> map() {
         this.parameters.put("_sql_", this.sql.toString());
         Map<String, Object> map = this.parameters;
@@ -259,12 +284,32 @@ public class Builder<M extends BaseModel<T>, T> {
         return this.sql.toString();
     }
 
-    public T first() {
-        return this.baseMapper.first(this.map());
+    /**
+     * 获取第一条数据
+     */
+    public <E> E first(Class<E> objectClass) {
+        this.sql.LIMIT(1);
+        Map<String, Object> map = this.baseMapper.first(this.map());
+        return JSONObject.parseObject(CamelizeUtil.toCamelCase(JSONObject.toJSONString(map)), objectClass);
     }
 
-    public List<T> get() {
-        return this.baseMapper.get(this.map());
+    /**
+     * 获取数据集合
+     */
+    public <E> List<E> get(Class<E> objectClass) {
+        List<Map<String, Object>> list = this.baseMapper.get(this.map());
+        if (!list.isEmpty()) {
+            List<E> result = new ArrayList<>();
+            for (Map<String, Object> map : list) {
+                result.add(JSONObject.parseObject(CamelizeUtil.toCamelCase(JSONObject.toJSONString(map)), objectClass));
+            }
+            return result;
+        }
+        return null;
+    }
+
+    public int sum() {
+        
     }
 
     public String toString() {

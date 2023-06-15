@@ -8,33 +8,41 @@ import com.yumi.db.system.model.News;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Repository;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Repository
 @Scope("prototype")
 public class NewsDao extends ServiceImpl<NewsMapper, News> {
 
-    News news = new News();
+    News model = new News();
+    private Builder<NewsMapper, News> builder;
 
     public Builder<NewsMapper, News> model() {
-         return new Builder<>(this.baseMapper).FROM(getEntityClass());
+        if (null == builder) {
+            builder = new Builder<>(this.baseMapper).FROM(getEntityClass());
+        }
+        return builder;
     }
 
     public void setData(NewsEntity newsEntity) {
         NewsEntity.Flag flag = newsEntity.currentFlag();
         if (null != flag) { // 编辑
-            news = this.model().SELECT("*").WHERE(News.FIELD.news_id, "=", newsEntity.getNewsId()).first();
-            if (null == news) {
+            model = this.model().SELECT("*").WHERE(News.FIELD.news_id, "=", newsEntity.getNewsId()).first(News.class);
+            if (null == model || model.getNewsId() == null) {
                 throw new RuntimeException("News数据不存在");
             }
             if (NewsEntity.Flag.Delete == flag) {
                 // TODO::映射入库字段
             } else if (NewsEntity.Flag.Update == flag) {
                 // TODO::映射入库字段
-                this.news.setTitle(newsEntity.getTitle());
+                this.model.setTitle(newsEntity.getTitle());
+                this.model.setClicknum(newsEntity.getTitle());
             }
         } else { // 新增
             //TODO::修改入库字段
-            this.news.setTitle(newsEntity.getTitle());
-            this.news.setCreateTime(newsEntity.getCreateTime());
+            this.model.setTitle(newsEntity.getTitle());
+            this.model.setCreateTime(newsEntity.getCreateTime());
         }
     }
 
@@ -44,8 +52,8 @@ public class NewsDao extends ServiceImpl<NewsMapper, News> {
      * @return Integer
      */
     public Integer Add() {
-        this.baseMapper.insert(this.news);
-        return this.news.getNewsId();
+        this.baseMapper.insert(this.model);
+        return this.model.getNewsId();
     }
 
     /**
@@ -54,12 +62,24 @@ public class NewsDao extends ServiceImpl<NewsMapper, News> {
      * @return int
      */
     public int Update() {
-        return this.baseMapper.updateById(this.news);
+        return this.baseMapper.updateById(this.model);
     }
 
     public News getByNewsId(Integer newsId) {
-        return this.model().SELECT("*").WHERE(News.FIELD.news_id, "=", newsId).first();
-//        return this.baseMapper.first(this.query.toSql());
+        return this.model().SELECT("*").WHERE(News.FIELD.news_id, "=", newsId).first(News.class);
+    }
+
+    public List<News> getByNewsIds(List<Object> newsIds) {
+        return this.model().SELECT("*").WHERE_IN(News.FIELD.news_id, newsIds).get(News.class);
+    }
+
+    public Integer sumClickNumByNewsIds(List<Object> newsIds) {
+        this.baseMapper.selectCount()
+        return null;
+    }
+
+    public int deleteByNewsId(Integer newsId) {
+        return this.baseMapper.deleteById(newsId);
     }
 
 
