@@ -6,9 +6,13 @@ import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.dunpju.orm.Builder;
+import com.dunpju.orm.Paged;
 import com.yumi.db.system.entity.NewsEntity;
 import com.yumi.db.system.mapper.NewsMapper;
+import com.yumi.db.system.mapper.UserMapper;
 import com.yumi.db.system.model.News;
+import com.yumi.db.system.model.User;
+import com.yumi.db.system.vo.NewSVo;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Repository;
 
@@ -94,16 +98,13 @@ public class NewsDao extends ServiceImpl<NewsMapper, News> {
         return this.model().WHERE_IN(News.FIELD.news_id, newsIds).count();
     }
 
-    public Page<News> getList() {
-        System.out.println(this.model().SELECT(
+    public Paged<NewSVo> getList() {
+        Builder<UserMapper, User> b = new UserDao().model();
+        return this.model().As("a").SELECT(
                 News.FIELD.news_id.toString(),
                 News.FIELD.title.toString(),
                 News.FIELD.clicknum.toString()
-        ).paginate(2, 10, News.class));
-        Page<News> page = new Page<>(1, 10);
-        QueryWrapper<News> wrapper = new QueryWrapper<>();
-//        wrapper.eq(News.FIELD.news_id.toString(), 1);
-        return this.baseMapper.selectPage(page, wrapper);
+        ).LEFT_OUTER_JOIN(b.getTable() + " AS b ON b.id = a." + News.FIELD.news_id).paginate(1, 10, NewSVo.class);
     }
 
     public News getById() {

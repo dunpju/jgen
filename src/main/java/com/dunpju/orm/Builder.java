@@ -27,7 +27,16 @@ public class Builder<M extends BaseModel<T>, T> {
         this.baseMapper = baseMapper;
     }
 
+    public String getTable() {
+        return table;
+    }
+
+    public void setTable(String table) {
+        this.table = table;
+    }
+
     public Builder<M, T> UPDATE(String table) {
+        this.table = table;
         this.sql.UPDATE(table);
         return this;
     }
@@ -43,7 +52,8 @@ public class Builder<M extends BaseModel<T>, T> {
     }
 
     public Builder<M, T> INSERT_INTO(String tableName) {
-        this.sql.INSERT_INTO(tableName);
+        this.table = tableName;
+        this.sql.INSERT_INTO(this.table);
         return this;
     }
 
@@ -77,33 +87,40 @@ public class Builder<M extends BaseModel<T>, T> {
     }
 
     public Builder<M, T> SELECT_DISTINCT(String columns) {
+        this._columns = columns;
         this.sql.SELECT_DISTINCT(columns);
         return this;
     }
 
     public Builder<M, T> SELECT_DISTINCT(String... columns) {
+        this._columns = String.join(",", columns);
         this.sql.SELECT_DISTINCT(columns);
         return this;
     }
 
     public Builder<M, T> DELETE_FROM(String table) {
-        this.sql.DELETE_FROM(table);
+        this.table = table;
+        this.sql.DELETE_FROM(this.table);
         return this;
     }
 
     public Builder<M, T> FROM(Class<?> table) {
         this.table = table.getAnnotation(TableName.class).value();
-        this.sql.FROM(this.table);
         return this;
     }
 
     public Builder<M, T> FROM(String table) {
-        this.sql.FROM(table);
+        this.table = table;
         return this;
     }
 
     public Builder<M, T> FROM(String... tables) {
-        this.sql.FROM(tables);
+        this.table = String.join(",", tables);
+        return this;
+    }
+
+    public Builder<M, T> As(String alias) {
+        this.table = String.format("%s AS %s", this.table, alias);
         return this;
     }
 
@@ -278,18 +295,17 @@ public class Builder<M extends BaseModel<T>, T> {
         return this;
     }
 
-    private Map<String, Object> map() {
-        this.parameters.put("_sql_", this.sql.toString());
+    private Map<String, Object> map(String _sql_) {
+        this.parameters.put("_sql_", _sql_);
         Map<String, Object> map = this.parameters;
         this.parameters = new HashMap<>();
         this._columns = null;
         this.sql = new SQL();
-        this.sql.FROM(this.table);
         return map;
     }
 
     public String toSql() {
-        return this.sql.toString();
+        return this.sql.FROM(this.table).toString();
     }
 
     /**
@@ -297,7 +313,7 @@ public class Builder<M extends BaseModel<T>, T> {
      */
     public <E> E first(Class<E> objectClass) {
         this.sql.LIMIT(1);
-        Map<String, Object> map = this.baseMapper.first(this.map());
+        Map<String, Object> map = this.baseMapper.first(this.map(this.toSql()));
         return JSONObject.parseObject(CamelizeUtil.toCamelCase(JSONObject.toJSONString(map)), objectClass);
     }
 
@@ -305,7 +321,7 @@ public class Builder<M extends BaseModel<T>, T> {
      * 获取数据集合
      */
     public <E> List<E> get(Class<E> objectClass) {
-        List<Map<String, Object>> list = this.baseMapper.get(this.map());
+        List<Map<String, Object>> list = this.baseMapper.get(this.map(this.toSql()));
         if (!list.isEmpty()) {
             List<E> result = new ArrayList<>();
             for (Map<String, Object> map : list) {
@@ -318,14 +334,20 @@ public class Builder<M extends BaseModel<T>, T> {
 
     public BigDecimal sum(Object column) {
         this.sql.SELECT(String.format("sum(%s) _sum_", column));
-        Map<String, Object> map = this.baseMapper.query(this.map());
-        return (BigDecimal) map.get("_sum_");
+        Map<String, Object> map = this.baseMapper.query(this.map(this.toSql()));
+        if (null != map) {
+            return (BigDecimal) map.get("_sum_");
+        }
+        return BigDecimal.valueOf(0);
     }
 
     public Long count() {
         this.sql.SELECT("count(1) _count_");
-        Map<String, Object> map = this.baseMapper.query(this.map());
-        return (Long) map.get("_count_");
+        Map<String, Object> map = this.baseMapper.query(this.map(this.toSql()));
+        if (null != map) {
+            return (Long) map.get("_count_");
+        }
+        return 0L;
     }
 
     public <E> Paged<E> paginate(long current, long size, Class<E> objectClass) {
@@ -333,26 +355,25 @@ public class Builder<M extends BaseModel<T>, T> {
             this._columns = "*";
             this.sql.SELECT(this._columns);
         }
-
-        Map<String, Object> countMap = this.parameters;
-        Pattern patten = Pattern.compile("(SELECT\\s+.*\n)");
-        Matcher matcher = patten.matcher(this.sql.toString());
-        if (matcher.find()) {
-            countMap.put("_sql_", matcher.replaceAll("SELECT count(1) _count_ \n"));
-        }
-
-        Map<String, Object> countResult = this.baseMapper.query(countMap);
-        long total = (Long) countResult.get("_count_");
-
         long limit = (current - 1) * size;
         this.sql.LIMIT(String.format("%s,%s", limit, size));
-        List<Map<String, Object>> list = this.baseMapper.get(this.map());
+
+        String _sql_ = this.toSql();
+        Map<String, Object> countMap = this.parameters;
+        Pattern patten = Pattern.compile("(SELECT\\s+.*\n)");
+        Matcher matcher = patten.matcher(_sql_);
+        if (matcher.find()) {
+            countMap.put("_sql_", matcher.replaceFirst("SELECT count(1) _count_ \n").replaceAll(String.format(" LIMIT %s,%s", limit, size), ""));
+        }
+        Map<String, Object> countResult = this.baseMapper.query(countMap);
+        long total = (Long) countResult.get("_count_");
+        List<Map<String, Object>> list = this.baseMapper.get(this.map(_sql_));
         if (!list.isEmpty()) {
             List<E> result = new ArrayList<>();
             for (Map<String, Object> map : list) {
                 result.add(JSONObject.parseObject(CamelizeUtil.toCamelCase(JSONObject.toJSONString(map)), objectClass));
             }
-            return new Paged<>(result, total, current, size);
+            return new Paged<>(total, current, size, result);
         }
         return null;
     }

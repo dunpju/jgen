@@ -8,8 +8,8 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 public class Paged<E> {
-    List<E> list;
     long total;
     long current;
     long size;
+    List<E> list;
 }

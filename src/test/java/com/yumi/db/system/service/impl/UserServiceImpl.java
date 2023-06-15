@@ -1,9 +1,8 @@
 package com.yumi.db.system.service.impl;
 
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.dunpju.orm.Builder;
-import com.yumi.db.system.entity.User;
 import com.yumi.db.system.mapper.UserMapper;
+import com.yumi.db.system.model.User;
 import com.yumi.db.system.service.IUserService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.apache.ibatis.jdbc.SQL;
@@ -40,11 +39,11 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         User user = this.baseMapper.get(map);*/
 
 
-        Builder<UserMapper, User> query = new Builder<>(this.baseMapper);
-        query.SELECT("id", "uname", "u_tel", "score");
-        query.FROM(getEntityClass().getAnnotation(TableName.class).value());
+//        Builder<UserMapper, User> query = new Builder<>(this.baseMapper);
+//        query.SELECT("id", "uname", "u_tel", "score");
+//        query.FROM(getEntityClass().getAnnotation(TableName.class).value());
 //                WHERE("id", "=", String.valueOf(1002)).
-        query.LIKE("uname", "%d%");
+//        query.LIKE("uname", "%d%");
 
 //        List<User> user = this.baseMapper.get(query.toSql());
 //        System.out.println(user);

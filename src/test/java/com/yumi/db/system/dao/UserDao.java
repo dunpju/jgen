@@ -2,12 +2,23 @@ package com.yumi.db.system.dao;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.dunpju.orm.Builder;
-import com.yumi.db.system.entity.User;
 import com.yumi.db.system.mapper.UserMapper;
+import com.yumi.db.system.model.User;
 import org.springframework.stereotype.Repository;
 
 @Repository
 public class UserDao extends ServiceImpl<UserMapper, User> {
+
+    User model = new User();
+    private Builder<UserMapper, User> builder;
+
+    public  Builder<UserMapper, User> model() {
+        if (null == builder) {
+            builder = new Builder<>(this.baseMapper).FROM(getEntityClass());
+        }
+        return builder;
+    }
+
     public User getById() {
         Builder<UserMapper, User> query = new Builder<>(this.baseMapper);
 

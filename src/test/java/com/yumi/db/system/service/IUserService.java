@@ -1,7 +1,7 @@
 package com.yumi.db.system.service;
 
-import com.yumi.db.system.entity.User;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.yumi.db.system.model.User;
 
 /**
  * <p>

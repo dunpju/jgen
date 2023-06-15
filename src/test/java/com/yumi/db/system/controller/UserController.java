@@ -69,7 +69,7 @@ public class UserController {
         System.out.println(newsDao.sumClickNumByNewsIds(newsIds));
         System.out.println(newsDao.countByNewsIds(newsIds));
         System.out.println(newsDao.getList());
-        return userDao.getById();
+        return null;
     }
 
 }
