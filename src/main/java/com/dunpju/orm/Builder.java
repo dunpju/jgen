@@ -12,6 +12,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class Builder<M extends BaseModel<T>, T> {
     SQL sql;
@@ -60,12 +62,16 @@ public class Builder<M extends BaseModel<T>, T> {
         return this;
     }
 
+    private String _columns = null;
+
     public Builder<M, T> SELECT(String columns) {
+        this._columns = columns;
         this.sql.SELECT(columns);
         return this;
     }
 
     public Builder<M, T> SELECT(String... columns) {
+        this._columns = String.join(",", columns);
         this.sql.SELECT(columns);
         return this;
     }
@@ -276,6 +282,7 @@ public class Builder<M extends BaseModel<T>, T> {
         this.parameters.put("_sql_", this.sql.toString());
         Map<String, Object> map = this.parameters;
         this.parameters = new HashMap<>();
+        this._columns = null;
         this.sql = new SQL();
         this.sql.FROM(this.table);
         return map;
@@ -311,14 +318,43 @@ public class Builder<M extends BaseModel<T>, T> {
 
     public BigDecimal sum(Object column) {
         this.sql.SELECT(String.format("sum(%s) _sum_", column));
-        Map<String, Object> map = this.baseMapper.first(this.map());
+        Map<String, Object> map = this.baseMapper.query(this.map());
         return (BigDecimal) map.get("_sum_");
     }
 
     public Long count() {
         this.sql.SELECT("count(1) _count_");
-        Map<String, Object> map = this.baseMapper.first(this.map());
+        Map<String, Object> map = this.baseMapper.query(this.map());
         return (Long) map.get("_count_");
+    }
+
+    public <E> Paged<E> paginate(long current, long size, Class<E> objectClass) {
+        if (null == this._columns) {
+            this._columns = "*";
+            this.sql.SELECT(this._columns);
+        }
+
+        Map<String, Object> countMap = this.parameters;
+        Pattern patten = Pattern.compile("(SELECT\\s+.*\n)");
+        Matcher matcher = patten.matcher(this.sql.toString());
+        if (matcher.find()) {
+            countMap.put("_sql_", matcher.replaceAll("SELECT count(1) _count_ \n"));
+        }
+
+        Map<String, Object> countResult = this.baseMapper.query(countMap);
+        long total = (Long) countResult.get("_count_");
+
+        long limit = (current - 1) * size;
+        this.sql.LIMIT(String.format("%s,%s", limit, size));
+        List<Map<String, Object>> list = this.baseMapper.get(this.map());
+        if (!list.isEmpty()) {
+            List<E> result = new ArrayList<>();
+            for (Map<String, Object> map : list) {
+                result.add(JSONObject.parseObject(CamelizeUtil.toCamelCase(JSONObject.toJSONString(map)), objectClass));
+            }
+            return new Paged<>(result, total, current, size);
+        }
+        return null;
     }
 
     public String toString() {

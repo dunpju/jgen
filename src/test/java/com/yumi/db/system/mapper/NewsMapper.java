@@ -2,6 +2,7 @@ package com.yumi.db.system.mapper;
 
 import com.dunpju.orm.BaseModel;
 import com.yumi.db.system.model.News;
+import org.apache.ibatis.annotations.Mapper;
 
 /**
  * <p>
@@ -11,5 +12,6 @@ import com.yumi.db.system.model.News;
  * @author ffff
  * @since 2023-06-08
  */
+@Mapper
 public interface NewsMapper extends BaseModel<News> {
 }

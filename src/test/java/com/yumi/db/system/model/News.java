@@ -31,7 +31,7 @@ public class News implements Serializable {
     @Message("标题")
     private String title;
     @Message("点击量")
-    private Integer clicknum;
+    private Object clicknum;
     @Message("创建时间")
     private LocalDateTime createTime;
 

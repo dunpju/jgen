@@ -1,5 +1,9 @@
 package com.yumi.db.system.dao;
 
+import com.baomidou.mybatisplus.core.conditions.Wrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.dunpju.orm.Builder;
 import com.yumi.db.system.entity.NewsEntity;
@@ -11,6 +15,7 @@ import org.springframework.stereotype.Repository;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Repository
 @Scope("prototype")
@@ -38,6 +43,10 @@ public class NewsDao extends ServiceImpl<NewsMapper, News> {
             } else if (NewsEntity.Flag.Update == flag) {
                 // TODO::映射入库字段
                 this.model.setTitle(newsEntity.getTitle());
+//                this.model.setClicknum("clicknum + 10");
+//                Wrapper<News> updateWrapper = new <> ();
+//                updateWrapper.e
+//                this.baseMapper.update()
             }
         } else { // 新增
             //TODO::修改入库字段
@@ -83,6 +92,18 @@ public class NewsDao extends ServiceImpl<NewsMapper, News> {
 
     public Long countByNewsIds(List<Object> newsIds) {
         return this.model().WHERE_IN(News.FIELD.news_id, newsIds).count();
+    }
+
+    public Page<News> getList() {
+        System.out.println(this.model().SELECT(
+                News.FIELD.news_id.toString(),
+                News.FIELD.title.toString(),
+                News.FIELD.clicknum.toString()
+        ).paginate(2, 10, News.class));
+        Page<News> page = new Page<>(1, 10);
+        QueryWrapper<News> wrapper = new QueryWrapper<>();
+//        wrapper.eq(News.FIELD.news_id.toString(), 1);
+        return this.baseMapper.selectPage(page, wrapper);
     }
 
     public News getById() {
