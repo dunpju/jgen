@@ -104,7 +104,10 @@ public class NewsDao extends ServiceImpl<NewsMapper, News> {
                 News.FIELD.news_id.toString(),
                 News.FIELD.title.toString(),
                 News.FIELD.clicknum.toString()
-        ).LEFT_OUTER_JOIN(b.getTable() + " AS b ON b.id = a." + News.FIELD.news_id).paginate(1, 10, NewSVo.class);
+        ).LEFT_OUTER_JOIN(b.getTable() + " AS b ON b.id = a." + News.FIELD.news_id).
+                GROUP_BY(News.FIELD.title).
+                ORDER_BY(News.FIELD.news_id.DESC()).
+                paginate(1, 2, NewSVo.class);
     }
 
     public News getById() {

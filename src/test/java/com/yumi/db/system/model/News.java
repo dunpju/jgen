@@ -23,6 +23,12 @@ public class News implements Serializable {
         public String As(String alias) {
             return String.format("%s AS %s", this, alias);
         }
+        public String ASC() {
+            return String.format("%s %s", this, "ASC");
+        }
+        public String DESC() {
+            return String.format("%s %s", this, "DESC");
+        }
     }
 
     @Message("主键")
