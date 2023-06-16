@@ -119,9 +119,13 @@ public class Builder<M extends BaseModel<T>, T> {
         return this;
     }
 
-    public Builder<M, T> As(String alias) {
+    public Builder<M, T> AS(String alias) {
         this.table = String.format("%s AS %s", this.table, alias);
         return this;
+    }
+
+    public String ON(String first, String operator, String second, String... other) {
+        return String.format(" %s ON %s %s %s %s", this.table, first, operator, second, String.join(" ", other));
     }
 
     public Builder<M, T> JOIN(String join) {

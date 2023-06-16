@@ -19,7 +19,9 @@ public class News implements Serializable {
         title,
         clicknum,
         create_time;
-
+        public String Pre(String prefix) {
+            return String.format("%s.%s", prefix, this);
+        }
         public String As(String alias) {
             return String.format("%s AS %s", this, alias);
         }

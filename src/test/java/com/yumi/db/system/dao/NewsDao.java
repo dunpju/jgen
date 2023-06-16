@@ -100,11 +100,13 @@ public class NewsDao extends ServiceImpl<NewsMapper, News> {
 
     public Paged<NewSVo> getList() {
         Builder<UserMapper, User> b = new UserDao().model();
-        return this.model().As("a").SELECT(
-                News.FIELD.news_id.toString(),
-                News.FIELD.title.toString(),
-                News.FIELD.clicknum.toString()
-        ).LEFT_OUTER_JOIN(b.getTable() + " AS b ON b.id = a." + News.FIELD.news_id).
+        return this.model().AS("a").SELECT(
+                        News.FIELD.news_id.toString(),
+                        News.FIELD.title.toString(),
+                        News.FIELD.clicknum.toString()
+                ).INNER_JOIN(b.AS("b").ON("b.id", "=", News.FIELD.news_id.Pre("a"),
+                        "AND",
+                        News.FIELD.clicknum.Pre("a"), ">", "1")).
                 GROUP_BY(News.FIELD.title).
                 ORDER_BY(News.FIELD.news_id.DESC()).
                 paginate(1, 2, NewSVo.class);
