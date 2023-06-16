@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import java.io.Serial;
 import java.io.Serializable;
 import com.dunpju.annotations.Message;
+import com.dunpju.orm.BaseField;
 import lombok.Data;
 
 
@@ -18,15 +19,11 @@ public class User implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
 
-    public enum FIELD {
+    public enum FIELD implements BaseField {
         id,
         uname,
         u_tel,
         score;
-
-        public String As(String alias) {
-            return String.format("%s AS %s", this, alias);
-        }
     }
 
     @Message("主键")

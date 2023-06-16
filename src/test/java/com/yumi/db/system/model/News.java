@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.dunpju.annotations.Message;
+import com.dunpju.orm.BaseField;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -14,23 +15,11 @@ import java.time.LocalDateTime;
 @Data
 public class News implements Serializable {
 
-    public enum FIELD implements Serializable {
+    public enum FIELD implements BaseField {
         news_id,
         title,
         clicknum,
         create_time;
-        public String Pre(String prefix) {
-            return String.format("%s.%s", prefix, this);
-        }
-        public String As(String alias) {
-            return String.format("%s AS %s", this, alias);
-        }
-        public String ASC() {
-            return String.format("%s %s", this, "ASC");
-        }
-        public String DESC() {
-            return String.format("%s %s", this, "DESC");
-        }
     }
 
     @Message("主键")

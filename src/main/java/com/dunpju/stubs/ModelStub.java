@@ -40,6 +40,7 @@ public class ModelStub {
                 import java.io.Serial;
                 import java.io.Serializable;
                 import com.dunpju.annotations.Message;
+                import com.dunpju.orm.BaseField;
                 import lombok.Data;
                 %IMPORTS%
                                 
@@ -51,12 +52,8 @@ public class ModelStub {
                     @Serial
                     private static final long serialVersionUID = 1L;
                     
-                    public enum FIELD {
+                    public enum FIELD implements BaseField {
                         %FIELD%;
-
-                        public String As(String alias) {
-                            return String.format("%s AS %s", this, alias);
-                        }
                     }
                                 
                     %PROPERTY%
