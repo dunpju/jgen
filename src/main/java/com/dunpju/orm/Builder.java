@@ -190,8 +190,8 @@ public class Builder<M extends BaseModel<T>, T> {
         return this;
     }
 
-    public Builder<M, T> GROUP_BY(String columns) {
-        this.sql.GROUP_BY(columns);
+    public Builder<M, T> GROUP_BY(Object columns) {
+        this.sql.GROUP_BY(columns.toString());
         return this;
     }
 
@@ -365,8 +365,14 @@ public class Builder<M extends BaseModel<T>, T> {
         if (matcher.find()) {
             countMap.put("_sql_", matcher.replaceFirst("SELECT count(1) _count_ \n").replaceAll(String.format(" LIMIT %s,%s", limit, size), ""));
         }
-        Map<String, Object> countResult = this.baseMapper.query(countMap);
-        long total = (Long) countResult.get("_count_");
+        List<Map<String, Object>> countResult = this.baseMapper.count(countMap);
+        long total = 0L;
+        if (countResult.size() > 1) {
+            total = countResult.size();
+        } else {
+            total = (Long) countResult.get(0).get("_count_");
+        }
+
         List<Map<String, Object>> list = this.baseMapper.get(this.map(_sql_));
         if (!list.isEmpty()) {
             List<E> result = new ArrayList<>();
