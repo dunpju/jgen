@@ -3,17 +3,21 @@ package com.yumi.db.system.model;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+
+import java.io.Serial;
+import java.io.Serializable;
 import com.dunpju.annotations.Message;
 import com.dunpju.orm.BaseField;
 import lombok.Data;
-
-import java.io.Serializable;
 import java.time.LocalDateTime;
 
 @TableName("ts_news")
-@Message(value = "")
+@Message(value = "新闻表")
 @Data
 public class News implements Serializable {
+
+    @Serial
+    private static final long serialVersionUID = 1L;
 
     public enum FIELD implements BaseField {
         news_id,
@@ -24,11 +28,11 @@ public class News implements Serializable {
 
     @Message("主键")
     @TableId(value = "news_id", type = IdType.AUTO)
-    private Integer newsId;
+    private Long newsId;
     @Message("标题")
     private String title;
     @Message("点击量")
-    private Object clicknum;
+    private Integer clicknum;
     @Message("创建时间")
     private LocalDateTime createTime;
 

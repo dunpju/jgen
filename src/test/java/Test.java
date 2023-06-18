@@ -53,9 +53,18 @@ public class Test {
 
         // https://blog.csdn.net/weixin_42629433/article/details/124151645
         try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
+            ModelGen modelGen = new ModelGen();
+            modelGen.setOutPackage("com.yumi.db.system.model")
+                    .setOutDir("E:\\share\\jgen\\src\\test\\java\\com\\yumi\\db\\system\\model")
+                    .setTablePrefix("ts_")
+                    .Builder("jdbc:mysql://192.168.8.99:3306/test?characterEncoding=UTF-8", "root", "1qaz2wsx")
+                    .run();
+
+
+
+            /*Class.forName("com.mysql.cj.jdbc.Driver");
             DataSourceConfig dataSourceConfig = new DataSourceConfig.Builder("jdbc:mysql://192.168.8.99:3306/test?characterEncoding=UTF-8", "root", "1qaz2wsx").build();
-            System.out.println(dataSourceConfig.getConn().getSchema());
+            System.out.println(dataSourceConfig.getConn().getCatalog());
             DatabaseMetaDataWrapper databaseMetaDataWrapper = new DatabaseMetaDataWrapper(dataSourceConfig.getConn(), dataSourceConfig.getSchemaName());
             DatabaseMetaData metaData = dataSourceConfig.getConn().getMetaData();
 
@@ -69,15 +78,15 @@ public class Test {
 
             ConfigBuilder configBuilder = new ConfigBuilder(packageInfo, dataSourceConfig, strategy, template, globalConfig, injection);
 
-            ResultSet tableResultSet = metaData.getTables("test", "test", null, new String[]{"TABLE"});
+            ResultSet tableResultSet = metaData.getTables(dataSourceConfig.getConn().getCatalog(), dataSourceConfig.getConn().getCatalog(), null, new String[]{"TABLE"});
             while (tableResultSet.next()) {
                 String tableName = tableResultSet.getString("TABLE_NAME");
-                Map<String, DatabaseMetaDataWrapper.Column> columnsInfo = databaseMetaDataWrapper.getColumnsInfo("test", "test", tableName,true);
+                Map<String, DatabaseMetaDataWrapper.Column> columnsInfo = databaseMetaDataWrapper.getColumnsInfo(dataSourceConfig.getConn().getCatalog(), dataSourceConfig.getConn().getCatalog(), tableName,true);
                 System.out.println("=============");
                 DatabaseMetaDataWrapper.Table table = databaseMetaDataWrapper.getTableInfo(tableName);
 
                 System.out.println(tableName);
-                /*for (String key : columnsInfo.keySet()) {
+                *//*for (String key : columnsInfo.keySet()) {
                     System.out.println(columnsInfo.get(key).getName());
                     System.out.println(columnsInfo.get(key).getJdbcType());
                     System.out.println(columnsInfo.get(key).isPrimaryKey());
@@ -92,19 +101,19 @@ public class Test {
                     System.out.println(iColumnType.getType());
                     System.out.println(iColumnType.getPkg());
                     System.out.println();
-                }*/
+                }*//*
 
-                ModelGen modelGen = new ModelGen();
+                *//*ModelGen modelGen = new ModelGen();
                 modelGen.setOutPackage("com.yumi.db.system.model");
-                modelGen.setOutDir("D:\\php\\jgen\\src\\test\\java\\com\\yumi\\db\\system\\model");
+                modelGen.setOutDir("E:\\share\\jgen\\src\\test\\java\\com\\yumi\\db\\system\\model");
                 modelGen.setTableName(tableName);
                 modelGen.setTableRemarks(table.getRemarks());
                 modelGen.setTablePrefix("ts_");
                 modelGen.setColumnsInfo(columnsInfo);
                 modelGen.setConfigBuilder(configBuilder);
                 modelGen.setTypeRegistry(typeRegistry);
-                modelGen.run();
-            }
+                modelGen.run();*//*
+            }*/
 
             /*Map<String, DatabaseMetaDataWrapper.Column> columnsInfo = databaseMetaDataWrapper.getColumnsInfo("test", "test", "users",true);
             Assertions.assertNotNull(columnsInfo);

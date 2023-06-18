@@ -48,7 +48,7 @@ public class UserController {
         // 测试插入
         newsEntity.setTitle("ggghh");
         newsDao.setData(newsEntity);
-        Integer id = newsDao.Add();
+        Long id = newsDao.Add();
         System.out.println(id);
 
         // 测试查询

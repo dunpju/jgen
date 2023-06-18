@@ -26,7 +26,7 @@ public class NewsEntity {
     }
 
     @Message("主键")
-    private Integer newsId;
+    private Long newsId;
 
     @Message("标题")
     private String title;
@@ -37,11 +37,11 @@ public class NewsEntity {
     @Message("创建时间")
     private LocalDateTime createTime;
 
-    public Integer getNewsId() {
+    public Long getNewsId() {
         return newsId;
     }
 
-    public void setNewsId(Integer newsId) {
+    public void setNewsId(Long newsId) {
         this.newsId = newsId;
     }
 
