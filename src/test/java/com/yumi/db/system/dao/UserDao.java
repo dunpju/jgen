@@ -14,13 +14,13 @@ public class UserDao extends ServiceImpl<UserMapper, User> {
 
     public  Builder<UserMapper, User> model() {
         if (null == builder) {
-            builder = new Builder<>(this.baseMapper).FROM(getEntityClass());
+            builder = new Builder<>(this.baseMapper, this.model).FROM(getEntityClass());
         }
         return builder;
     }
 
     public User getById() {
-        Builder<UserMapper, User> query = new Builder<>(this.baseMapper);
+        Builder<UserMapper, User> query = new Builder<>(this.baseMapper, this.model);
 
         /*query.SELECT("id", "uname", "u_tel", "score");
         query.FROM(getEntityClass());

@@ -3,18 +3,18 @@ package com.yumi.db.system.model;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
-
-import java.io.Serial;
-import java.io.Serializable;
 import com.dunpju.annotations.Message;
 import com.dunpju.orm.BaseField;
+import com.dunpju.orm.BaseModel;
 import lombok.Data;
+
+import java.io.Serial;
 import java.time.LocalDateTime;
 
 @TableName("ts_news")
 @Message(value = "新闻表")
 @Data
-public class News implements Serializable {
+public class News extends BaseModel {
 
     @Serial
     private static final long serialVersionUID = 1L;

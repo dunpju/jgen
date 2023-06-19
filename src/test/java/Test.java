@@ -43,7 +43,6 @@ public class Test {
         NewsEntity newsEntity = new NewsEntity();
         newsEntity.setFlag(NewsEntity.Flag.Delete);
         System.out.println(newsEntity.currentFlag());
-        System.out.println(newsEntity.currentFlag());
         newsEntity.setFlag(NewsEntity.Flag.Update);
         System.out.println(newsEntity.currentFlag());
         newsEntity = new NewsEntity();
@@ -55,7 +54,7 @@ public class Test {
         try {
             ModelGen modelGen = new ModelGen();
             modelGen.setOutPackage("com.yumi.db.system.model")
-                    .setOutDir("E:\\share\\jgen\\src\\test\\java\\com\\yumi\\db\\system\\model")
+                    .setOutDir("D:\\php\\jgen\\src\\test\\java\\com\\yumi\\db\\system\\model")
                     .setTablePrefix("ts_")
                     .Builder("jdbc:mysql://192.168.8.99:3306/test?characterEncoding=UTF-8", "root", "1qaz2wsx")
                     .run();

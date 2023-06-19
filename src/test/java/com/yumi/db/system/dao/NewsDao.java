@@ -30,7 +30,7 @@ public class NewsDao extends ServiceImpl<NewsMapper, News> {
 
     public Builder<NewsMapper, News> model() {
         if (null == builder) {
-            builder = new Builder<>(this.baseMapper).FROM(getEntityClass());
+            builder = new Builder<>(this.baseMapper, this.model).FROM(getEntityClass());
         }
         return builder;
     }
@@ -101,10 +101,10 @@ public class NewsDao extends ServiceImpl<NewsMapper, News> {
     public Paged<NewSVo> getList() {
         Builder<UserMapper, User> b = new UserDao().model();
         return this.model().AS("a").SELECT(
-                        News.FIELD.news_id.toString(),
-                        News.FIELD.title.toString(),
-                        News.FIELD.clicknum.toString()
-                ).INNER_JOIN(b.AS("b").ON(User.FIELD.id.Pre("b"), "=", News.FIELD.news_id.Pre("a"),
+                        News.FIELD.news_id,
+                        News.FIELD.title,
+                        News.FIELD.clicknum
+                ).INNER_JOIN(b.AS("b").ON(User.FIELD.id.Pre("b"), "=", News.FIELD.news_id.As("a"),
                         "AND",
                         News.FIELD.clicknum.Pre("a"), ">", "1")).
                 GROUP_BY(News.FIELD.title).
@@ -113,7 +113,7 @@ public class NewsDao extends ServiceImpl<NewsMapper, News> {
     }
 
     public News getById() {
-        Builder<NewsMapper, News> query = new Builder<>(this.baseMapper);
+        Builder<NewsMapper, News> query = new Builder<>(this.baseMapper, this.model);
 
         /*query.SELECT("id", "uname", "u_tel", "score");
         query.FROM(getEntityClass());

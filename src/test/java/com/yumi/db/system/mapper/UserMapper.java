@@ -1,6 +1,6 @@
 package com.yumi.db.system.mapper;
 
-import com.dunpju.orm.BaseModel;
+import com.dunpju.orm.BaseMapper;
 import com.yumi.db.system.model.User;
 
 /**
@@ -11,6 +11,6 @@ import com.yumi.db.system.model.User;
  * @author ffff
  * @since 2023-06-08
  */
-public interface UserMapper extends BaseModel<User> {
+public interface UserMapper extends BaseMapper<User> {
 
 }

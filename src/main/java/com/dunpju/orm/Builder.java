@@ -13,16 +13,20 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class Builder<M extends BaseModel<T>, T> {
-    SQL sql;
-    Map<String, Object> parameters;
-    String table;
+public class Builder<M extends BaseMapper<T>, T extends BaseModel> {
+    protected SQL sql;
+    protected Map<String, Object> parameters;
+    protected String table;
+    protected String tableAlias;
+    protected String _columns = null;
     protected M baseMapper;
+    protected T model;
 
-    public Builder(M baseMapper) {
+    public Builder(M baseMapper, T t) {
         this.sql = new SQL();
         this.parameters = new HashMap<>();
         this.baseMapper = baseMapper;
+        this.model = t;
     }
 
     public String getTable() {
@@ -70,8 +74,6 @@ public class Builder<M extends BaseModel<T>, T> {
         return this;
     }
 
-    private String _columns = null;
-
     public Builder<M, T> SELECT(String columns) {
         this._columns = columns;
         this.sql.SELECT(columns);
@@ -81,6 +83,16 @@ public class Builder<M extends BaseModel<T>, T> {
     public Builder<M, T> SELECT(String... columns) {
         this._columns = String.join(",", columns);
         this.sql.SELECT(columns);
+        return this;
+    }
+
+    public Builder<M, T> SELECT(BaseField... columns) {
+        List<String> c = new ArrayList<>();
+        for (BaseField b : columns) {
+            c.add(b.toString());
+        }
+        this._columns = String.join(",", c);
+        this.sql.SELECT(this._columns);
         return this;
     }
 
@@ -118,6 +130,8 @@ public class Builder<M extends BaseModel<T>, T> {
     }
 
     public Builder<M, T> AS(String alias) {
+        this.tableAlias = alias;
+        this.model.setTableAlias(alias);
         this.table = String.format("%s AS %s", this.table, alias);
         return this;
     }
@@ -344,7 +358,7 @@ public class Builder<M extends BaseModel<T>, T> {
     }
 
     public Long count() {
-        this.sql.SELECT("count(1) _count_");
+        this.sql.SELECT("count(*) _count_");
         Map<String, Object> map = this.baseMapper.query(this.map(this.toSql()));
         if (null != map) {
             return (Long) map.get("_count_");
@@ -365,7 +379,7 @@ public class Builder<M extends BaseModel<T>, T> {
         Pattern patten = Pattern.compile("(SELECT\\s+.*\n)");
         Matcher matcher = patten.matcher(_sql_);
         if (matcher.find()) {
-            countMap.put("_sql_", matcher.replaceFirst("SELECT count(1) _count_ \n").replaceAll(String.format(" LIMIT %s,%s", limit, size), ""));
+            countMap.put("_sql_", matcher.replaceFirst("SELECT count(*) _count_ \n").replaceAll(String.format(" LIMIT %s,%s", limit, size), ""));
         }
         List<Map<String, Object>> countResult = this.baseMapper.count(countMap);
         long total = 0L;
