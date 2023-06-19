@@ -36,18 +36,18 @@ public class ModelStub {
                 import com.baomidou.mybatisplus.annotation.IdType;
                 import com.baomidou.mybatisplus.annotation.TableId;
                 import com.baomidou.mybatisplus.annotation.TableName;
-                                
-                import java.io.Serial;
-                import java.io.Serializable;
                 import com.dunpju.annotations.Message;
                 import com.dunpju.orm.BaseField;
+                import com.dunpju.orm.BaseModel;
                 import lombok.Data;
+                                
+                import java.io.Serial;
                 %IMPORTS%
                                 
                 @TableName("%TABLE_NAME%")
                 @Message(value = "%TABLE_DESCRIPTION%")
                 @Data
-                public class %CLASS_NAME% implements Serializable {
+                public class %CLASS_NAME% extends BaseModel {
                     
                     @Serial
                     private static final long serialVersionUID = 1L;
