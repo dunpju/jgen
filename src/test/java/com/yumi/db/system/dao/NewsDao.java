@@ -104,7 +104,7 @@ public class NewsDao extends ServiceImpl<NewsMapper, News> {
                         News.FIELD.news_id,
                         News.FIELD.title,
                         News.FIELD.clicknum
-                ).INNER_JOIN(b.AS("b").ON(User.FIELD.id.Pre("b"), "=", News.FIELD.news_id.As("a"),
+                ).INNER_JOIN(b.AS("b").ON(User.FIELD.id.Pre("b"), "=", News.FIELD.news_id.Pre("a"),
                         "AND",
                         News.FIELD.clicknum.Pre("a"), ">", "1")).
                 GROUP_BY(News.FIELD.title).
