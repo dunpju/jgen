@@ -64,7 +64,7 @@ public class NewsDao extends ServiceImpl<NewsMapper, News> {
      *
      * @return Integer
      */
-    public Long Add() {
+    public int Add() {
         this.baseMapper.insert(this.model);
         return this.model.getNewsId();
     }

@@ -1,16 +1,9 @@
 package com.yumi.db.system.mapper;
 
 import com.dunpju.orm.BaseMapper;
+import org.apache.ibatis.annotations.Mapper;
 import com.yumi.db.system.model.User;
 
-/**
- * <p>
- *  Mapper 接口
- * </p>
- *
- * @author ffff
- * @since 2023-06-08
- */
+@Mapper
 public interface UserMapper extends BaseMapper<User> {
-
 }

@@ -1,16 +1,9 @@
-import com.baomidou.mybatisplus.generator.config.*;
-import com.baomidou.mybatisplus.generator.config.builder.ConfigBuilder;
-import com.baomidou.mybatisplus.generator.jdbc.DatabaseMetaDataWrapper;
-import com.baomidou.mybatisplus.generator.type.TypeRegistry;
-import com.dunpju.model.ModelGen;
-import com.yumi.db.system.dao.NewsDao;
+import com.dunpju.gen.Gen;
+import com.dunpju.gen.ModelGen;
 import com.yumi.db.system.entity.NewsEntity;
 import com.yumi.db.system.model.News;
 
-import java.sql.DatabaseMetaData;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Map;
 
 public class Test {
     public static void main(String[] args) {
@@ -52,10 +45,10 @@ public class Test {
 
         // https://blog.csdn.net/weixin_42629433/article/details/124151645
         try {
-            ModelGen modelGen = new ModelGen();
-            modelGen.setOutPackage("com.yumi.db.system.model")
+            Gen.model().setOutPackage("com.yumi.db.system.model")
                     .setOutDir("D:\\php\\jgen\\src\\test\\java\\com\\yumi\\db\\system\\model")
                     .setTablePrefix("ts_")
+                    .setOutMapperXmlDir("D:\\php\\jgen\\src\\main\\resources\\mapper")
                     .Builder("jdbc:mysql://192.168.8.99:3306/test?characterEncoding=UTF-8", "root", "1qaz2wsx")
                     .run();
 

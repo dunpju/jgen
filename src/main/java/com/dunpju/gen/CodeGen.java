@@ -1,4 +1,4 @@
-package com.dunpju.errcode;
+package com.dunpju.gen;
 
 import com.dunpju.gen.IGen;
 import com.dunpju.stubs.CodeStub;

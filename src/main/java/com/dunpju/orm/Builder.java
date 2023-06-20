@@ -389,15 +389,15 @@ public class Builder<M extends BaseMapper<T>, T extends BaseModel> {
             total = (Long) countResult.get(0).get("_count_");
         }
 
+        List<E> result = new ArrayList<>();
         List<Map<String, Object>> list = this.baseMapper.get(this.map(_sql_));
         if (!list.isEmpty()) {
-            List<E> result = new ArrayList<>();
             for (Map<String, Object> map : list) {
                 result.add(JSONObject.parseObject(CamelizeUtil.toCamelCase(JSONObject.toJSONString(map)), objectClass));
             }
             return new Paged<>(total, current, size, result);
         }
-        return null;
+        return new Paged<>(total, current, size, result);
     }
 
     public String toString() {

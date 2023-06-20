@@ -1,7 +1,6 @@
 package com.dunpju.gen;
 
-import com.dunpju.enumgen.EnumGen;
-import com.dunpju.errcode.CodeGen;
+import java.sql.SQLException;
 
 public class Gen {
     public static void code(String yamlDir, String outPackage, String outClassFile, String importClass) {
@@ -19,5 +18,9 @@ public class Gen {
         enumGen.setInput(input);
         enumGen.setOutDir(outDir);
         enumGen.run();
+    }
+
+    public static ModelGen model() throws SQLException, ClassNotFoundException {
+        return new ModelGen();
     }
 }
