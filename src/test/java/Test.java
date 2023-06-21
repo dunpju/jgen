@@ -48,7 +48,7 @@ public class Test {
             Gen.model().setOutPackage("com.yumi.db.system.model")
                     .setOutDir("D:\\php\\jgen\\src\\test\\java\\com\\yumi\\db\\system\\model")
                     .setTablePrefix("ts_")
-                    .setOutMapperXmlDir("D:\\php\\jgen\\src\\main\\resources\\mapper")
+                    .setOutMapperXmlDir("D:\\php\\jgen\\src\\test\\resources\\mapper\\xml")
                     .Builder("jdbc:mysql://192.168.8.99:3306/test?characterEncoding=UTF-8", "root", "1qaz2wsx")
                     .run();
 

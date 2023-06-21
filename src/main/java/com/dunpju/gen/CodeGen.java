@@ -37,6 +37,9 @@ public class CodeGen implements IGen {
             codeStub.setOutPackage(this.outPackage);
 
             File file = new File(this.outClassFile);
+            if (!file.getParentFile().exists()) {
+                file.getParentFile().mkdirs();
+            }
             String fileName = file.getName();
 
             String regex = "(.*)\\.(java)";

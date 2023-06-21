@@ -43,11 +43,8 @@ public class ModelGen implements IGen {
         TemplateConfig template = new TemplateConfig.Builder().build();
         GlobalConfig globalConfig = new GlobalConfig.Builder().build();
         InjectionConfig injection = new InjectionConfig();
-
         this.typeRegistry = new TypeRegistry(globalConfig);
-
         this.configBuilder = new ConfigBuilder(packageInfo, dataSourceConfig, strategy, template, globalConfig, injection);
-
         this.tableResultSet = metaData.getTables(dataSourceConfig.getConn().getCatalog(), dataSourceConfig.getConn().getCatalog(), null, new String[]{"TABLE"});
         return this;
     }
@@ -95,15 +92,14 @@ public class ModelGen implements IGen {
                 }
                 outPackageArray.add("mapper");
                 String mapperPackage = String.join(".", outPackageArray);
-                System.out.println(mapperPackage);
                 MapperGen mapperGen = new MapperGen();
                 mapperGen.setOutPackage(mapperPackage);
                 List<String> imports = new ArrayList<>();
                 imports.add("import " + String.format("%s.%s", this.outPackage, className) + ";");
-                System.out.println(imports);
                 mapperGen.setImports(imports);
                 mapperGen.setClassName(className + "Mapper");
                 mapperGen.setModelName(className);
+                mapperGen.setOutMapperXmlDir(this.outMapperXmlDir);
                 File file = new File(this.outDir);
                 mapperGen.setOutDir(file.getParentFile() + "/mapper");
                 mapperGen.run();
