@@ -18,7 +18,7 @@ import java.util.List;
 
 /**
  * <p>
- *  前端控制器
+ * 前端控制器
  * </p>
  *
  * @author ffff
@@ -48,15 +48,15 @@ public class UserController {
         // 测试插入
         newsEntity.setTitle("ggghh");
         newsDao.setData(newsEntity);
-        Long id = (long) newsDao.Add();
+        int id = newsDao.Add();
         System.out.println(id);
 
         // 测试查询
         System.out.println(newsDao.getByNewsId(id));
 
         // 测试修改
-        newsEntity.setFlag(NewsEntity.Flag.Update);
-        newsEntity.setNewsId(id);
+        newsEntity.SetFlag(NewsEntity.FLAG.Update);
+        newsEntity.setNewsId((long) id);
         newsEntity.setTitle("ggghh111");
         newsDao.setData(newsEntity);
         newsDao.Update();

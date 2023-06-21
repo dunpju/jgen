@@ -1,28 +1,17 @@
 package com.yumi.db.system.entity;
 
 import com.dunpju.annotations.Message;
-import lombok.NonNull;
+import com.dunpju.entity.BaseEntity;
+import com.dunpju.entity.IFlag;
 
 import java.time.LocalDateTime;
 
 @Message(value = "News实体")
-public class NewsEntity {
+public class NewsEntity extends BaseEntity {
 
-    public enum Flag {
+    public enum FLAG implements IFlag {
         Delete,
-        Update
-    }
-
-    private Flag currentFlag;
-
-    public Flag currentFlag() {
-        Flag flag = currentFlag;
-        currentFlag = null;
-        return flag;
-    }
-
-    public void setFlag(Flag currentFlag) {
-        this.currentFlag = currentFlag;
+        Update;
     }
 
     @Message("主键")

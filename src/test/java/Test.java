@@ -31,15 +31,13 @@ public class Test {
                 "D:\\php\\jgen\\src\\test\\java\\com\\yumi\\enums");
         System.out.println(EnumYesOrNo.NO.getCode());*/
 
-        System.out.println(News.FIELD.news_id.As("b"));
-        System.out.println(NewsEntity.Flag.Delete);
         NewsEntity newsEntity = new NewsEntity();
-        newsEntity.setFlag(NewsEntity.Flag.Delete);
-        System.out.println(newsEntity.currentFlag());
-        newsEntity.setFlag(NewsEntity.Flag.Update);
-        System.out.println(newsEntity.currentFlag());
+        newsEntity.SetFlag(NewsEntity.FLAG.Delete);
+        System.out.println(newsEntity.Flag());
+        newsEntity.SetFlag(NewsEntity.FLAG.Update);
+        System.out.println(newsEntity.Flag());
         newsEntity = new NewsEntity();
-        System.out.println(newsEntity.currentFlag());
+        System.out.println(newsEntity.Flag());
         System.out.println(newsEntity.getNewsId());
 
 

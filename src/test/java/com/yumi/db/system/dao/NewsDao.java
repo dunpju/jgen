@@ -1,10 +1,9 @@
 package com.yumi.db.system.dao;
 
-import com.baomidou.mybatisplus.core.conditions.Wrapper;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.dunpju.entity.BaseEntity;
+import com.dunpju.entity.IEntity;
+import com.dunpju.entity.IFlag;
 import com.dunpju.orm.Builder;
 import com.dunpju.orm.Paged;
 import com.yumi.db.system.entity.NewsEntity;
@@ -17,9 +16,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Repository;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 @Repository
 @Scope("prototype")
@@ -36,15 +33,15 @@ public class NewsDao extends ServiceImpl<NewsMapper, News> {
     }
 
     public void setData(NewsEntity newsEntity) {
-        NewsEntity.Flag flag = newsEntity.currentFlag();
+        IFlag flag = newsEntity.Flag();
         if (null != flag) { // 编辑
             model = this.model().SELECT("*").WHERE(News.FIELD.news_id, "=", newsEntity.getNewsId()).first(News.class);
             if (null == model || model.getNewsId() == null) {
                 throw new RuntimeException("News数据不存在");
             }
-            if (NewsEntity.Flag.Delete == flag) {
+            if (NewsEntity.FLAG.Delete == flag) {
                 // TODO::映射入库字段
-            } else if (NewsEntity.Flag.Update == flag) {
+            } else if (NewsEntity.FLAG.Update == flag) {
                 // TODO::映射入库字段
                 this.model.setTitle(newsEntity.getTitle());
 //                this.model.setClicknum("clicknum + 10");
@@ -78,7 +75,7 @@ public class NewsDao extends ServiceImpl<NewsMapper, News> {
         return this.baseMapper.updateById(this.model);
     }
 
-    public News getByNewsId(Long newsId) {
+    public News getByNewsId(int newsId) {
         return this.model().SELECT("*").WHERE(News.FIELD.news_id, "=", newsId).first(News.class);
     }
 
@@ -86,7 +83,7 @@ public class NewsDao extends ServiceImpl<NewsMapper, News> {
         return this.model().SELECT("*").WHERE_IN(News.FIELD.news_id, newsIds).get(News.class);
     }
 
-    public int deleteByNewsId(Integer newsId) {
+    public int deleteByNewsId(int newsId) {
         return this.baseMapper.deleteById(newsId);
     }
 
