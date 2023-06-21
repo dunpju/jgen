@@ -1,8 +1,6 @@
 package com.yumi.db.system.dao;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.dunpju.entity.BaseEntity;
-import com.dunpju.entity.IEntity;
 import com.dunpju.entity.IFlag;
 import com.dunpju.orm.Builder;
 import com.dunpju.orm.Paged;
