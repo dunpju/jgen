@@ -4,11 +4,8 @@ import com.yumi.db.system.dao.NewsDao;
 import com.yumi.db.system.dao.UserDao;
 import com.yumi.db.system.entity.NewsEntity;
 import com.yumi.db.system.entity.User;
-import com.yumi.db.system.service.IUserService;
-import com.yumi.db.system.service.impl.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.Scope;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.stereotype.Controller;
@@ -28,8 +25,6 @@ import java.util.List;
 @RequestMapping("/system/user")
 public class UserController {
 
-    @Autowired
-    UserServiceImpl userService;
     @Autowired
     UserDao userDao;
 

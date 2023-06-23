@@ -130,13 +130,15 @@ public class ModelGen implements IGen {
 
                 ServiceImplGen serviceImplGen = new ServiceImplGen();
                 serviceImplGen.setOutPackage(String.join(".", serviceImplPackageArray));
-                modelImports.add(mapperGen.getOutPackage());
-                modelImports.add(iServiceGen.getOutPackage());
+                modelImports.add("import " + String.format("%s.%s", mapperGen.getOutPackage(), mapperGen.getClassName()) + ";");
+                modelImports.add("import " + String.format("%s.%s", iServiceGen.getOutPackage(), iServiceGen.getClassName()) + ";");
                 serviceImplGen.setImports(modelImports);
                 serviceImplGen.setClassName(className + "ServiceImpl");
                 serviceImplGen.setMapperName(mapperGen.getClassName());
                 serviceImplGen.setModelName(className);
                 serviceImplGen.setServiceName(iServiceGen.getClassName());
+                serviceImplGen.setOutDir(iServiceGen.getOutDir() + "/impl");
+                serviceImplGen.run();
 
                 EntityGen entityGen = new EntityGen();
                 entityGen.setOutPackage(String.join(".", entityPackageArray));
