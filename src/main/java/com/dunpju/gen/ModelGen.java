@@ -65,7 +65,8 @@ public class ModelGen implements IGen {
             DatabaseMetaDataWrapper.Table table = this.databaseMetaDataWrapper.getTableInfo(tableName);
 
             if (tableName.contains(this.tablePrefix)) {
-                String className = StrUtil.upperFirst(CamelizeUtil.toCamelCase(tableName.replaceAll(this.tablePrefix, "")));
+                String unTablePrefix = tableName.replaceAll(this.tablePrefix, "");
+                String className = StrUtil.upperFirst(CamelizeUtil.toCamelCase(unTablePrefix));
 
                 ModelStub modelStub = new ModelStub();
                 modelStub.setOutPackage(this.outPackage);
@@ -88,12 +89,17 @@ public class ModelGen implements IGen {
                 String[] outPackageSplit = this.outPackage.split("\\.");
                 ArrayList<String> mapperPackageArray = new ArrayList<>();
                 ArrayList<String> entityPackageArray = new ArrayList<>();
+                ArrayList<String> voPackageArray = new ArrayList<>();
                 for (int i = 0; i < outPackageSplit.length - 1; i++) {
                     mapperPackageArray.add(outPackageSplit[i]);
                     entityPackageArray.add(outPackageSplit[i]);
+                    voPackageArray.add(outPackageSplit[i]);
                 }
                 mapperPackageArray.add("mapper");
                 entityPackageArray.add("entity");
+                voPackageArray.add("vo");
+                voPackageArray.add(className);
+
                 String mapperPackage = String.join(".", mapperPackageArray);
                 MapperGen mapperGen = new MapperGen();
                 mapperGen.setOutPackage(mapperPackage);
@@ -117,6 +123,12 @@ public class ModelGen implements IGen {
                 entityGen.setTypeRegistry(this.typeRegistry);
                 entityGen.setOutDir(file.getParentFile() + "/entity");
                 entityGen.run();
+
+                VOGen voGen = new VOGen();
+                voGen.setOutPackage(String.join(".", voPackageArray));
+                voGen.setClassName(className + "VO");
+                voGen.setOutDir(file.getParentFile() + "/vo/" + className);
+                voGen.run();
             }
         }
     }

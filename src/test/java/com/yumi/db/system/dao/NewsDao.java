@@ -6,9 +6,7 @@ import com.dunpju.orm.Builder;
 import com.dunpju.orm.Paged;
 import com.yumi.db.system.entity.NewsEntity;
 import com.yumi.db.system.mapper.NewsMapper;
-import com.yumi.db.system.mapper.UserMapper;
 import com.yumi.db.system.model.News;
-import com.yumi.db.system.model.User;
 import com.yumi.db.system.vo.NewSVo;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Repository;
@@ -93,39 +91,7 @@ public class NewsDao extends ServiceImpl<NewsMapper, News> {
         return this.model().WHERE_IN(News.FIELD.news_id, newsIds).count();
     }
 
-    public Paged<NewSVo> getList() {
-        Builder<UserMapper, User> b = new UserDao().model();
-        return this.model().AS("a").SELECT(
-                        News.FIELD.news_id,
-                        News.FIELD.title,
-                        News.FIELD.clicknum
-                ).INNER_JOIN(b.AS("b").ON(User.FIELD.id.Pre("b"), "=", News.FIELD.news_id.Pre("a"),
-                        "AND",
-                        News.FIELD.clicknum.Pre("a"), ">", "1")).
-                GROUP_BY(News.FIELD.title).
-                ORDER_BY(News.FIELD.news_id.DESC()).
-                paginate(1, 2, NewSVo.class);
-    }
-
-    public News getById() {
-        Builder<NewsMapper, News> query = new Builder<>(this.baseMapper, this.model);
-
-        /*query.SELECT("id", "uname", "u_tel", "score");
-        query.FROM(getEntityClass());
-        query.WHERE("id", "=", 1001);
-
-        User user = this.baseMapper.first(query.map());
-        System.out.println(user);
-
-        query.SELECT("id", "uname");
-        query.FROM(getEntityClass());
-        System.out.println(this.baseMapper.get(query.map()));*/
-
-        query.SELECT("id", "uname", "u_tel");
-        query.FROM(getEntityClass());
-        query.BETWEEN("id", 3, 6);
-//        System.out.println(this.baseMapper.get(query.toSql()));
-
-        return null;
+    public Paged<NewSVo> getList(long page, long pageSize) {
+        return this.model().paginate(page, pageSize, NewSVo.class);
     }
 }
