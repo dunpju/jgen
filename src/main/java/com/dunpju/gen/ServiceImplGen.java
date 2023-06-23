@@ -1,6 +1,6 @@
 package com.dunpju.gen;
 
-import com.dunpju.stubs.MapperStub;
+import com.dunpju.stubs.ServiceImplStub;
 import lombok.Data;
 
 import java.io.BufferedWriter;
@@ -11,22 +11,24 @@ import java.sql.SQLException;
 import java.util.List;
 
 @Data
-public class MapperGen implements IGen {
+public class ServiceImplGen implements IGen{
+    private String outDir;
     private String outPackage;
     private List<String> imports;
     private String className;
     private String modelName;
-    private String outDir;
-    private String outMapperXmlDir;
-
+    private String mapperName;
+    private String serviceName;
     @Override
     public void run() throws SQLException {
-        MapperStub mapperStub = new MapperStub();
-        mapperStub.setOutPackage(this.outPackage);
-        mapperStub.setImports(this.imports);
-        mapperStub.setClassName(this.className);
-        mapperStub.setModelName(this.modelName);
-        String stub = mapperStub.stub();
+        ServiceImplStub serviceImplStub = new ServiceImplStub();
+        serviceImplStub.setOutPackage(this.outPackage);
+        serviceImplStub.setImports(this.imports);
+        serviceImplStub.setClassName(this.className);
+        serviceImplStub.setModelName(this.modelName);
+        serviceImplStub.setMapperName(this.mapperName);
+        serviceImplStub.setServiceName(this.serviceName);
+        String stub = serviceImplStub.stub();
         String outClassFile = this.outDir + "/" + className + ".java";
         File file = new File(outClassFile);
         if (!file.exists()) {
@@ -41,13 +43,5 @@ public class MapperGen implements IGen {
                 throw new RuntimeException(e);
             }
         }
-        MapperXmlGen mapperXmlGen = new MapperXmlGen();
-        mapperXmlGen.setFileName(className);
-        mapperXmlGen.setNamespace(String.format("%s.%s", this.outPackage, className));
-        if (this.outMapperXmlDir == null) {
-            this.outMapperXmlDir = String.format("%s/%s", this.outDir, "xml");
-        }
-        mapperXmlGen.setOutDir(this.outMapperXmlDir);
-        mapperXmlGen.run();
     }
 }

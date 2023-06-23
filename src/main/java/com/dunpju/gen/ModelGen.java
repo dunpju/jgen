@@ -89,29 +89,54 @@ public class ModelGen implements IGen {
                 String[] outPackageSplit = this.outPackage.split("\\.");
                 ArrayList<String> mapperPackageArray = new ArrayList<>();
                 ArrayList<String> entityPackageArray = new ArrayList<>();
+                ArrayList<String> iServicePackageArray = new ArrayList<>();
+                ArrayList<String> serviceImplPackageArray = new ArrayList<>();
                 ArrayList<String> voPackageArray = new ArrayList<>();
                 for (int i = 0; i < outPackageSplit.length - 1; i++) {
                     mapperPackageArray.add(outPackageSplit[i]);
                     entityPackageArray.add(outPackageSplit[i]);
+                    iServicePackageArray.add(outPackageSplit[i]);
+                    serviceImplPackageArray.add(outPackageSplit[i]);
                     voPackageArray.add(outPackageSplit[i]);
                 }
                 mapperPackageArray.add("mapper");
                 entityPackageArray.add("entity");
+                iServicePackageArray.add("service");
+                serviceImplPackageArray.add("service");
+                serviceImplPackageArray.add("impl");
                 voPackageArray.add("vo");
                 voPackageArray.add(className);
 
                 String mapperPackage = String.join(".", mapperPackageArray);
                 MapperGen mapperGen = new MapperGen();
                 mapperGen.setOutPackage(mapperPackage);
-                List<String> imports = new ArrayList<>();
-                imports.add("import " + String.format("%s.%s", this.outPackage, className) + ";");
-                mapperGen.setImports(imports);
+                List<String> modelImports = new ArrayList<>();
+                modelImports.add("import " + String.format("%s.%s", this.outPackage, className) + ";");
+                mapperGen.setImports(modelImports);
                 mapperGen.setClassName(className + "Mapper");
                 mapperGen.setModelName(className);
                 mapperGen.setOutMapperXmlDir(this.outMapperXmlDir);
                 File file = new File(this.outDir);
                 mapperGen.setOutDir(file.getParentFile() + "/mapper");
                 mapperGen.run();
+
+                IServiceGen iServiceGen = new IServiceGen();
+                iServiceGen.setOutPackage(String.join(".", iServicePackageArray));
+                iServiceGen.setImports(modelImports);
+                iServiceGen.setClassName("I" + className + "Service");
+                iServiceGen.setModelName(className);
+                iServiceGen.setOutDir(file.getParentFile() + "/service");
+                iServiceGen.run();
+
+                ServiceImplGen serviceImplGen = new ServiceImplGen();
+                serviceImplGen.setOutPackage(String.join(".", serviceImplPackageArray));
+                modelImports.add(mapperGen.getOutPackage());
+                modelImports.add(iServiceGen.getOutPackage());
+                serviceImplGen.setImports(modelImports);
+                serviceImplGen.setClassName(className + "ServiceImpl");
+                serviceImplGen.setMapperName(mapperGen.getClassName());
+                serviceImplGen.setModelName(className);
+                serviceImplGen.setServiceName(iServiceGen.getClassName());
 
                 EntityGen entityGen = new EntityGen();
                 entityGen.setOutPackage(String.join(".", entityPackageArray));

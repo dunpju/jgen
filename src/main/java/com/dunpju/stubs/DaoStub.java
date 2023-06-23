@@ -91,8 +91,8 @@ public class DaoStub {
                     }
                 }
                 """;
-        tpl = tpl.replaceAll("%PACKAGE%", this.outPackage);
-        tpl = tpl.replaceAll("%CLASS_NAME%", this.className);
+//        tpl = tpl.replaceAll("%PACKAGE%", this.outPackage);
+//        tpl = tpl.replaceAll("%CLASS_NAME%", this.className);
         return tpl;
     }
 }
