@@ -44,9 +44,9 @@ public class Test {
         // https://blog.csdn.net/weixin_42629433/article/details/124151645
         try {
             Gen.model().setOutPackage("com.yumi.db.system.model")
-                    .setOutDir("D:\\php\\jgen\\src\\test\\java\\com\\yumi\\db\\system\\model")
+                    .setOutDir("E:\\share\\jgen\\src\\test\\java\\com\\yumi\\db\\system\\model")
                     .setTablePrefix("ts_")
-                    .setOutMapperXmlDir("D:\\php\\jgen\\src\\test\\resources\\mapper\\xml")
+                    .setOutMapperXmlDir("E:\\share\\jgen\\src\\test\\resources\\mapper")
                     .Builder("jdbc:mysql://192.168.8.99:3306/test?characterEncoding=UTF-8", "root", "1qaz2wsx")
                     .run();
 

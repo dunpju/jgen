@@ -86,12 +86,15 @@ public class ModelGen implements IGen {
                 }
 
                 String[] outPackageSplit = this.outPackage.split("\\.");
-                ArrayList<String> outPackageArray = new ArrayList<>();
+                ArrayList<String> mapperPackageArray = new ArrayList<>();
+                ArrayList<String> entityPackageArray = new ArrayList<>();
                 for (int i = 0; i < outPackageSplit.length - 1; i++) {
-                    outPackageArray.add(outPackageSplit[i]);
+                    mapperPackageArray.add(outPackageSplit[i]);
+                    entityPackageArray.add(outPackageSplit[i]);
                 }
-                outPackageArray.add("mapper");
-                String mapperPackage = String.join(".", outPackageArray);
+                mapperPackageArray.add("mapper");
+                entityPackageArray.add("entity");
+                String mapperPackage = String.join(".", mapperPackageArray);
                 MapperGen mapperGen = new MapperGen();
                 mapperGen.setOutPackage(mapperPackage);
                 List<String> imports = new ArrayList<>();
@@ -103,6 +106,17 @@ public class ModelGen implements IGen {
                 File file = new File(this.outDir);
                 mapperGen.setOutDir(file.getParentFile() + "/mapper");
                 mapperGen.run();
+
+                EntityGen entityGen = new EntityGen();
+                entityGen.setOutPackage(String.join(".", entityPackageArray));
+                entityGen.setClassDesc(table.getRemarks());
+                entityGen.setClassName(className + "Entity");
+                entityGen.setTableName(tableName);
+                entityGen.setColumnsInfo(columnsInfo);
+                entityGen.setConfigBuilder(this.configBuilder);
+                entityGen.setTypeRegistry(this.typeRegistry);
+                entityGen.setOutDir(file.getParentFile() + "/entity");
+                entityGen.run();
             }
         }
     }
