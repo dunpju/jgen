@@ -16,7 +16,7 @@ import java.util.List;
 
 @Repository
 @Scope("prototype")
-public class NewsDao extends ServiceImpl<NewsMapper, News> {
+public class NewsDao1 extends ServiceImpl<NewsMapper, News> {
 
     News model = new News();
     private Builder<NewsMapper, News> builder;

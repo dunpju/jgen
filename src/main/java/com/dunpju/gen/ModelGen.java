@@ -92,12 +92,14 @@ public class ModelGen implements IGen {
                 ArrayList<String> iServicePackageArray = new ArrayList<>();
                 ArrayList<String> serviceImplPackageArray = new ArrayList<>();
                 ArrayList<String> voPackageArray = new ArrayList<>();
+                ArrayList<String> daoPackageArray = new ArrayList<>();
                 for (int i = 0; i < outPackageSplit.length - 1; i++) {
                     mapperPackageArray.add(outPackageSplit[i]);
                     entityPackageArray.add(outPackageSplit[i]);
                     iServicePackageArray.add(outPackageSplit[i]);
                     serviceImplPackageArray.add(outPackageSplit[i]);
                     voPackageArray.add(outPackageSplit[i]);
+                    daoPackageArray.add(outPackageSplit[i]);
                 }
                 mapperPackageArray.add("mapper");
                 entityPackageArray.add("entity");
@@ -106,6 +108,7 @@ public class ModelGen implements IGen {
                 serviceImplPackageArray.add("impl");
                 voPackageArray.add("vo");
                 voPackageArray.add(className);
+                daoPackageArray.add("dao");
 
                 String mapperPackage = String.join(".", mapperPackageArray);
                 MapperGen mapperGen = new MapperGen();
@@ -156,6 +159,26 @@ public class ModelGen implements IGen {
                 voGen.setClassName(className + "VO");
                 voGen.setOutDir(file.getParentFile() + "/vo/" + className);
                 voGen.run();
+
+                DaoGen daoGen = new DaoGen();
+                daoGen.setOutPackage(String.join(".", daoPackageArray));
+                List<String> daoImports = new ArrayList<>();
+                daoImports.add("import " + String.format("%s.%s", entityGen.getOutPackage(), entityGen.getClassName()) + ";");
+                daoImports.add("import " + String.format("%s.%s", mapperGen.getOutPackage(), mapperGen.getClassName()) + ";");
+                daoImports.add("import " + String.format("%s.%s", this.outPackage, className) + ";");
+                daoImports.add("import " + String.format("%s.%s", voGen.getOutPackage(), voGen.getClassName()) + ";");
+                daoGen.setImports(daoImports);
+                daoGen.setClassName(className + "Dao");
+                daoGen.setMapperName(mapperGen.getClassName());
+                daoGen.setModelName(className);
+                daoGen.setEntityName(entityGen.getClassName());
+                daoGen.setConfigBuilder(this.configBuilder);
+                daoGen.setColumnsInfo(columnsInfo);
+                daoGen.setTypeRegistry(this.typeRegistry);
+                daoGen.setTableName(tableName);
+                daoGen.setVoName(voGen.getClassName());
+                daoGen.setOutDir(file.getParentFile() + "/dao");
+                daoGen.run();
             }
         }
     }
