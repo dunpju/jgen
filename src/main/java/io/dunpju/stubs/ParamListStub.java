@@ -9,6 +9,7 @@ public class ParamListStub {
                 package %PACKAGE%;
                                 
                 import lombok.Data;
+                import lombok.EqualsAndHashCode;
                                 
                 @Data
                 @EqualsAndHashCode(callSuper=false)

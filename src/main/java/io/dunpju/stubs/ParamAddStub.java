@@ -9,6 +9,7 @@ public class ParamAddStub {
                 package %PACKAGE%;
                                 
                 import lombok.Data;
+                import lombok.EqualsAndHashCode;
                                 
                 @Data
                 @EqualsAndHashCode(callSuper=false)
