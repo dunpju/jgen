@@ -80,6 +80,10 @@ public class ModelGen implements IGen {
                 String stub = modelStub.stub();
                 String outClassFile = this.baseDir + "/" + className + ".java";
                 try {
+                    File file = new File(outClassFile);
+                    if (!file.getParentFile().exists()) {
+                        file.getParentFile().mkdirs();
+                    }
                     BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(outClassFile));
                     bufferedWriter.write(stub);
                     bufferedWriter.flush();
@@ -87,7 +91,7 @@ public class ModelGen implements IGen {
                     throw new RuntimeException(e);
                 }
 
-                String[] outPackageSplit = this.basePackage.split("\\.");
+                String[] basePackageSplit = this.basePackage.split("\\.");
                 ArrayList<String> mapperPackageArray = new ArrayList<>();
                 ArrayList<String> entityPackageArray = new ArrayList<>();
                 ArrayList<String> iServicePackageArray = new ArrayList<>();
@@ -95,14 +99,14 @@ public class ModelGen implements IGen {
                 ArrayList<String> voPackageArray = new ArrayList<>();
                 ArrayList<String> daoPackageArray = new ArrayList<>();
                 ArrayList<String> paramPackageArray = new ArrayList<>();
-                for (int i = 0; i < outPackageSplit.length - 1; i++) {
-                    mapperPackageArray.add(outPackageSplit[i]);
-                    entityPackageArray.add(outPackageSplit[i]);
-                    iServicePackageArray.add(outPackageSplit[i]);
-                    serviceImplPackageArray.add(outPackageSplit[i]);
-                    voPackageArray.add(outPackageSplit[i]);
-                    daoPackageArray.add(outPackageSplit[i]);
-                    paramPackageArray.add(outPackageSplit[i]);
+                for (int i = 0; i < basePackageSplit.length - 1; i++) {
+                    mapperPackageArray.add(basePackageSplit[i]);
+                    entityPackageArray.add(basePackageSplit[i]);
+                    iServicePackageArray.add(basePackageSplit[i]);
+                    serviceImplPackageArray.add(basePackageSplit[i]);
+                    voPackageArray.add(basePackageSplit[i]);
+                    daoPackageArray.add(basePackageSplit[i]);
+                    paramPackageArray.add(basePackageSplit[i]);
                 }
                 mapperPackageArray.add("mapper");
                 entityPackageArray.add("entity");
@@ -210,7 +214,7 @@ public class ModelGen implements IGen {
     }
 
     public ModelGen setBasePackage(String basePackage) {
-        this.basePackage = basePackage;
+        this.basePackage = basePackage + ".model";
         return this;
     }
 
