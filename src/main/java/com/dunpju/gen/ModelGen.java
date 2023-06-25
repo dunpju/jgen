@@ -18,10 +18,11 @@ import java.sql.SQLException;
 import java.util.*;
 
 public class ModelGen implements IGen {
-    private String outPackage;
+    private String basePackage;
     /**
      * 输出目录，绝对路径
      */
+    private String baseDir;
     private String outDir;
     private String outMapperXmlDir;
     private String tableName;
@@ -69,7 +70,7 @@ public class ModelGen implements IGen {
                 String className = StrUtil.upperFirst(CamelizeUtil.toCamelCase(unTablePrefix));
 
                 ModelStub modelStub = new ModelStub();
-                modelStub.setOutPackage(this.outPackage);
+                modelStub.setOutPackage(this.basePackage);
                 modelStub.setClassName(className);
                 modelStub.setTableName(tableName);
                 modelStub.setTableDescription(table.getRemarks());
@@ -77,7 +78,7 @@ public class ModelGen implements IGen {
                 modelStub.setConfigBuilder(this.configBuilder);
                 modelStub.setTypeRegistry(this.typeRegistry);
                 String stub = modelStub.stub();
-                String outClassFile = this.outDir + "/" + className + ".java";
+                String outClassFile = this.baseDir + "/" + className + ".java";
                 try {
                     BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(outClassFile));
                     bufferedWriter.write(stub);
@@ -86,7 +87,7 @@ public class ModelGen implements IGen {
                     throw new RuntimeException(e);
                 }
 
-                String[] outPackageSplit = this.outPackage.split("\\.");
+                String[] outPackageSplit = this.basePackage.split("\\.");
                 ArrayList<String> mapperPackageArray = new ArrayList<>();
                 ArrayList<String> entityPackageArray = new ArrayList<>();
                 ArrayList<String> iServicePackageArray = new ArrayList<>();
@@ -118,12 +119,12 @@ public class ModelGen implements IGen {
                 MapperGen mapperGen = new MapperGen();
                 mapperGen.setOutPackage(mapperPackage);
                 List<String> modelImports = new ArrayList<>();
-                modelImports.add("import " + String.format("%s.%s", this.outPackage, className) + ";");
+                modelImports.add("import " + String.format("%s.%s", this.basePackage, className) + ";");
                 mapperGen.setImports(modelImports);
                 mapperGen.setClassName(className + "Mapper");
                 mapperGen.setModelName(className);
                 mapperGen.setOutMapperXmlDir(this.outMapperXmlDir);
-                File file = new File(this.outDir);
+                File file = new File(this.baseDir);
                 mapperGen.setOutDir(file.getParentFile() + "/mapper");
                 mapperGen.run();
 
@@ -149,7 +150,7 @@ public class ModelGen implements IGen {
                 List<String> daoImports = new ArrayList<>();
                 daoImports.add("import " + String.format("%s.%s", entityGen.getOutPackage(), entityGen.getClassName()) + ";");
                 daoImports.add("import " + String.format("%s.%s", mapperGen.getOutPackage(), mapperGen.getClassName()) + ";");
-                daoImports.add("import " + String.format("%s.%s", this.outPackage, className) + ";");
+                daoImports.add("import " + String.format("%s.%s", this.basePackage, className) + ";");
                 daoImports.add("import " + String.format("%s.%s", voGen.getOutPackage(), voGen.getClassName()) + ";");
                 daoGen.setImports(daoImports);
                 daoGen.setClassName(className + "Dao");
@@ -183,7 +184,7 @@ public class ModelGen implements IGen {
                 serviceImplImports.add("import " + String.format("%s.%s", daoGen.getOutPackage(), daoGen.getClassName()) + ";");
                 serviceImplImports.add("import " + String.format("%s.%s", entityGen.getOutPackage(), entityGen.getClassName()) + ";");
                 serviceImplImports.add("import " + String.format("%s.%s", mapperGen.getOutPackage(), mapperGen.getClassName()) + ";");
-                serviceImplImports.add("import " + String.format("%s.%s", this.outPackage, className) + ";");
+                serviceImplImports.add("import " + String.format("%s.%s", this.basePackage, className) + ";");
                 serviceImplImports.add("import " + String.format("%s.%s", paramGen.getOutPackage(), paramGen.getAddClassName()) + ";");
                 serviceImplImports.add("import " + String.format("%s.%s", paramGen.getOutPackage(), paramGen.getEditClassName()) + ";");
                 serviceImplImports.add("import " + String.format("%s.%s", paramGen.getOutPackage(), paramGen.getListClassName()) + ";");
@@ -208,13 +209,13 @@ public class ModelGen implements IGen {
         }
     }
 
-    public ModelGen setOutPackage(String outPackage) {
-        this.outPackage = outPackage;
+    public ModelGen setBasePackage(String basePackage) {
+        this.basePackage = basePackage;
         return this;
     }
 
-    public ModelGen setOutDir(String outDir) {
-        this.outDir = outDir;
+    public ModelGen setBaseDir(String baseDir) {
+        this.baseDir = baseDir + "/model";
         return this;
     }
 
