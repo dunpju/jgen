@@ -23,6 +23,7 @@ public class NewsServiceImpl extends ServiceImpl<NewsMapper, News> implements IN
 
     public Paged<NewsVO> getList(ListParam params) {
         NewsDao newsDao = applicationContext.getBean(NewsDao.class);
+        System.out.println(params);
         return newsDao.getList(params.getPage(), params.getPageSize());
     }
 
