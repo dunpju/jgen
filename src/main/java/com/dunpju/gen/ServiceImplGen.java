@@ -19,6 +19,14 @@ public class ServiceImplGen implements IGen{
     private String modelName;
     private String mapperName;
     private String serviceName;
+    private String voName;
+    private String upperFirstDaoName;
+    private String daoName;
+    private String upperFirstEntityName;
+    private String entityName;
+    private String entityPrimaryKey;
+    private String entityPrimaryKeyType;
+    private String upperFirstEntityPrimaryKey;
     @Override
     public void run() throws SQLException {
         ServiceImplStub serviceImplStub = new ServiceImplStub();
@@ -28,10 +36,18 @@ public class ServiceImplGen implements IGen{
         serviceImplStub.setModelName(this.modelName);
         serviceImplStub.setMapperName(this.mapperName);
         serviceImplStub.setServiceName(this.serviceName);
+        serviceImplStub.setVoName(this.voName);
+        serviceImplStub.setUpperFirstDaoName(this.upperFirstDaoName);
+        serviceImplStub.setDaoName(this.daoName);
+        serviceImplStub.setUpperFirstEntityName(this.upperFirstEntityName);
+        serviceImplStub.setEntityName(this.entityName);
+        serviceImplStub.setEntityPrimaryKey(this.entityPrimaryKey);
+        serviceImplStub.setEntityPrimaryKeyType(this.entityPrimaryKeyType);
+        serviceImplStub.setUpperFirstEntityPrimaryKey(this.upperFirstEntityPrimaryKey);
         String stub = serviceImplStub.stub();
         String outClassFile = this.outDir + "/" + className + ".java";
         File file = new File(outClassFile);
-        if (!file.exists()) {
+//        if (!file.exists()) {
             try {
                 if (!file.getParentFile().exists()) {
                     file.getParentFile().mkdirs();
@@ -42,6 +58,6 @@ public class ServiceImplGen implements IGen{
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
-        }
+//        }
     }
 }

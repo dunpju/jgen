@@ -123,25 +123,11 @@ public class ModelGen implements IGen {
                 mapperGen.setOutDir(file.getParentFile() + "/mapper");
                 mapperGen.run();
 
-                IServiceGen iServiceGen = new IServiceGen();
-                iServiceGen.setOutPackage(String.join(".", iServicePackageArray));
-                iServiceGen.setImports(modelImports);
-                iServiceGen.setClassName("I" + className + "Service");
-                iServiceGen.setModelName(className);
-                iServiceGen.setOutDir(file.getParentFile() + "/service");
-                iServiceGen.run();
-
-                ServiceImplGen serviceImplGen = new ServiceImplGen();
-                serviceImplGen.setOutPackage(String.join(".", serviceImplPackageArray));
-                modelImports.add("import " + String.format("%s.%s", mapperGen.getOutPackage(), mapperGen.getClassName()) + ";");
-                modelImports.add("import " + String.format("%s.%s", iServiceGen.getOutPackage(), iServiceGen.getClassName()) + ";");
-                serviceImplGen.setImports(modelImports);
-                serviceImplGen.setClassName(className + "ServiceImpl");
-                serviceImplGen.setMapperName(mapperGen.getClassName());
-                serviceImplGen.setModelName(className);
-                serviceImplGen.setServiceName(iServiceGen.getClassName());
-                serviceImplGen.setOutDir(iServiceGen.getOutDir() + "/impl");
-                serviceImplGen.run();
+                VOGen voGen = new VOGen();
+                voGen.setOutPackage(String.join(".", voPackageArray));
+                voGen.setClassName(className + "VO");
+                voGen.setOutDir(file.getParentFile() + "/vo/" + className);
+                voGen.run();
 
                 EntityGen entityGen = new EntityGen();
                 entityGen.setOutPackage(String.join(".", entityPackageArray));
@@ -153,12 +139,6 @@ public class ModelGen implements IGen {
                 entityGen.setTypeRegistry(this.typeRegistry);
                 entityGen.setOutDir(file.getParentFile() + "/entity");
                 entityGen.run();
-
-                VOGen voGen = new VOGen();
-                voGen.setOutPackage(String.join(".", voPackageArray));
-                voGen.setClassName(className + "VO");
-                voGen.setOutDir(file.getParentFile() + "/vo/" + className);
-                voGen.run();
 
                 DaoGen daoGen = new DaoGen();
                 daoGen.setOutPackage(String.join(".", daoPackageArray));
@@ -179,6 +159,35 @@ public class ModelGen implements IGen {
                 daoGen.setVoName(voGen.getClassName());
                 daoGen.setOutDir(file.getParentFile() + "/dao");
                 daoGen.run();
+
+                IServiceGen iServiceGen = new IServiceGen();
+                iServiceGen.setOutPackage(String.join(".", iServicePackageArray));
+                iServiceGen.setImports(modelImports);
+                iServiceGen.setClassName("I" + className + "Service");
+                iServiceGen.setModelName(className);
+                iServiceGen.setOutDir(file.getParentFile() + "/service");
+                iServiceGen.run();
+
+                ServiceImplGen serviceImplGen = new ServiceImplGen();
+                serviceImplGen.setOutPackage(String.join(".", serviceImplPackageArray));
+                modelImports.add("import " + String.format("%s.%s", mapperGen.getOutPackage(), mapperGen.getClassName()) + ";");
+                modelImports.add("import " + String.format("%s.%s", iServiceGen.getOutPackage(), iServiceGen.getClassName()) + ";");
+                modelImports.add("import " + String.format("%s.%s", voGen.getOutPackage(), voGen.getClassName()) + ";");
+                serviceImplGen.setImports(modelImports);
+                serviceImplGen.setClassName(className + "ServiceImpl");
+                serviceImplGen.setMapperName(mapperGen.getClassName());
+                serviceImplGen.setModelName(className);
+                serviceImplGen.setServiceName(iServiceGen.getClassName());
+                serviceImplGen.setVoName(voGen.getClassName());
+                serviceImplGen.setUpperFirstDaoName(daoGen.getClassName());
+                serviceImplGen.setDaoName(StrUtil.lowerFirst(daoGen.getClassName()));
+                serviceImplGen.setUpperFirstEntityName(entityGen.getClassName());
+                serviceImplGen.setEntityName(StrUtil.lowerFirst(entityGen.getClassName()));
+                serviceImplGen.setEntityPrimaryKey(entityGen.getEntityPrimaryKey());
+                serviceImplGen.setEntityPrimaryKeyType(entityGen.getEntityPrimaryKeyType());
+                serviceImplGen.setUpperFirstEntityPrimaryKey(StrUtil.upperFirst(entityGen.getEntityPrimaryKey()));
+                serviceImplGen.setOutDir(iServiceGen.getOutDir() + "/impl");
+                serviceImplGen.run();
             }
         }
     }

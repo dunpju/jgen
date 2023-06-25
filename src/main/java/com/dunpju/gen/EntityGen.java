@@ -23,6 +23,8 @@ public class EntityGen implements IGen{
     private Map<String, DatabaseMetaDataWrapper.Column> columnsInfo;
     private ConfigBuilder configBuilder;
     private TypeRegistry typeRegistry;
+    private String entityPrimaryKey;
+    private String entityPrimaryKeyType;
     @Override
     public void run() throws SQLException {
         EntityStub entityStub = new EntityStub();
@@ -34,6 +36,8 @@ public class EntityGen implements IGen{
         entityStub.setConfigBuilder(this.configBuilder);
         entityStub.setTypeRegistry(this.typeRegistry);
         String stub = entityStub.stub();
+        this.entityPrimaryKey = entityStub.getEntityPrimaryKey();
+        this.entityPrimaryKeyType = entityStub.getEntityPrimaryKeyType();
         String outClassFile = this.outDir + "/" + className + ".java";
         File file = new File(outClassFile);
         if (!file.exists()) {

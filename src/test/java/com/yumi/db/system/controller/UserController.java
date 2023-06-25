@@ -1,5 +1,6 @@
 package com.yumi.db.system.controller;
 
+import com.yumi.db.system.dao.NewsDao;
 import com.yumi.db.system.dao.NewsDao1;
 import com.yumi.db.system.dao.UserDao;
 import com.yumi.db.system.entity.NewsEntity;
@@ -35,14 +36,14 @@ public class UserController {
     @GetMapping("/test")
     public User test() {
 //        userService.getById();
-        NewsDao1 newsDao1 = applicationContext.getBean(NewsDao1.class);
+        NewsDao newsDao = applicationContext.getBean(NewsDao.class);
 
         System.out.println(newsDao1);
 
         NewsEntity newsEntity = new NewsEntity();
         // 测试插入
         newsEntity.setTitle("ggghh");
-        newsDao1.setData(newsEntity);
+        newsDao.setData(newsEntity);
         int id = Math.toIntExact(newsDao1.Add());
         System.out.println(id);
 
@@ -51,19 +52,19 @@ public class UserController {
 
         // 测试修改
         newsEntity.SetFlag(NewsEntity.FLAG.Update);
-        newsEntity.setNewsId((long) id);
+        newsEntity.setNewsId(id);
         newsEntity.setTitle("ggghh111");
-        newsDao1.setData(newsEntity);
-        newsDao1.Update();
-        System.out.println(newsDao1.getByNewsId(id));
+        newsDao.setData(newsEntity);
+        newsDao.Update();
+        System.out.println(newsDao.getByNewsId(id));
         // 测试批量查询
         List<Object> newsIds = new ArrayList<>();
         newsIds.add(1);
         newsIds.add(2);
-        System.out.println(newsDao1.getByNewsIds(newsIds));
-        System.out.println(newsDao1.sumClickNumByNewsIds(newsIds));
-        System.out.println(newsDao1.countByNewsIds(newsIds));
-        System.out.println(newsDao1.getList(1, 10));
+        System.out.println(newsDao.getByNewsIds(newsIds));
+//        System.out.println(newsDao.sumClickNumByNewsIds(newsIds));
+//        System.out.println(newsDao.countByNewsIds(newsIds));
+        System.out.println(newsDao.getList(1, 10));
         return null;
     }
 

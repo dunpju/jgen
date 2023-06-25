@@ -24,6 +24,8 @@ public class EntityStub {
     private ConfigBuilder configBuilder;
     private Map<String, DatabaseMetaDataWrapper.Column> columnsInfo;
     private TypeRegistry typeRegistry;
+    private String entityPrimaryKey;
+    private String entityPrimaryKeyType;
     public String stub() {
         String tpl = """
                 package %PACKAGE%;
@@ -68,6 +70,10 @@ public class EntityStub {
                 this.property.append(this.messageStub.replaceAll("%FIELD_DESCRIPTION%", columnsInfo.get(key).getRemarks()));
             }
             String camelCasePropertyName = CamelizeUtil.toCamelCase(columnsInfo.get(key).getName());
+            if (columnsInfo.get(key).isPrimaryKey()) {
+                this.entityPrimaryKey = camelCasePropertyName;
+                this.entityPrimaryKeyType = iColumnType.getType();
+            }
             String propertyStub = this.propertyStub;
             propertyStub = propertyStub.replaceAll("%PROPERTY_TYPE%", iColumnType.getType());
             propertyStub = propertyStub.replaceAll("%PROPERTY_NAME%", camelCasePropertyName);
@@ -105,5 +111,13 @@ public class EntityStub {
 
     public void setTypeRegistry(TypeRegistry typeRegistry) {
         this.typeRegistry = typeRegistry;
+    }
+
+    public String getEntityPrimaryKey() {
+        return entityPrimaryKey;
+    }
+
+    public String getEntityPrimaryKeyType() {
+        return entityPrimaryKeyType;
     }
 }

@@ -1,7 +1,4 @@
 import com.dunpju.gen.Gen;
-import com.dunpju.gen.ModelGen;
-import com.yumi.db.system.entity.NewsEntity;
-import com.yumi.db.system.model.News;
 
 import java.sql.SQLException;
 
@@ -31,22 +28,22 @@ public class Test {
                 "D:\\php\\jgen\\src\\test\\java\\com\\yumi\\enums");
         System.out.println(EnumYesOrNo.NO.getCode());*/
 
-        NewsEntity newsEntity = new NewsEntity();
+        /*NewsEntity newsEntity = new NewsEntity();
         newsEntity.SetFlag(NewsEntity.FLAG.Delete);
         System.out.println(newsEntity.Flag());
         newsEntity.SetFlag(NewsEntity.FLAG.Update);
         System.out.println(newsEntity.Flag());
         newsEntity = new NewsEntity();
         System.out.println(newsEntity.Flag());
-        System.out.println(newsEntity.getNewsId());
+        System.out.println(newsEntity.getNewsId());*/
 
 
         // https://blog.csdn.net/weixin_42629433/article/details/124151645
         try {
             Gen.model().setOutPackage("com.yumi.db.system.model")
-                    .setOutDir("E:\\share\\jgen\\src\\test\\java\\com\\yumi\\db\\system\\model")
+                    .setOutDir("D:\\php\\jgen\\src\\test\\java\\com\\yumi\\db\\system\\model")
                     .setTablePrefix("ts_")
-                    .setOutMapperXmlDir("E:\\share\\jgen\\src\\test\\resources\\mapper")
+                    .setOutMapperXmlDir("D:\\php\\jgen\\src\\test\\resources\\mapper")
                     .Builder("jdbc:mysql://192.168.8.99:3306/test?characterEncoding=UTF-8", "root", "1qaz2wsx")
                     .run();
 
