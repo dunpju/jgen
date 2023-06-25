@@ -16,7 +16,7 @@ public class MapperStub {
         String tpl = """
                   package %PACKAGE%;
                   
-                  import com.dunpju.orm.BaseMapper;
+                  import io.dunpju.orm.BaseMapper;
                   import org.apache.ibatis.annotations.Mapper;
                   %IMPORTS%
                   
