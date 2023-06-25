@@ -2,6 +2,10 @@ package com.yumi.db.system.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.dunpju.orm.Paged;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import com.yumi.db.system.dao.NewsDao;
 import com.yumi.db.system.entity.NewsEntity;
 import com.yumi.db.system.mapper.NewsMapper;
@@ -11,10 +15,6 @@ import com.yumi.db.system.params.NewsService.EditParam;
 import com.yumi.db.system.params.NewsService.ListParam;
 import com.yumi.db.system.service.INewsService;
 import com.yumi.db.system.vo.News.NewsVO;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class NewsServiceImpl extends ServiceImpl<NewsMapper, News> implements INewsService {
@@ -42,7 +42,7 @@ public class NewsServiceImpl extends ServiceImpl<NewsMapper, News> implements IN
         newsEntity.SetFlag(NewsEntity.FLAG.Update);
         // TODO::填充业务
         newsDao.setData(newsEntity);
-        newsDao.Add();
+        newsDao.Update();
     }
 
     public News details(Integer newsId) {

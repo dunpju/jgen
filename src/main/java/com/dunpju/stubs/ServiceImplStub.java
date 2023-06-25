@@ -27,27 +27,7 @@ public class ServiceImplStub {
                 package %PACKAGE%;
                                 
                 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-                import org.springframework.stereotype.Service;
-                %IMPORTS%
-                                
-                @Service
-                public class %CLASS_NAME% extends ServiceImpl<%MAPPER_NAME%, %MODEL_NAME%> implements %SERVICE_NAME% {
-                                
-                }
-                package %PACKAGE%;
-                                
-                import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
                 import com.dunpju.orm.Paged;
-                
-                import com.yumi.db.system.dao.NewsDao;
-                import com.yumi.db.system.entity.NewsEntity;
-                import com.yumi.db.system.mapper.NewsMapper;
-                import com.yumi.db.system.model.News;
-                import com.yumi.db.system.params.NewsService.AddParam;
-                import com.yumi.db.system.params.NewsService.EditParam;
-                import com.yumi.db.system.service.INewsService;
-                import com.yumi.db.system.vo.News.NewsVO;
-                
                 import org.springframework.beans.factory.annotation.Autowired;
                 import org.springframework.context.ApplicationContext;
                 import org.springframework.stereotype.Service;
@@ -80,10 +60,10 @@ public class ServiceImplStub {
                         %ENTITY_NAME%.SetFlag(%UPPER_FIRST_ENTITY_NAME%.FLAG.Update);
                         // TODO::填充业务
                         %DAO_NAME%.setData(%ENTITY_NAME%);
-                        %DAO_NAME%.Add();
+                        %DAO_NAME%.Update();
                     }
                                 
-                    public News details(%ENTITY_PRIMARY_KEY_TYPE% %ENTITY_PRIMARY_KEY%) {
+                    public %MODEL_NAME% details(%ENTITY_PRIMARY_KEY_TYPE% %ENTITY_PRIMARY_KEY%) {
                         %UPPER_FIRST_DAO_NAME% %DAO_NAME% = applicationContext.getBean(%UPPER_FIRST_DAO_NAME%.class);
                         return %DAO_NAME%.getBy%UPPER_FIRST_ENTITY_PRIMARY_KEY%(%ENTITY_PRIMARY_KEY%);
                     }

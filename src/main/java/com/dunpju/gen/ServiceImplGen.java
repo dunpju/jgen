@@ -47,7 +47,7 @@ public class ServiceImplGen implements IGen{
         String stub = serviceImplStub.stub();
         String outClassFile = this.outDir + "/" + className + ".java";
         File file = new File(outClassFile);
-//        if (!file.exists()) {
+        if (!file.exists()) {
             try {
                 if (!file.getParentFile().exists()) {
                     file.getParentFile().mkdirs();
@@ -58,6 +58,6 @@ public class ServiceImplGen implements IGen{
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
-//        }
+        }
     }
 }

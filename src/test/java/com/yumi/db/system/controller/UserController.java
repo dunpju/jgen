@@ -2,7 +2,6 @@ package com.yumi.db.system.controller;
 
 import com.yumi.db.system.dao.NewsDao;
 import com.yumi.db.system.dao.NewsDao1;
-import com.yumi.db.system.dao.UserDao;
 import com.yumi.db.system.entity.NewsEntity;
 import com.yumi.db.system.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,9 +24,6 @@ import java.util.List;
 @Controller
 @RequestMapping("/system/user")
 public class UserController {
-
-    @Autowired
-    UserDao userDao;
 
     NewsDao1 newsDao1;
     @Autowired
