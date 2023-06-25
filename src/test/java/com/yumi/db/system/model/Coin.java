@@ -3,9 +3,9 @@ package com.yumi.db.system.model;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.dunpju.annotations.Message;
-import com.dunpju.orm.BaseField;
-import com.dunpju.orm.BaseModel;
+import io.dunpju.annotations.Message;
+import io.dunpju.orm.BaseField;
+import io.dunpju.orm.BaseModel;
 import lombok.Data;
 
 import java.io.Serial;

@@ -1,9 +1,8 @@
 package com.yumi.db.system.dao;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.dunpju.entity.IFlag;
-import com.dunpju.orm.Builder;
-import com.dunpju.orm.Paged;
+import io.dunpju.orm.Builder;
+import io.dunpju.orm.Paged;
 import com.yumi.db.system.mapper.NewsMapper;
 import com.yumi.db.system.model.News;
 import com.yumi.db.system.vo.NewSVo;

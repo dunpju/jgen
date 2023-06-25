@@ -1,7 +1,7 @@
 package com.yumi.db.system.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.dunpju.orm.Paged;
+import io.dunpju.orm.Paged;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;

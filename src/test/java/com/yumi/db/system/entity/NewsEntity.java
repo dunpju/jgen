@@ -1,8 +1,8 @@
 package com.yumi.db.system.entity;
 
-import com.dunpju.annotations.Message;
-import com.dunpju.entity.BaseEntity;
-import com.dunpju.entity.IFlag;
+import io.dunpju.annotations.Message;
+import io.dunpju.entity.BaseEntity;
+import io.dunpju.entity.IFlag;
 import lombok.Data;
 
 import java.math.BigDecimal;

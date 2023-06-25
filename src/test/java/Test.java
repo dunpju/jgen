@@ -1,4 +1,4 @@
-import com.dunpju.gen.Gen;
+import io.dunpju.gen.Gen;
 import com.yumi.db.system.entity.NewsEntity;
 
 import java.sql.SQLException;

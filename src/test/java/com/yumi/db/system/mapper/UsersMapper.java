@@ -1,6 +1,5 @@
 package com.yumi.db.system.mapper;
 
-import com.yumi.db.system.entity.Users;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 
 /**

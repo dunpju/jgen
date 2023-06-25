@@ -3,7 +3,6 @@ package com.yumi.db.system.controller;
 import com.yumi.db.system.dao.NewsDao;
 import com.yumi.db.system.dao.NewsDao1;
 import com.yumi.db.system.entity.NewsEntity;
-import com.yumi.db.system.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.web.bind.annotation.GetMapping;
