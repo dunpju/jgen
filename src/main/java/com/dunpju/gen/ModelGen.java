@@ -93,6 +93,7 @@ public class ModelGen implements IGen {
                 ArrayList<String> serviceImplPackageArray = new ArrayList<>();
                 ArrayList<String> voPackageArray = new ArrayList<>();
                 ArrayList<String> daoPackageArray = new ArrayList<>();
+                ArrayList<String> paramPackageArray = new ArrayList<>();
                 for (int i = 0; i < outPackageSplit.length - 1; i++) {
                     mapperPackageArray.add(outPackageSplit[i]);
                     entityPackageArray.add(outPackageSplit[i]);
@@ -100,6 +101,7 @@ public class ModelGen implements IGen {
                     serviceImplPackageArray.add(outPackageSplit[i]);
                     voPackageArray.add(outPackageSplit[i]);
                     daoPackageArray.add(outPackageSplit[i]);
+                    paramPackageArray.add(outPackageSplit[i]);
                 }
                 mapperPackageArray.add("mapper");
                 entityPackageArray.add("entity");
@@ -109,6 +111,7 @@ public class ModelGen implements IGen {
                 voPackageArray.add("vo");
                 voPackageArray.add(className);
                 daoPackageArray.add("dao");
+                paramPackageArray.add("params");
 
                 String mapperPackage = String.join(".", mapperPackageArray);
                 MapperGen mapperGen = new MapperGen();
@@ -168,9 +171,20 @@ public class ModelGen implements IGen {
                 iServiceGen.setOutDir(file.getParentFile() + "/service");
                 iServiceGen.run();
 
+                ParamGen paramGen = new ParamGen();
+                paramGen.setOutPackage(String.join(".", paramPackageArray));
+                paramGen.setOutDir(file.getParentFile() + "/params/" + className + "Service");
+                paramGen.run();
+
                 ServiceImplGen serviceImplGen = new ServiceImplGen();
                 serviceImplGen.setOutPackage(String.join(".", serviceImplPackageArray));
+                modelImports.add("import " + String.format("%s.%s", daoGen.getOutPackage(), daoGen.getClassName()) + ";");
+                modelImports.add("import " + String.format("%s.%s", entityGen.getOutPackage(), entityGen.getClassName()) + ";");
                 modelImports.add("import " + String.format("%s.%s", mapperGen.getOutPackage(), mapperGen.getClassName()) + ";");
+                modelImports.add("import " + String.format("%s.%s", this.outPackage, className) + ";");
+                modelImports.add("import " + String.format("%s.%s", paramGen.getOutPackage(), paramGen.getAddClassName()) + ";");
+                modelImports.add("import " + String.format("%s.%s", paramGen.getOutPackage(), paramGen.getEditClassName()) + ";");
+                modelImports.add("import " + String.format("%s.%s", paramGen.getOutPackage(), paramGen.getListClassName()) + ";");
                 modelImports.add("import " + String.format("%s.%s", iServiceGen.getOutPackage(), iServiceGen.getClassName()) + ";");
                 modelImports.add("import " + String.format("%s.%s", voGen.getOutPackage(), voGen.getClassName()) + ";");
                 serviceImplGen.setImports(modelImports);
