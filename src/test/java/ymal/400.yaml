@@ -1,4 +1,0 @@
-fail:
-    code: 400
-    message: 失败
-need_login:
