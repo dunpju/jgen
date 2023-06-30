@@ -25,6 +25,7 @@ public class EntityGen implements IGen{
     private TypeRegistry typeRegistry;
     private String entityPrimaryKey;
     private String entityPrimaryKeyType;
+    private boolean shieldExistedOut;
     @Override
     public void run() throws SQLException {
         EntityStub entityStub = new EntityStub();
@@ -50,6 +51,11 @@ public class EntityGen implements IGen{
                 bufferedWriter.flush();
             } catch (IOException e) {
                 throw new RuntimeException(e);
+            }
+            System.out.println(outClassFile + " generate successful");
+        } else {
+            if (!shieldExistedOut) {
+                System.out.println(outClassFile + " already existed");
             }
         }
     }

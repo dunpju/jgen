@@ -14,23 +14,29 @@ public class MapperXmlGen implements IGen {
     private String fileName;
     private String namespace;
     private String outDir;
+    private boolean shieldExistedOut;
     @Override
     public void run() throws SQLException {
         MapperXmlStub mapperXmlStub = new MapperXmlStub();
         mapperXmlStub.setNamespace(this.namespace);
         String stub = mapperXmlStub.stub();
-        String outFile = this.outDir + "/" + fileName + ".xml";
-        File file = new File(outFile);
+        String outClassFile = this.outDir + "/" + fileName + ".xml";
+        File file = new File(outClassFile);
         if (!file.exists()) {
             try {
                 if (!file.getParentFile().exists()) {
                     file.getParentFile().mkdirs();
                 }
-                BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(outFile));
+                BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(outClassFile));
                 bufferedWriter.write(stub);
                 bufferedWriter.flush();
             } catch (IOException e) {
                 throw new RuntimeException(e);
+            }
+            System.out.println(outClassFile + " generate successful");
+        } else {
+            if (!shieldExistedOut) {
+                System.out.println(outClassFile + " already existed");
             }
         }
     }

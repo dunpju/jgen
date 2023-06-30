@@ -28,6 +28,7 @@ public class ModelStub {
     private ConfigBuilder configBuilder;
     private Map<String, DatabaseMetaDataWrapper.Column> columnsInfo;
     private TypeRegistry typeRegistry;
+    private Map<String, String> propertyTypeConvertMap;
 
     public String stub() {
         String tpl = """
@@ -49,12 +50,12 @@ public class ModelStub {
                 @Data
                 public class %CLASS_NAME% extends BaseModel {
                     
-                    @Serial
-                    private static final long serialVersionUID = 1L;
-                    
                     public enum FIELD implements BaseField {
                         %FIELD%;
                     }
+                    
+                    @Serial
+                    private static final long serialVersionUID = 1L;
                                 
                     %PROPERTY%
                     @Override
@@ -92,7 +93,13 @@ public class ModelStub {
             }
             String camelCasePropertyName = CamelizeUtil.toCamelCase(columnsInfo.get(key).getName());
             String propertyStub = this.propertyStub;
-            propertyStub = propertyStub.replaceAll("%PROPERTY_TYPE%", iColumnType.getType());
+            String getType = iColumnType.getType();
+            if (this.propertyTypeConvertMap.size() > 0) {
+                if (this.propertyTypeConvertMap.containsKey(getType)) {
+                    getType = this.propertyTypeConvertMap.get(getType);
+                }
+            }
+            propertyStub = propertyStub.replaceAll("%PROPERTY_TYPE%", getType);
             propertyStub = propertyStub.replaceAll("%PROPERTY_NAME%", camelCasePropertyName);
             this.property.append(propertyStub);
             if (iColumnType.getPkg() != null) {
@@ -148,5 +155,9 @@ public class ModelStub {
 
     public void setTypeRegistry(TypeRegistry typeRegistry) {
         this.typeRegistry = typeRegistry;
+    }
+
+    public void setPropertyTypeConvertMap(Map<String, String> propertyTypeConvertMap) {
+        this.propertyTypeConvertMap = propertyTypeConvertMap;
     }
 }

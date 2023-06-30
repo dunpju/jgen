@@ -34,6 +34,9 @@ public class EnumGen implements IGen {
                 BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(outClassFile));
                 bufferedWriter.write(stub);
                 bufferedWriter.flush();
+                System.out.println(outClassFile + " generate successful");
+            } else {
+                System.out.println(outClassFile + " already existed");
             }
         } catch (IOException e) {
             e.printStackTrace();

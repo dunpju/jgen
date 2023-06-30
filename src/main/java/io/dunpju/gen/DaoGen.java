@@ -28,6 +28,7 @@ public class DaoGen implements IGen{
     private TypeRegistry typeRegistry;
     private String voName;
     private String tableName;
+    private boolean shieldExistedOut;
     @Override
     public void run() throws SQLException {
         DaoStub daoStub = new DaoStub();
@@ -55,6 +56,11 @@ public class DaoGen implements IGen{
                 bufferedWriter.flush();
             } catch (IOException e) {
                 throw new RuntimeException(e);
+            }
+            System.out.println(outClassFile + " generate successful");
+        } else {
+            if (!shieldExistedOut) {
+                System.out.println(outClassFile + " already existed");
             }
         }
     }

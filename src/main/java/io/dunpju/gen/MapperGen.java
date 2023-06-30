@@ -18,6 +18,7 @@ public class MapperGen implements IGen {
     private String modelName;
     private String outDir;
     private String outMapperXmlDir;
+    private boolean shieldExistedOut;
 
     @Override
     public void run() throws SQLException {
@@ -40,10 +41,16 @@ public class MapperGen implements IGen {
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
+            System.out.println(outClassFile + " generate successful");
+        } else {
+            if (!shieldExistedOut) {
+                System.out.println(outClassFile + " already existed");
+            }
         }
         MapperXmlGen mapperXmlGen = new MapperXmlGen();
         mapperXmlGen.setFileName(className);
         mapperXmlGen.setNamespace(String.format("%s.%s", this.outPackage, className));
+        mapperXmlGen.setShieldExistedOut(this.shieldExistedOut);
         if (this.outMapperXmlDir == null) {
             this.outMapperXmlDir = String.format("%s/%s", this.outDir, "xml");
         }

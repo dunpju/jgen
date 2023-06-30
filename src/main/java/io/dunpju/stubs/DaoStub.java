@@ -36,6 +36,7 @@ public class DaoStub {
         String tpl = """
                 package %PACKAGE%;
                                 
+                import com.baomidou.mybatisplus.core.conditions.Wrapper;
                 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
                 import io.dunpju.entity.IFlag;
                 import io.dunpju.orm.Builder;
@@ -50,6 +51,8 @@ public class DaoStub {
                 public class %CLASS_NAME% extends ServiceImpl<%MAPPER_NAME%, %MODEL_NAME%> {
                                 
                     %MODEL_NAME% model = new %MODEL_NAME%();
+                    // @see https://baomidou.com/pages/f84a74/#%E6%8F%92%E5%85%A5%E6%88%96%E6%9B%B4%E6%96%B0%E7%9A%84%E5%AD%97%E6%AE%B5%E6%9C%89-%E7%A9%BA%E5%AD%97%E7%AC%A6%E4%B8%B2-%E6%88%96%E8%80%85-null
+                    Wrapper wrapper;
                     private Builder<%MAPPER_NAME%, %MODEL_NAME%> builder;
                                 
                     public Builder<%MAPPER_NAME%, %MODEL_NAME%> model() {
@@ -83,7 +86,11 @@ public class DaoStub {
                     }
                                 
                     public int Update() {
-                        return this.baseMapper.updateById(this.model);
+                        if (null != this.wrapper){
+                            return this.baseMapper.update(null, this.wrapper);
+                        } else {
+                            return this.baseMapper.updateById(this.model);
+                        }
                     }
                                 
                     public %MODEL_NAME% getBy%ENTITY_PRIMARY_KEY%(%ENTITY_PRIMARY_KEY_TYPE% %CAME_ENTITY_PRIMARY_KEY%) {

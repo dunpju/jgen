@@ -18,6 +18,7 @@ public class ParamGen implements IGen {
     private String addClassName = "AddParam";
     private String editClassName = "EditParam";
     private String listClassName = "ListParam";
+    private boolean shieldExistedOut;
 
     @Override
     public void run() throws SQLException {
@@ -38,6 +39,11 @@ public class ParamGen implements IGen {
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
+            System.out.println(outClassFile + " generate successful");
+        } else {
+            if (!shieldExistedOut) {
+                System.out.println(outClassFile + " already existed");
+            }
         }
         ParamEditStub paramEditStub = new ParamEditStub();
         paramEditStub.setOutPackage(this.outPackage);
@@ -57,6 +63,11 @@ public class ParamGen implements IGen {
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
+            System.out.println(outClassFile + " generate successful");
+        } else {
+            if (!shieldExistedOut) {
+                System.out.println(outClassFile + " already existed");
+            }
         }
         ParamListStub paramListStub = new ParamListStub();
         paramListStub.setOutPackage(this.outPackage);
@@ -74,6 +85,11 @@ public class ParamGen implements IGen {
                 bufferedWriter.flush();
             } catch (IOException e) {
                 throw new RuntimeException(e);
+            }
+            System.out.println(outClassFile + " generate successful");
+        } else {
+            if (!shieldExistedOut) {
+                System.out.println(outClassFile + " already existed");
             }
         }
     }

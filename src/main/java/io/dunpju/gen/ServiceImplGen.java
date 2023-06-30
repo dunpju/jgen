@@ -27,6 +27,7 @@ public class ServiceImplGen implements IGen{
     private String entityPrimaryKey;
     private String entityPrimaryKeyType;
     private String upperFirstEntityPrimaryKey;
+    private boolean shieldExistedOut;
     @Override
     public void run() throws SQLException {
         ServiceImplStub serviceImplStub = new ServiceImplStub();
@@ -57,6 +58,11 @@ public class ServiceImplGen implements IGen{
                 bufferedWriter.flush();
             } catch (IOException e) {
                 throw new RuntimeException(e);
+            }
+            System.out.println(outClassFile + " generate successful");
+        } else {
+            if (!shieldExistedOut) {
+                System.out.println(outClassFile + " already existed");
             }
         }
     }

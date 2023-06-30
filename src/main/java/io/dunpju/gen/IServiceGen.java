@@ -17,6 +17,7 @@ public class IServiceGen implements IGen {
     private List<String> imports;
     private String className;
     private String modelName;
+    private boolean shieldExistedOut;
     @Override
     public void run() throws SQLException {
         IServiceStub iServiceStub = new IServiceStub();
@@ -37,6 +38,11 @@ public class IServiceGen implements IGen {
                 bufferedWriter.flush();
             } catch (IOException e) {
                 throw new RuntimeException(e);
+            }
+            System.out.println(outClassFile + " generate successful");
+        } else {
+            if (!shieldExistedOut) {
+                System.out.println(outClassFile + " already existed");
             }
         }
     }

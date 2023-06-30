@@ -68,6 +68,7 @@ public class CodeGen implements IGen {
             BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(this.outClassFile));
             bufferedWriter.write(stub);
             bufferedWriter.flush();
+            System.out.println(this.outClassFile + " generate successful");
         } catch (IOException e) {
             e.printStackTrace();
         }

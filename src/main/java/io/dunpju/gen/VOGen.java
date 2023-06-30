@@ -14,6 +14,7 @@ public class VOGen implements IGen{
     private String outDir;
     private String outPackage;
     private String className;
+    private boolean shieldExistedOut;
     @Override
     public void run() throws SQLException {
         VOStub voStub = new VOStub();
@@ -32,6 +33,11 @@ public class VOGen implements IGen{
                 bufferedWriter.flush();
             } catch (IOException e) {
                 throw new RuntimeException(e);
+            }
+            System.out.println(outClassFile + " generate successful");
+        } else {
+            if (!shieldExistedOut) {
+                System.out.println(outClassFile + " already existed");
             }
         }
     }
