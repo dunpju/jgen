@@ -57,7 +57,7 @@ public class ServiceImplStub {
                     public void edit(EditParam params) {
                         %UPPER_FIRST_DAO_NAME% %DAO_NAME% = applicationContext.getBean(%UPPER_FIRST_DAO_NAME%.class);
                         %UPPER_FIRST_ENTITY_NAME% %ENTITY_NAME% = new %UPPER_FIRST_ENTITY_NAME%();
-                        %ENTITY_NAME%.SetFlag(%UPPER_FIRST_ENTITY_NAME%.FLAG.Update);
+                        %UPPER_FIRST_ENTITY_NAME%.FLAG.Update.Apply(%ENTITY_NAME%);
                         // TODO::填充业务
                         %DAO_NAME%.setData(%ENTITY_NAME%);
                         %DAO_NAME%.Update();
@@ -71,7 +71,11 @@ public class ServiceImplStub {
                     @Transactional(rollbackFor = Exception.class)
                     public void delete(%ENTITY_PRIMARY_KEY_TYPE% %ENTITY_PRIMARY_KEY%) {
                         %UPPER_FIRST_DAO_NAME% %DAO_NAME% = applicationContext.getBean(%UPPER_FIRST_DAO_NAME%.class);
-                        // TODO::填充业务
+                        %UPPER_FIRST_ENTITY_NAME% %ENTITY_NAME% = new %UPPER_FIRST_ENTITY_NAME%();
+                        %UPPER_FIRST_ENTITY_NAME%.FLAG.Delete.Apply(%ENTITY_NAME%);
+                        %ENTITY_NAME%.set%UPPER_FIRST_ENTITY_PRIMARY_KEY%(%ENTITY_PRIMARY_KEY%);
+                        %DAO_NAME%.setData(%ENTITY_NAME%);
+                        %DAO_NAME%.Update();
                     }
                 }
                 """;
