@@ -23,4 +23,8 @@ public class Gen {
     public static ModelGen model() throws SQLException, ClassNotFoundException {
         return new ModelGen();
     }
+
+    public static ControllerGen controller() {
+        return new ControllerGen();
+    }
 }
