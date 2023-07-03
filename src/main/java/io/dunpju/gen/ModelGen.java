@@ -260,8 +260,11 @@ public class ModelGen implements IGen {
         return this;
     }
 
-    public ModelGen setTableName(String tableName) {
+    public ModelGen setTableName(String tableName, String ...moreTableName) {
         this.tableNames.add(tableName);
+        if (moreTableName.length > 0) {
+            this.tableNames.addAll(Arrays.asList(moreTableName));
+        }
         return this;
     }
 

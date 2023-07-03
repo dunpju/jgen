@@ -8,18 +8,16 @@ import com.baomidou.mybatisplus.generator.jdbc.DatabaseMetaDataWrapper;
 import com.baomidou.mybatisplus.generator.type.TypeRegistry;
 import io.dunpju.utils.CamelizeUtil;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class ModelStub {
 
     private String outPackage;
-    private final List<String> imports = new ArrayList<>();
+    private final Set<String> imports = new HashSet<>();
     private String tableName;
     private String tableDescription;
     private String className;
-    private final String fieldDescriptionStub = "    @Message(\"%FIELD_DESCRIPTION%\")\n";
+    private String fieldDescriptionStub = "    @%MESSAGE%(\"%FIELD_DESCRIPTION%\")\n";
     private final String tableIdStub = "    @TableId(value = \"%TABLE_PRIMARY_KEY%\", type = IdType.AUTO)\n";
     private final String propertyStub = "    private %PROPERTY_TYPE% %PROPERTY_NAME%;\n";
     private final StringBuffer field = new StringBuffer();
@@ -37,7 +35,6 @@ public class ModelStub {
                 import com.baomidou.mybatisplus.annotation.IdType;
                 import com.baomidou.mybatisplus.annotation.TableId;
                 import com.baomidou.mybatisplus.annotation.TableName;
-                import io.dunpju.annotations.Message;
                 import io.dunpju.orm.BaseField;
                 import io.dunpju.orm.BaseModel;
                 import lombok.Data;
@@ -46,7 +43,7 @@ public class ModelStub {
                 %IMPORTS%
                                 
                 @TableName("%TABLE_NAME%")
-                @Message(value = "%TABLE_DESCRIPTION%")
+                @%MESSAGE%(value = "%TABLE_DESCRIPTION%")
                 @Data
                 public class %CLASS_NAME% extends BaseModel {
                     
@@ -68,6 +65,12 @@ public class ModelStub {
         this.processProperty();
         tpl = tpl.replaceAll("%PACKAGE%", this.outPackage);
         tpl = tpl.replaceAll("%FIELD%", this.field.toString());
+        if (!Objects.equals(this.className, "Message")) {
+            this.imports.add("import io.dunpju.annotations.Message;");
+            tpl = tpl.replaceAll("%MESSAGE%", "Message");
+        } else {
+            tpl = tpl.replaceAll("%MESSAGE%", "io.dunpju.annotations.Message");
+        }
         tpl = tpl.replaceAll("%PROPERTY%", this.property.toString());
         tpl = tpl.replaceAll("%IMPORTS%", String.join("\n", this.imports));
         tpl = tpl.replaceAll("%TABLE_NAME%", this.tableName);
@@ -83,6 +86,11 @@ public class ModelStub {
             TableInfo tableInfo = new TableInfo(configBuilder, tableName);
             TableField.MetaInfo metaInfo = new TableField.MetaInfo(columnsInfo.get(key), tableInfo);
             IColumnType iColumnType = typeRegistry.getColumnType(metaInfo);
+            if (!Objects.equals(this.className, "Message")) {
+                this.fieldDescriptionStub = this.fieldDescriptionStub.replaceAll("%MESSAGE%", "Message");
+            } else {
+                this.fieldDescriptionStub = this.fieldDescriptionStub.replaceAll("%MESSAGE%", "io.dunpju.annotations.Message");
+            }
             if (i == 0) {
                 this.property.append(this.fieldDescriptionStub.replaceAll("%FIELD_DESCRIPTION%", columnsInfo.get(key).getRemarks()).replaceAll(" ", ""));
             } else {
