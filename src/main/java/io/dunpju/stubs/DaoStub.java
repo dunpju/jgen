@@ -37,6 +37,7 @@ public class DaoStub {
                 package %PACKAGE%;
                                 
                 import com.baomidou.mybatisplus.core.conditions.Wrapper;
+                import com.baomidou.mybatisplus.core.toolkit.Wrappers;
                 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
                 import io.dunpju.entity.IFlag;
                 import io.dunpju.orm.Builder;
@@ -81,7 +82,7 @@ public class DaoStub {
                     }
                     
                     private com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper<%MODEL_NAME%> UpdateSet() {
-                        if (this.model.getAssessmentSchoolConfigId() == null) {
+                        if (this.model.get%ENTITY_PRIMARY_KEY%() == null) {
                             throw new RuntimeException("%ENTITY_PRIMARY_KEY%不能为null");
                         }
                         return Wrappers.<%MODEL_NAME%>lambdaUpdate().
