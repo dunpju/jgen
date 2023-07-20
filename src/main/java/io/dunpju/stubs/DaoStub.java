@@ -79,6 +79,14 @@ public class DaoStub {
                             %CREATE_PROPERTY_MAPPER%
                         }
                     }
+                    
+                    private com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper<%MODEL_NAME%> UpdateSet() {
+                        if (this.model.getAssessmentSchoolConfigId() == null) {
+                            throw new RuntimeException("%ENTITY_PRIMARY_KEY%不能为null");
+                        }
+                        return Wrappers.<%MODEL_NAME%>lambdaUpdate().
+                                eq(%MODEL_NAME%::get%ENTITY_PRIMARY_KEY%, this.model.get%ENTITY_PRIMARY_KEY%());
+                    }
                                 
                     public %ENTITY_PRIMARY_KEY_TYPE% Add() {
                         this.baseMapper.insert(this.model);
