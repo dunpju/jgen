@@ -5,7 +5,7 @@ import org.apache.ibatis.annotations.Select;
 import java.util.List;
 import java.util.Map;
 
-public interface BaseMapper<T> extends com.baomidou.mybatisplus.core.mapper.BaseMapper<T> {
+public interface IMapper<T> extends com.baomidou.mybatisplus.core.mapper.BaseMapper<T> {
     @Select("${_sql_}")
     public Map<String, Object> execute(Map<String, Object> map);
     @Select("${_sql_}")

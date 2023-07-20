@@ -8,13 +8,11 @@ import com.baomidou.mybatisplus.generator.jdbc.DatabaseMetaDataWrapper;
 import com.baomidou.mybatisplus.generator.type.TypeRegistry;
 import io.dunpju.utils.CamelizeUtil;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class EntityStub {
     private String outPackage;
-    private final List<String> imports = new ArrayList<>();
+    private final Set<String> imports = new HashSet<>();
     private String classDesc;
     private String className;
     private String tableName;

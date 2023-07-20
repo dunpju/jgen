@@ -16,12 +16,12 @@ public class MapperStub {
         String tpl = """
                   package %PACKAGE%;
                   
-                  import io.dunpju.orm.BaseMapper;
+                  import io.dunpju.orm.IMapper;
                   import org.apache.ibatis.annotations.Mapper;
                   %IMPORTS%
                   
                   @Mapper
-                  public interface %CLASS_NAME% extends BaseMapper<%MODEL_NAME%> {
+                  public interface %CLASS_NAME% extends IMapper<%MODEL_NAME%> {
                   }""";
         tpl = tpl.replaceAll("%PACKAGE%", this.outPackage);
         tpl = tpl.replaceAll("%IMPORTS%", String.join("\n", this.imports));

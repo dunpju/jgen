@@ -13,7 +13,7 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class Builder<M extends BaseMapper<T>, T extends BaseModel> {
+public class Builder<M extends IMapper<T>, T extends BaseModel> {
     protected SQL sql;
     protected Map<String, Object> parameters;
     protected String table;
@@ -296,6 +296,12 @@ public class Builder<M extends BaseMapper<T>, T extends BaseModel> {
         }
         inStr.add(")");
         this.sql.WHERE(String.join(" ", inStr));
+        return this;
+    }
+
+    public Builder<M, T> WHERE_NULL(Object column) {
+        this.sql.WHERE(String.format("%s %s #{%s}", column.toString(), "IS", "NULL"));
+        this.parameters.put(column.toString(), "NULL");
         return this;
     }
 
