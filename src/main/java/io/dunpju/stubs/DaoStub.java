@@ -81,7 +81,7 @@ public class DaoStub {
                         }
                     }
                     
-                    private com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper<%MODEL_NAME%> UpdateSet() {
+                    private com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper<%MODEL_NAME%> Wrappers() {
                         if (this.model.get%ENTITY_PRIMARY_KEY%() == null) {
                             throw new RuntimeException("%ENTITY_PRIMARY_KEY%不能为null");
                         }
