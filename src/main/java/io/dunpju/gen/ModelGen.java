@@ -166,6 +166,7 @@ public class ModelGen implements IGen {
         entityGen.setColumnsInfo(columnsInfo);
         entityGen.setConfigBuilder(this.configBuilder);
         entityGen.setTypeRegistry(this.typeRegistry);
+        entityGen.setPropertyTypeConvertMap(this.typeConvertMap);
         entityGen.setShieldExistedOut(this.shieldExistedOut);
         entityGen.setOutDir(file.getParentFile() + "/entity/" + catalog);
         entityGen.run();

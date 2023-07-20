@@ -23,6 +23,7 @@ public class EntityGen implements IGen{
     private Map<String, DatabaseMetaDataWrapper.Column> columnsInfo;
     private ConfigBuilder configBuilder;
     private TypeRegistry typeRegistry;
+    private Map<String, String> propertyTypeConvertMap;
     private String entityPrimaryKey;
     private String entityPrimaryKeyType;
     private boolean shieldExistedOut;
@@ -36,6 +37,7 @@ public class EntityGen implements IGen{
         entityStub.setColumnsInfo(this.columnsInfo);
         entityStub.setConfigBuilder(this.configBuilder);
         entityStub.setTypeRegistry(this.typeRegistry);
+        entityStub.setPropertyTypeConvertMap(this.propertyTypeConvertMap);
         String stub = entityStub.stub();
         this.entityPrimaryKey = entityStub.getEntityPrimaryKey();
         this.entityPrimaryKeyType = entityStub.getEntityPrimaryKeyType();

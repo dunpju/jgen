@@ -24,6 +24,7 @@ public class EntityStub {
     private TypeRegistry typeRegistry;
     private String entityPrimaryKey;
     private String entityPrimaryKeyType;
+    private Map<String, String> propertyTypeConvertMap;
     public String stub() {
         String tpl = """
                 package %PACKAGE%;
@@ -73,7 +74,13 @@ public class EntityStub {
                 this.entityPrimaryKeyType = iColumnType.getType();
             }
             String propertyStub = this.propertyStub;
-            propertyStub = propertyStub.replaceAll("%PROPERTY_TYPE%", iColumnType.getType());
+            String getType = iColumnType.getType();
+            if (this.propertyTypeConvertMap.size() > 0) {
+                if (this.propertyTypeConvertMap.containsKey(getType)) {
+                    getType = this.propertyTypeConvertMap.get(getType);
+                }
+            }
+            propertyStub = propertyStub.replaceAll("%PROPERTY_TYPE%", getType);
             propertyStub = propertyStub.replaceAll("%PROPERTY_NAME%", camelCasePropertyName);
             this.property.append(propertyStub);
             if (iColumnType.getPkg() != null && !iColumnType.getPkg().equals("")) {
@@ -109,6 +116,10 @@ public class EntityStub {
 
     public void setTypeRegistry(TypeRegistry typeRegistry) {
         this.typeRegistry = typeRegistry;
+    }
+
+    public void setPropertyTypeConvertMap(Map<String, String> propertyTypeConvertMap) {
+        this.propertyTypeConvertMap = propertyTypeConvertMap;
     }
 
     public String getEntityPrimaryKey() {
