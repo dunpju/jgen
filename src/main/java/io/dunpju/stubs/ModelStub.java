@@ -152,6 +152,9 @@ public class ModelStub {
     public String getClassName() {
         return className;
     }
+    public String getOutPackage() {
+        return outPackage;
+    }
 
     public void setConfigBuilder(ConfigBuilder configBuilder) {
         this.configBuilder = configBuilder;

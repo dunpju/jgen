@@ -70,8 +70,10 @@ public class ModelGen implements IGen {
         String unTablePrefix = tableName.replaceAll(this.tablePrefix, "");
         String className = StrUtil.upperFirst(CamelizeUtil.toCamelCase(unTablePrefix));
 
+        String catalog = StrUtil.upperFirst(CamelizeUtil.toCamelCase(dataSourceConfig.getConn().getCatalog()));
+
         ModelStub modelStub = new ModelStub();
-        modelStub.setOutPackage(this.basePackage);
+        modelStub.setOutPackage(this.basePackage + "." + catalog);
         modelStub.setClassName(className);
         modelStub.setTableName(tableName);
         modelStub.setTableDescription(table.getRemarks());
@@ -80,7 +82,7 @@ public class ModelGen implements IGen {
         modelStub.setTypeRegistry(this.typeRegistry);
         modelStub.setPropertyTypeConvertMap(this.typeConvertMap);
         String stub = modelStub.stub();
-        String outClassFile = this.baseDir + "/" + className + ".java";
+        String outClassFile = this.baseDir + "/" + catalog + "/" + className + ".java";
         try {
             File file = new File(outClassFile);
             if (!file.getParentFile().exists()) {
@@ -112,27 +114,40 @@ public class ModelGen implements IGen {
             paramPackageArray.add(basePackageSplit[i]);
         }
         mapperPackageArray.add("mapper");
+        mapperPackageArray.add(catalog);
+
         entityPackageArray.add("entity");
+        entityPackageArray.add(catalog);
+
         iServicePackageArray.add("service");
+        iServicePackageArray.add(catalog);
+
         serviceImplPackageArray.add("service");
+        serviceImplPackageArray.add(catalog);
         serviceImplPackageArray.add("impl");
+
         voPackageArray.add("vo");
+        voPackageArray.add(catalog);
         voPackageArray.add(className);
+
         daoPackageArray.add("dao");
+        daoPackageArray.add(catalog);
+
         paramPackageArray.add("params");
+        paramPackageArray.add(catalog);
         paramPackageArray.add(className + "Service");
 
         String mapperPackage = String.join(".", mapperPackageArray);
         MapperGen mapperGen = new MapperGen();
         mapperGen.setOutPackage(mapperPackage);
         List<String> modelImports = new ArrayList<>();
-        modelImports.add("import " + String.format("%s.%s", this.basePackage, className) + ";");
+        modelImports.add("import " + String.format("%s.%s", modelStub.getOutPackage(), className) + ";");
         mapperGen.setImports(modelImports);
         mapperGen.setClassName(className + "Mapper");
         mapperGen.setModelName(className);
-        mapperGen.setOutMapperXmlDir(this.outMapperXmlDir);
+        mapperGen.setOutMapperXmlDir(this.outMapperXmlDir + "/" + catalog);
         File file = new File(this.baseDir);
-        mapperGen.setOutDir(file.getParentFile() + "/mapper");
+        mapperGen.setOutDir(file.getParentFile() + "/mapper/" + catalog);
         mapperGen.setShieldExistedOut(shieldExistedOut);
         mapperGen.run();
 
@@ -140,7 +155,7 @@ public class ModelGen implements IGen {
         voGen.setOutPackage(String.join(".", voPackageArray));
         voGen.setClassName(className + "VO");
         voGen.setShieldExistedOut(this.shieldExistedOut);
-        voGen.setOutDir(file.getParentFile() + "/vo/" + className);
+        voGen.setOutDir(file.getParentFile() + "/vo/" + catalog + "/" + className);
         voGen.run();
 
         EntityGen entityGen = new EntityGen();
@@ -152,7 +167,7 @@ public class ModelGen implements IGen {
         entityGen.setConfigBuilder(this.configBuilder);
         entityGen.setTypeRegistry(this.typeRegistry);
         entityGen.setShieldExistedOut(this.shieldExistedOut);
-        entityGen.setOutDir(file.getParentFile() + "/entity");
+        entityGen.setOutDir(file.getParentFile() + "/entity/" + catalog);
         entityGen.run();
 
         DaoGen daoGen = new DaoGen();
@@ -160,7 +175,7 @@ public class ModelGen implements IGen {
         List<String> daoImports = new ArrayList<>();
         daoImports.add("import " + String.format("%s.%s", entityGen.getOutPackage(), entityGen.getClassName()) + ";");
         daoImports.add("import " + String.format("%s.%s", mapperGen.getOutPackage(), mapperGen.getClassName()) + ";");
-        daoImports.add("import " + String.format("%s.%s", this.basePackage, className) + ";");
+        daoImports.add("import " + String.format("%s.%s", modelStub.getOutPackage(), className) + ";");
         daoImports.add("import " + String.format("%s.%s", voGen.getOutPackage(), voGen.getClassName()) + ";");
         daoGen.setImports(daoImports);
         daoGen.setClassName(className + "Dao");
@@ -173,7 +188,7 @@ public class ModelGen implements IGen {
         daoGen.setShieldExistedOut(this.shieldExistedOut);
         daoGen.setTableName(tableName);
         daoGen.setVoName(voGen.getClassName());
-        daoGen.setOutDir(file.getParentFile() + "/dao");
+        daoGen.setOutDir(file.getParentFile() + "/dao/" + catalog);
         daoGen.run();
 
         IServiceGen iServiceGen = new IServiceGen();
@@ -182,13 +197,13 @@ public class ModelGen implements IGen {
         iServiceGen.setClassName("I" + className + "Service");
         iServiceGen.setModelName(className);
         iServiceGen.setShieldExistedOut(this.shieldExistedOut);
-        iServiceGen.setOutDir(file.getParentFile() + "/service");
+        iServiceGen.setOutDir(file.getParentFile() + "/service/" + catalog);
         iServiceGen.run();
 
         ParamGen paramGen = new ParamGen();
         paramGen.setShieldExistedOut(this.shieldExistedOut);
         paramGen.setOutPackage(String.join(".", paramPackageArray));
-        paramGen.setOutDir(file.getParentFile() + "/params/" + className + "Service");
+        paramGen.setOutDir(file.getParentFile() + "/params/" + catalog + "/" + className + "Service");
         paramGen.run();
 
         ServiceImplGen serviceImplGen = new ServiceImplGen();
@@ -197,7 +212,7 @@ public class ModelGen implements IGen {
         serviceImplImports.add("import " + String.format("%s.%s", daoGen.getOutPackage(), daoGen.getClassName()) + ";");
         serviceImplImports.add("import " + String.format("%s.%s", entityGen.getOutPackage(), entityGen.getClassName()) + ";");
         serviceImplImports.add("import " + String.format("%s.%s", mapperGen.getOutPackage(), mapperGen.getClassName()) + ";");
-        serviceImplImports.add("import " + String.format("%s.%s", this.basePackage, className) + ";");
+        serviceImplImports.add("import " + String.format("%s.%s", modelStub.getOutPackage(), className) + ";");
         serviceImplImports.add("import " + String.format("%s.%s", paramGen.getOutPackage(), paramGen.getAddClassName()) + ";");
         serviceImplImports.add("import " + String.format("%s.%s", paramGen.getOutPackage(), paramGen.getEditClassName()) + ";");
         serviceImplImports.add("import " + String.format("%s.%s", paramGen.getOutPackage(), paramGen.getListClassName()) + ";");
@@ -224,7 +239,7 @@ public class ModelGen implements IGen {
     @Override
     public void run() throws SQLException {
         if (!this.tableNames.isEmpty()) {
-            for (String tn: this.tableNames) {
+            for (String tn : this.tableNames) {
                 this.build(tn);
             }
         } else if (this.isAll) {
@@ -239,7 +254,7 @@ public class ModelGen implements IGen {
                     this.tableNames.add(tableName);
                 }
             }
-            for (String tn: this.tableNames) {
+            for (String tn : this.tableNames) {
                 this.build(tn);
             }
         }
@@ -260,7 +275,7 @@ public class ModelGen implements IGen {
         return this;
     }
 
-    public ModelGen setTableName(String tableName, String ...moreTableName) {
+    public ModelGen setTableName(String tableName, String... moreTableName) {
         this.tableNames.add(tableName);
         if (moreTableName.length > 0) {
             this.tableNames.addAll(Arrays.asList(moreTableName));
