@@ -78,4 +78,8 @@ public class ControllerGen implements IGen {
         this.shieldExistedOut = shieldExistedOut;
         return this;
     }
+
+    public ControllerGen setRequestMappingValue(String requestMappingValue) {
+        return this;
+    }
 }
