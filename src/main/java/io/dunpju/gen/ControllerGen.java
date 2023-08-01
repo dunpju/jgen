@@ -80,6 +80,7 @@ public class ControllerGen implements IGen {
     }
 
     public ControllerGen setRequestMappingValue(String requestMappingValue) {
+        this.requestMappingValue = requestMappingValue;
         return this;
     }
 }
