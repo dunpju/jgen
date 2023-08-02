@@ -38,6 +38,10 @@ public class ModelGen implements IGen {
     private ResultSet tableResultSet;
     private final Map<String, String> typeConvertMap;
     private boolean shieldExistedOut;
+    private String createTimeInit;
+    private String createTime;
+    private String updateTime;
+    private String deleteTime;
 
     public ModelGen() {
         this.typeConvertMap = new HashMap<>();
@@ -168,6 +172,10 @@ public class ModelGen implements IGen {
         entityGen.setTypeRegistry(this.typeRegistry);
         entityGen.setPropertyTypeConvertMap(this.typeConvertMap);
         entityGen.setShieldExistedOut(this.shieldExistedOut);
+        entityGen.setCreateTimeInit(this.createTimeInit);
+        entityGen.setCreateTime(this.createTime);
+        entityGen.setUpdateTime(this.updateTime);
+        entityGen.setDeleteTime(this.deleteTime);
         entityGen.setOutDir(file.getParentFile() + "/entity/" + catalog);
         entityGen.run();
 
@@ -301,6 +309,26 @@ public class ModelGen implements IGen {
 
     public ModelGen setAll(boolean all) {
         this.isAll = all;
+        return this;
+    }
+
+    public ModelGen setCreateTimeInit(String createTimeInit) {
+        this.createTimeInit = createTimeInit;
+        return this;
+    }
+
+    public ModelGen setCreateTime(String createTime) {
+        this.createTime = createTime;
+        return this;
+    }
+
+    public ModelGen setUpdateTime(String updateTime) {
+        this.updateTime = updateTime;
+        return this;
+    }
+
+    public ModelGen setDeleteTime(String deleteTime) {
+        this.deleteTime = deleteTime;
         return this;
     }
 }

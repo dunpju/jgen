@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.generator.config.rules.IColumnType;
 import com.baomidou.mybatisplus.generator.jdbc.DatabaseMetaDataWrapper;
 import com.baomidou.mybatisplus.generator.type.TypeRegistry;
 import io.dunpju.utils.CamelizeUtil;
+import io.dunpju.utils.StrUtil;
 
 import java.util.*;
 
@@ -25,6 +26,13 @@ public class EntityStub {
     private String entityPrimaryKey;
     private String entityPrimaryKeyType;
     private Map<String, String> propertyTypeConvertMap;
+    private String createTimeInitTemp = "this.set%CREATE_TIME%(%CREATE_TIME_INIT%);";
+    private String updateTimeInitTemp = "this.set%UPDATE_TIME%(%UPDATE_TIME_INIT%);";
+    private String createTimeInit = "LocalDateTime.now()";
+    private String createTime = "create_time";
+    private String updateTime = "update_time";
+    private String deleteTime = "delete_time";
+
     public String stub() {
         String tpl = """
                 package %PACKAGE%;
@@ -44,6 +52,11 @@ public class EntityStub {
                         Delete,
                         Update;
                     }
+                    
+                    public %CLASS_NAME%() {
+                        %CREATE_TIME_INIT_TEMP%
+                        %UPDATE_TIME_INIT_TEMP%
+                    }
                                 
                     %PROPERTY%
                 }
@@ -53,12 +66,16 @@ public class EntityStub {
         tpl = tpl.replaceAll("%IMPORTS%", String.join("\n", this.imports));
         tpl = tpl.replaceAll("%CLASS_DESC%", this.classDesc);
         tpl = tpl.replaceAll("%CLASS_NAME%", this.className);
+        tpl = tpl.replaceAll("%CREATE_TIME_INIT_TEMP%", this.createTimeInitTemp);
+        tpl = tpl.replaceAll("%UPDATE_TIME_INIT_TEMP%", this.updateTimeInitTemp);
         tpl = tpl.replaceAll("%PROPERTY%", this.property.toString());
         return tpl;
     }
 
     private void processProperty() {
         int i = 0;
+        String camelCaseCreateTime = "";
+        String camelCaseUpdateTime = "";
         for (String key : columnsInfo.keySet()) {
             TableInfo tableInfo = new TableInfo(configBuilder, tableName);
             TableField.MetaInfo metaInfo = new TableField.MetaInfo(columnsInfo.get(key), tableInfo);
@@ -68,7 +85,8 @@ public class EntityStub {
             } else {
                 this.property.append(this.messageStub.replaceAll("%FIELD_DESCRIPTION%", columnsInfo.get(key).getRemarks()));
             }
-            String camelCasePropertyName = CamelizeUtil.toCamelCase(columnsInfo.get(key).getName());
+            String columnName = columnsInfo.get(key).getName();
+            String camelCasePropertyName = CamelizeUtil.toCamelCase(columnName);
             if (columnsInfo.get(key).isPrimaryKey()) {
                 this.entityPrimaryKey = camelCasePropertyName;
                 this.entityPrimaryKeyType = iColumnType.getType();
@@ -86,7 +104,24 @@ public class EntityStub {
             if (iColumnType.getPkg() != null && !iColumnType.getPkg().equals("")) {
                 this.imports.add("import " + iColumnType.getPkg() + ";");
             }
+            if (columnName.equals(this.createTime)) {
+                camelCaseCreateTime = StrUtil.upperFirst(camelCasePropertyName);
+                this.createTimeInitTemp = this.createTimeInitTemp.replaceAll("%CREATE_TIME%", camelCaseCreateTime);
+                this.createTimeInitTemp = this.createTimeInitTemp.replaceAll("%CREATE_TIME_INIT%", this.createTimeInit);
+            } else if (columnName.equals(this.updateTime)) {
+                if (!camelCaseCreateTime.equals("")) {
+                    camelCaseUpdateTime = StrUtil.upperFirst(camelCasePropertyName);
+                    this.updateTimeInitTemp = this.updateTimeInitTemp.replaceAll("%UPDATE_TIME%", camelCaseUpdateTime);
+                    this.updateTimeInitTemp = this.updateTimeInitTemp.replaceAll("%UPDATE_TIME_INIT%", String.format("this.get%s()", camelCaseCreateTime));
+                }
+            }
             i++;
+        }
+        if (camelCaseCreateTime.equals("")) {
+            this.createTimeInitTemp = "";
+        }
+        if (camelCaseUpdateTime.equals("")) {
+            this.updateTimeInitTemp = "";
         }
     }
 
@@ -128,5 +163,21 @@ public class EntityStub {
 
     public String getEntityPrimaryKeyType() {
         return entityPrimaryKeyType;
+    }
+
+    public void setCreateTimeInit(String createTimeInit) {
+        this.createTimeInit = createTimeInit;
+    }
+
+    public void setCreateTime(String createTime) {
+        this.createTime = createTime;
+    }
+
+    public void setUpdateTime(String updateTime) {
+        this.updateTime = updateTime;
+    }
+
+    public void setDeleteTime(String deleteTime) {
+        this.deleteTime = deleteTime;
     }
 }

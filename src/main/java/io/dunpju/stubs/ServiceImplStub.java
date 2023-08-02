@@ -29,8 +29,6 @@ public class ServiceImplStub {
                 import cn.hutool.extra.spring.SpringUtil;
                 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
                 import io.dunpju.orm.Paged;
-                import org.springframework.beans.factory.annotation.Autowired;
-                import org.springframework.context.ApplicationContext;
                 import org.springframework.stereotype.Service;
                 import org.springframework.transaction.annotation.Transactional;
                 %IMPORTS%

@@ -27,6 +27,10 @@ public class EntityGen implements IGen{
     private String entityPrimaryKey;
     private String entityPrimaryKeyType;
     private boolean shieldExistedOut;
+    private String createTimeInit;
+    private String createTime;
+    private String updateTime;
+    private String deleteTime;
     @Override
     public void run() throws SQLException {
         EntityStub entityStub = new EntityStub();
@@ -38,6 +42,18 @@ public class EntityGen implements IGen{
         entityStub.setConfigBuilder(this.configBuilder);
         entityStub.setTypeRegistry(this.typeRegistry);
         entityStub.setPropertyTypeConvertMap(this.propertyTypeConvertMap);
+        if (this.createTimeInit != null) {
+            entityStub.setCreateTimeInit(this.createTimeInit);
+        }
+        if (this.createTime != null) {
+            entityStub.setCreateTime(this.createTime);
+        }
+        if (this.updateTime != null) {
+            entityStub.setUpdateTime(this.updateTime);
+        }
+        if (this.deleteTime != null) {
+            entityStub.setDeleteTime(this.deleteTime);
+        }
         String stub = entityStub.stub();
         this.entityPrimaryKey = entityStub.getEntityPrimaryKey();
         this.entityPrimaryKeyType = entityStub.getEntityPrimaryKeyType();
