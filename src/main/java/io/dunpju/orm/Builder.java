@@ -132,6 +132,7 @@ public class Builder<M extends IMapper<T>, T extends BaseModel> {
     public Builder<M, T> AS(String alias) {
         this.tableAlias = alias;
         this.model.setTableAlias(alias);
+        this.table = this.table.replaceAll("\\s+AS\\s+\\w+", "");
         this.table = String.format("%s AS %s", this.table, alias);
         return this;
     }
