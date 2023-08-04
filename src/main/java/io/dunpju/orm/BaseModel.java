@@ -1,12 +1,15 @@
 package io.dunpju.orm;
 
+import com.baomidou.mybatisplus.annotation.TableField;
+
 import java.io.Serial;
 import java.io.Serializable;
 
 public abstract class BaseModel implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
-    protected String _tableAlias;
+    @TableField(select = false)
+    private String _tableAlias;
 
     public String getTableAlias() {
         return _tableAlias;
