@@ -192,8 +192,9 @@ public class Builder<M extends IMapper<T>, T extends BaseModel> {
     }
 
     public Builder<M, T> WHERE(Object column, String operator, Object value) {
-        this.sql.WHERE(String.format("%s %s #{%s}", column.toString(), operator, column));
-        this.parameters.put(column.toString(), value);
+        String columnStr = column.toString().replaceAll("\\.", "_");
+        this.sql.WHERE(String.format("%s %s #{%s}", column, operator, columnStr));
+        this.parameters.put(columnStr, value);
         return this;
     }
 
