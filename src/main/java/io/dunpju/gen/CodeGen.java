@@ -4,10 +4,7 @@ import io.dunpju.stubs.CodeStub;
 import org.yaml.snakeyaml.Yaml;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -24,7 +21,9 @@ public class CodeGen implements IGen {
      * 输出类文件，绝对路径
      */
     private String outClassFile;
-    private String importClass;
+    private String codeClass;
+    private final List<String> importClass = new ArrayList<>();
+    private String extendsClassName;
     private List<String> files;
 
     @Override
@@ -50,7 +49,9 @@ public class CodeGen implements IGen {
             }
 
             codeStub.setClassName(className);
-            codeStub.setCodeClass(this.importClass);
+            codeStub.setCodeClass(this.codeClass);
+            codeStub.setImports(this.importClass);
+            codeStub.setExtendsClassName(this.extendsClassName);
             for (String filename : this.files) {
                 InputStream inputStream = new FileInputStream(filename);
                 Map<String, Object> map = yaml.load(inputStream);
@@ -117,19 +118,36 @@ public class CodeGen implements IGen {
         }
     }
 
-    public void setYamlDir(String yamlDir) {
+    public CodeGen setYamlDir(String yamlDir) {
         this.yamlDir = yamlDir;
+        return this;
     }
 
-    public void setOutPackage(String outPackage) {
+    public CodeGen setOutPackage(String outPackage) {
         this.outPackage = outPackage;
+        return this;
     }
 
-    public void setOutClassFile(String outClassFile) {
+    public CodeGen setOutClassFile(String outClassFile) {
         this.outClassFile = outClassFile;
+        return this;
     }
 
-    public void setImportClass(String importClass) {
-        this.importClass = importClass;
+    public CodeGen setCodeClass(String codeClass) {
+        this.codeClass = codeClass;
+        return this;
+    }
+
+    public CodeGen setExtendsClassName(String extendsClassName) {
+        this.extendsClassName = extendsClassName;
+        return this;
+    }
+
+    public CodeGen setImportClass(String importClass, String... moreImportClass) {
+        this.importClass.add("import " + importClass + ";");
+        for (String mic : moreImportClass) {
+            this.importClass.add("import " + mic + ";");
+        }
+        return this;
     }
 }
