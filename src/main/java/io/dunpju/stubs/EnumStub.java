@@ -7,6 +7,7 @@ import lombok.Data;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -80,8 +81,26 @@ public class EnumStub {
         List<Cm> cms = new ArrayList<>();
         for (String f : flagLaterArr) {
             if (!f.equals("")) {
-                String[] fm = f.split("-");
-                cms.add(new Cm(fm[0], Integer.parseInt(fm[1]), fm[2]));
+                String[] fms = f.split("-");
+                String preFm = "";
+                String property = "";
+                Integer code = null;
+                String message = "";
+                for (String fm : fms) {
+                    if (Objects.equals(property, "") && !Objects.equals(fm, "")) {
+                        property = fm;
+                    } else if (!property.equals("") && code == null && !Objects.equals(fm, "")) {
+                        if (preFm.equals("")) {
+                            code = Integer.parseInt(String.format("-%s", fm));
+                        } else {
+                            code = Integer.parseInt(fm);
+                        }
+                    } else if (!property.equals("") && code != null && message.equals("")) {
+                        message = fm;
+                    }
+                    preFm = fm;
+                }
+                cms.add(new Cm(property, code, message));
             }
         }
         int i = 0;
