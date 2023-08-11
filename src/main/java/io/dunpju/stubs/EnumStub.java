@@ -44,6 +44,34 @@ public class EnumStub {
                 "    public String getMessage() {\n" +
                 "        return message;\n" +
                 "    }\n" +
+                "    public static %CLASS_NAME% get(int code) throws Exception {\n" +
+                "        for (%CLASS_NAME% e : %CLASS_NAME%.values()) {\n" +
+                "            if (e.code == code) {\n" +
+                "                return e;\n" +
+                "            }\n" +
+                "        }\n" +
+                "        throw new Exception(String.format(\"%d不存在与枚举%s中\", code, %CLASS_NAME%.class.getSimpleName()));\n" +
+                "    }\n" +
+                "    public static List<Map<String, Object>> select() {\n" +
+                "        List<Map<String, Object>> list = new ArrayList<>();\n" +
+                "        for (EnumPeriodLevel e : EnumPeriodLevel.values()) {\n" +
+                "            Map<String, Object> m = new LinkedHashMap<>();\n" +
+                "            m.put(\"id\", e.getCode());\n" +
+                "            m.put(\"title\", e.getMessage());\n" +
+                "            list.add(m);\n" +
+                "        }\n" +
+                "        return list;\n" +
+                "    }\n" +
+                "    public static List<Map<String, Object>> select(String key, String title) {\n" +
+                "        List<Map<String, Object>> list = new ArrayList<>();\n" +
+                "        for (EnumPeriodLevel e : EnumPeriodLevel.values()) {\n" +
+                "            Map<String, Object> m = new LinkedHashMap<>();\n" +
+                "            m.put(key, e.getCode());\n" +
+                "            m.put(title, e.getMessage());\n" +
+                "            list.add(m);\n" +
+                "        }\n" +
+                "        return list;\n" +
+                "    }\n" +
                 "\n" +
                 "}";
         tpl = tpl.replaceAll("%PACKAGE%", this.outPackage);
