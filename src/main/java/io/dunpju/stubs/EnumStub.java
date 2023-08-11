@@ -25,6 +25,11 @@ public class EnumStub {
         this.buildFlags();
         String tpl = "package %PACKAGE%;\n" +
                 "\n" +
+                "import java.util.ArrayList;\n" +
+                "import java.util.LinkedHashMap;\n" +
+                "import java.util.List;\n" +
+                "import java.util.Map;\n" +
+                "\n" +
                 "/**\n" +
                 " * %CLASS_DESC%\n" +
                 " */\n" +
@@ -38,12 +43,15 @@ public class EnumStub {
                 "        this.code = code;\n" +
                 "        this.message = message;\n" +
                 "    }\n" +
+                "    \n" +
                 "    public int getCode() {\n" +
                 "        return code;\n" +
                 "    }\n" +
+                "    \n" +
                 "    public String getMessage() {\n" +
                 "        return message;\n" +
                 "    }\n" +
+                "    \n" +
                 "    public static %CLASS_NAME% get(int code) throws Exception {\n" +
                 "        for (%CLASS_NAME% e : %CLASS_NAME%.values()) {\n" +
                 "            if (e.code == code) {\n" +
@@ -52,6 +60,7 @@ public class EnumStub {
                 "        }\n" +
                 "        throw new Exception(String.format(\"%d不存在与枚举%s中\", code, %CLASS_NAME%.class.getSimpleName()));\n" +
                 "    }\n" +
+                "    \n" +
                 "    public static List<Map<String, Object>> select() {\n" +
                 "        List<Map<String, Object>> list = new ArrayList<>();\n" +
                 "        for (EnumPeriodLevel e : EnumPeriodLevel.values()) {\n" +
@@ -62,6 +71,7 @@ public class EnumStub {
                 "        }\n" +
                 "        return list;\n" +
                 "    }\n" +
+                "    \n" +
                 "    public static List<Map<String, Object>> select(String key, String title) {\n" +
                 "        List<Map<String, Object>> list = new ArrayList<>();\n" +
                 "        for (EnumPeriodLevel e : EnumPeriodLevel.values()) {\n" +

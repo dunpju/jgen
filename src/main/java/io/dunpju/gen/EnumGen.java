@@ -43,15 +43,18 @@ public class EnumGen implements IGen {
         }
     }
 
-    public void setOutPackage(String outPackage) {
+    public EnumGen setOutPackage(String outPackage) {
         this.outPackage = outPackage;
+        return this;
     }
 
-    public void setOutDir(String outDir) {
+    public EnumGen setOutDir(String outDir) {
         this.outDir = outDir;
+        return this;
     }
 
-    public void setInput(String input) {
+    public EnumGen setInput(String input) {
         this.input = input;
+        return this;
     }
 }

@@ -15,6 +15,10 @@ public class Gen {
         enumGen.run();
     }
 
+    public static EnumGen enums() {
+        return new EnumGen();
+    }
+
     public static ModelGen model() throws SQLException, ClassNotFoundException {
         return new ModelGen();
     }
