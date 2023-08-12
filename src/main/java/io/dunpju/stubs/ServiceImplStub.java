@@ -82,7 +82,7 @@ public class ServiceImplStub {
         tpl = tpl.replaceAll("%MAPPER_NAME%", this.mapperName);
         tpl = tpl.replaceAll("%MODEL_NAME%", this.modelName);
         tpl = tpl.replaceAll("%SERVICE_NAME%", this.serviceName);
-        tpl = tpl.replaceAll("%VO_NAME%", this.voName);
+        //tpl = tpl.replaceAll("%VO_NAME%", this.voName);
         tpl = tpl.replaceAll("%UPPER_FIRST_DAO_NAME%", this.upperFirstDaoName);
         tpl = tpl.replaceAll("%DAO_NAME%", this.daoName);
         tpl = tpl.replaceAll("%UPPER_FIRST_ENTITY_NAME%", this.upperFirstEntityName);
