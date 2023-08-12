@@ -347,11 +347,33 @@ public class Builder<M extends IMapper<T>, T extends BaseModel> {
 
             if (columnSnake != null || Arrays.toString(objectClass.getInterfaces()).contains(IColumnSnake.class.getName())) {
                 for (Field field : fields) {
-                    fieldName.add(CamelizeUtil.camelToSnake(field.getName()));
+                    TableField tableField = field.getAnnotation(TableField.class);
+                    if (tableField != null) {
+                        if (!Modifier.isStatic(field.getModifiers())) {
+                            if (tableField.select()) {
+                                fieldName.add(tableField.value());
+                            }
+                        }
+                    } else {
+                        if (!Modifier.isStatic(field.getModifiers())) {
+                            fieldName.add(CamelizeUtil.camelToSnake(field.getName()));
+                        }
+                    }
                 }
             } else if (columnCamel != null || Arrays.toString(objectClass.getInterfaces()).contains(IColumnCamel.class.getName())) {
                 for (Field field : fields) {
-                    fieldName.add(CamelizeUtil.toCamelCase(field.getName()));
+                    TableField tableField = field.getAnnotation(TableField.class);
+                    if (tableField != null) {
+                        if (!Modifier.isStatic(field.getModifiers())) {
+                            if (tableField.select()) {
+                                fieldName.add(tableField.value());
+                            }
+                        }
+                    } else {
+                        if (!Modifier.isStatic(field.getModifiers())) {
+                            fieldName.add(CamelizeUtil.toCamelCase(field.getName()));
+                        }
+                    }
                 }
             } else if (columnCustom != null || Arrays.toString(objectClass.getInterfaces()).contains(IColumnCustom.class.getName())) {
                 for (Field field : fields) {
