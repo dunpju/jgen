@@ -115,8 +115,8 @@ public class DaoStub {
                         return this.baseMapper.deleteById(%ENTITY_PRIMARY_KEY%);
                     }
                                 
-                    public Paged<%VO_NAME%> getList(long page, long pageSize) {
-                        return this.model().paginate(page, pageSize, %VO_NAME%.class);
+                    public Paged<%MODEL_NAME%> getList(long page, long pageSize) {
+                        return this.model().paginate(page, pageSize, %MODEL_NAME%.class);
                     }
                 }
                 """;
@@ -132,7 +132,7 @@ public class DaoStub {
         tpl = tpl.replaceAll("%CREATE_PROPERTY_MAPPER%", this.createPropertyMapper.toString());
         tpl = tpl.replaceAll("%ENTITY_PRIMARY_KEY_TYPE%", this.entityPrimaryKeyType);
         tpl = tpl.replaceAll("%CAME_ENTITY_PRIMARY_KEY%", this.cameEntityPrimaryKey);
-        tpl = tpl.replaceAll("%VO_NAME%", this.voName);
+        //tpl = tpl.replaceAll("%VO_NAME%", this.voName);
         return tpl;
     }
 
