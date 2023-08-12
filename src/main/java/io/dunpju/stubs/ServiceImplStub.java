@@ -36,7 +36,7 @@ public class ServiceImplStub {
                 @Service
                 public class %CLASS_NAME% extends ServiceImpl<%MAPPER_NAME%, %MODEL_NAME%> implements %SERVICE_NAME% {
                                 
-                    public Paged<%VO_NAME%> getList(ListParam params) {
+                    public Paged<%MODEL_NAME%> getList(ListParam params) {
                         %UPPER_FIRST_DAO_NAME% %DAO_NAME% = SpringUtil.getBean(%UPPER_FIRST_DAO_NAME%.class);
                         return %DAO_NAME%.getList(params.getPage(), params.getPageSize());
                     }
