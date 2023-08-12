@@ -18,6 +18,7 @@ public class ModelStub {
     private String tableDescription;
     private String className;
     private String fieldDescriptionStub = "    @%MESSAGE%(\"%FIELD_DESCRIPTION%\")\n";
+    private String tableFieldStub = "    @TableField(\"%TABLE_FIELD%\")\n";
     private final String tableIdStub = "    @TableId(value = \"%TABLE_PRIMARY_KEY%\", type = IdType.AUTO)\n";
     private final String propertyStub = "    private %PROPERTY_TYPE% %PROPERTY_NAME%;\n";
     private final StringBuffer field = new StringBuffer();
@@ -33,6 +34,7 @@ public class ModelStub {
                 package %PACKAGE%;
                                 
                 import com.baomidou.mybatisplus.annotation.IdType;
+                import com.baomidou.mybatisplus.annotation.TableField;
                 import com.baomidou.mybatisplus.annotation.TableId;
                 import com.baomidou.mybatisplus.annotation.TableName;
                 import io.dunpju.orm.BaseField;
@@ -52,6 +54,7 @@ public class ModelStub {
                     }
                     
                     @Serial
+                    @TableField(select = false)
                     private static final long serialVersionUID = 1L;
                                 
                     %PROPERTY%
@@ -96,6 +99,7 @@ public class ModelStub {
             } else {
                 this.property.append(this.fieldDescriptionStub.replaceAll("%FIELD_DESCRIPTION%", columnsInfo.get(key).getRemarks()));
             }
+            this.property.append(this.tableFieldStub.replaceAll("%TABLE_FIELD%", columnsInfo.get(key).getName()));
             if (columnsInfo.get(key).isPrimaryKey()) {
                 this.property.append(this.tableIdStub.replaceAll("%TABLE_PRIMARY_KEY%", columnsInfo.get(key).getName()));
             }

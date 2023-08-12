@@ -1,15 +1,18 @@
 package io.dunpju.orm;
 
 import com.alibaba.fastjson2.JSONObject;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
+import io.dunpju.annotations.ColumnCamel;
+import io.dunpju.annotations.ColumnCustom;
+import io.dunpju.annotations.ColumnSnake;
 import io.dunpju.utils.CamelizeUtil;
 import org.apache.ibatis.jdbc.SQL;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -332,11 +335,71 @@ public class Builder<M extends IMapper<T>, T extends BaseModel> {
         return this.sql.FROM(this.table).toString();
     }
 
+    private void columnHandle(Class<?> objectClass) {
+        if (this._columns == null || this._columns.equals("")) {
+            ColumnSnake columnSnake = objectClass.getAnnotation(ColumnSnake.class);
+            ColumnCamel columnCamel = objectClass.getAnnotation(ColumnCamel.class);
+            ColumnCustom columnCustom = objectClass.getAnnotation(ColumnCustom.class);
+
+            List<String> fieldName = new ArrayList<>();
+
+            Field[] fields = objectClass.getDeclaredFields();
+
+            if (columnSnake != null || Arrays.toString(objectClass.getInterfaces()).contains(IColumnSnake.class.getName())) {
+                for (Field field : fields) {
+                    fieldName.add(CamelizeUtil.camelToSnake(field.getName()));
+                }
+            } else if (columnCamel != null || Arrays.toString(objectClass.getInterfaces()).contains(IColumnCamel.class.getName())) {
+                for (Field field : fields) {
+                    fieldName.add(CamelizeUtil.toCamelCase(field.getName()));
+                }
+            } else if (columnCustom != null || Arrays.toString(objectClass.getInterfaces()).contains(IColumnCustom.class.getName())) {
+                for (Field field : fields) {
+                    TableField tableField = field.getAnnotation(TableField.class);
+                    if (tableField != null) {
+                        if (!Modifier.isStatic(field.getModifiers())) {
+                            if (tableField.select()) {
+                                fieldName.add(tableField.value());
+                            }
+                        }
+                    } else {
+                        if (!Modifier.isStatic(field.getModifiers())) {
+                            fieldName.add(field.getName());
+                        }
+                    }
+                }
+            } else {
+                for (Field field : fields) {
+                    TableField tableField = field.getAnnotation(TableField.class);
+                    if (tableField != null) {
+                        if (!Modifier.isStatic(field.getModifiers())) {
+                            if (tableField.select()) {
+                                fieldName.add(tableField.value());
+                            }
+                        }
+                    } else {
+                        if (!Modifier.isStatic(field.getModifiers())) {
+                            fieldName.add(field.getName());
+                        }
+                    }
+                }
+            }
+            if (fieldName.size() > 0) {
+                this.SELECT(String.join(",", fieldName));
+            } else {
+                this.SELECT("*");
+            }
+        }
+    }
+
     /**
      * 获取第一条数据
      */
     public <E> E first(Class<E> objectClass) {
+        this.columnHandle(objectClass);
+
         this.sql.LIMIT(1);
+
         Map<String, Object> map = this.baseMapper.first(this.map(this.toSql()));
         return JSONObject.parseObject(CamelizeUtil.toCamelCase(JSONObject.toJSONString(map)), objectClass);
     }
@@ -345,6 +408,9 @@ public class Builder<M extends IMapper<T>, T extends BaseModel> {
      * 获取数据集合
      */
     public <E> List<E> get(Class<E> objectClass) {
+
+        this.columnHandle(objectClass);
+
         List<Map<String, Object>> list = this.baseMapper.get(this.map(this.toSql()));
         if (!list.isEmpty()) {
             List<E> result = new ArrayList<>();
@@ -375,10 +441,9 @@ public class Builder<M extends IMapper<T>, T extends BaseModel> {
     }
 
     public <E> Paged<E> paginate(long current, long size, Class<E> objectClass) {
-        if (null == this._columns) {
-            this._columns = "*";
-            this.sql.SELECT(this._columns);
-        }
+
+        this.columnHandle(objectClass);
+
         long limit = (current - 1) * size;
         this.sql.LIMIT(String.format("%s,%s", limit, size));
 

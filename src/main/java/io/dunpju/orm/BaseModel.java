@@ -7,6 +7,7 @@ import java.io.Serializable;
 
 public abstract class BaseModel implements Serializable {
     @Serial
+    @TableField(select = false)
     private static final long serialVersionUID = 1L;
     @TableField(select = false)
     private String _tableAlias;
