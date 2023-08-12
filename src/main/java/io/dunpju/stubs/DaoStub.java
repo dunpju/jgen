@@ -36,7 +36,6 @@ public class DaoStub {
         String tpl = """
                 package %PACKAGE%;
                                 
-                import com.baomidou.mybatisplus.core.conditions.Wrapper;
                 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
                 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
                 import io.dunpju.entity.IFlag;
