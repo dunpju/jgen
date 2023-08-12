@@ -42,6 +42,7 @@ public class DaoStub {
                 import io.dunpju.entity.IFlag;
                 import io.dunpju.orm.Builder;
                 import io.dunpju.orm.Paged;
+                import lombok.EqualsAndHashCode;
                 import org.springframework.context.annotation.Scope;
                 import org.springframework.stereotype.Repository;
                 import java.util.List;
@@ -49,6 +50,7 @@ public class DaoStub {
                                 
                 @Repository
                 @Scope("prototype")
+                @EqualsAndHashCode(callSuper=false)
                 public class %CLASS_NAME% extends ServiceImpl<%MAPPER_NAME%, %MODEL_NAME%> {
                                 
                     %MODEL_NAME% model = new %MODEL_NAME%();

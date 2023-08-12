@@ -41,11 +41,13 @@ public class EntityStub {
                 import io.dunpju.entity.BaseEntity;
                 import io.dunpju.entity.IFlag;
                 import lombok.Data;
+                import lombok.EqualsAndHashCode;
                                 
                 %IMPORTS%
                                 
                 @Data
                 @Message(value = "%CLASS_DESC%")
+                @EqualsAndHashCode(callSuper=false)
                 public class %CLASS_NAME% extends BaseEntity {
                                 
                     public enum FLAG implements IFlag {

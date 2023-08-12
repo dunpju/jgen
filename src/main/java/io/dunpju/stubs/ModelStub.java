@@ -40,6 +40,7 @@ public class ModelStub {
                 import io.dunpju.orm.BaseField;
                 import io.dunpju.orm.BaseModel;
                 import lombok.Data;
+                import lombok.EqualsAndHashCode;
                                 
                 import java.io.Serial;
                 %IMPORTS%
@@ -47,6 +48,7 @@ public class ModelStub {
                 @TableName("%TABLE_NAME%")
                 @%MESSAGE%(value = "%TABLE_DESCRIPTION%")
                 @Data
+                @EqualsAndHashCode(callSuper=false)
                 public class %CLASS_NAME% extends BaseModel {
                     
                     public enum FIELD implements BaseField {
