@@ -54,7 +54,7 @@ public class DaoStub {
                 @EqualsAndHashCode(callSuper=false)
                 public class %CLASS_NAME% extends BaseDao<%MAPPER_NAME%, %MODEL_NAME%> {
                     
-                    public AttendClassLessonDao() {
+                    public %CLASS_NAME%() {
                         this.model = new %MODEL_NAME%();
                     }
                     
