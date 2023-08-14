@@ -35,10 +35,12 @@ public class DaoStub {
     public String stub() {
         String tpl = """
                 package %PACKAGE%;
-                                
+                
+                import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
                 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
                 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
                 import io.dunpju.entity.IFlag;
+                import io.dunpju.orm.BaseDao;
                 import io.dunpju.orm.Builder;
                 import io.dunpju.orm.Paged;
                 import lombok.EqualsAndHashCode;
@@ -50,18 +52,20 @@ public class DaoStub {
                 @Repository
                 @Scope("prototype")
                 @EqualsAndHashCode(callSuper=false)
-                public class %CLASS_NAME% extends ServiceImpl<%MAPPER_NAME%, %MODEL_NAME%> {
-                                
-                    %MODEL_NAME% model = new %MODEL_NAME%();
+                public class %CLASS_NAME% extends BaseDao<%MAPPER_NAME%, %MODEL_NAME%> {
+                    
+                    public AttendClassLessonDao() {
+                        this.model = new %MODEL_NAME%();
+                    }
+                    
                     // @see https://baomidou.com/pages/f84a74/#%E6%8F%92%E5%85%A5%E6%88%96%E6%9B%B4%E6%96%B0%E7%9A%84%E5%AD%97%E6%AE%B5%E6%9C%89-%E7%A9%BA%E5%AD%97%E7%AC%A6%E4%B8%B2-%E6%88%96%E8%80%85-null
-                    com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper<%MODEL_NAME%> wrapper;
-                    private Builder<%MAPPER_NAME%, %MODEL_NAME%> builder;
-                                
-                    public Builder<%MAPPER_NAME%, %MODEL_NAME%> model() {
-                        if (null == builder) {
-                            builder = new Builder<>(this.baseMapper, this.model).FROM(getEntityClass());
+                    private LambdaUpdateWrapper<%MODEL_NAME%> Wrappers() {
+                        if (this.model.get%ENTITY_PRIMARY_KEY%() == null) {
+                            throw new RuntimeException("%ENTITY_PRIMARY_KEY%不能为null");
                         }
-                        return builder;
+                        this.wrapper = Wrappers.<%MODEL_NAME%>lambdaUpdate().
+                                eq(%MODEL_NAME%::get%ENTITY_PRIMARY_KEY%, this.model.get%ENTITY_PRIMARY_KEY%());
+                        return this.wrapper;
                     }
                                 
                     public void setData(%ENTITY_NAME% entity) {
@@ -80,15 +84,6 @@ public class DaoStub {
                             //TODO::修改入库字段
                             %CREATE_PROPERTY_MAPPER%
                         }
-                    }
-                    
-                    private com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper<%MODEL_NAME%> Wrappers() {
-                        if (this.model.get%ENTITY_PRIMARY_KEY%() == null) {
-                            throw new RuntimeException("%ENTITY_PRIMARY_KEY%不能为null");
-                        }
-                        this.wrapper = Wrappers.<%MODEL_NAME%>lambdaUpdate().
-                                eq(%MODEL_NAME%::get%ENTITY_PRIMARY_KEY%, this.model.get%ENTITY_PRIMARY_KEY%());
-                        return this.wrapper;
                     }
                                 
                     public %ENTITY_PRIMARY_KEY_TYPE% Add() {
