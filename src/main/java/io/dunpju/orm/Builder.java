@@ -2,6 +2,7 @@ package io.dunpju.orm;
 
 import com.alibaba.fastjson2.JSONObject;
 import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import io.dunpju.annotations.ColumnCamel;
 import io.dunpju.annotations.ColumnCustom;
@@ -134,7 +135,6 @@ public class Builder<M extends IMapper<T>, T extends BaseModel> {
 
     public Builder<M, T> AS(String alias) {
         this.tableAlias = alias;
-        this.model.setTableAlias(alias);
         this.table = this.table.replaceAll("\\s+AS\\s+\\w+", "");
         this.table = String.format("%s AS %s", this.table, alias);
         return this;
@@ -348,10 +348,17 @@ public class Builder<M extends IMapper<T>, T extends BaseModel> {
             if (columnSnake != null || Arrays.toString(objectClass.getInterfaces()).contains(IColumnSnake.class.getName())) {
                 for (Field field : fields) {
                     TableField tableField = field.getAnnotation(TableField.class);
+                    TableId tableId = field.getAnnotation(TableId.class);
                     if (tableField != null) {
                         if (!Modifier.isStatic(field.getModifiers())) {
                             if (tableField.select()) {
                                 fieldName.add(tableField.value());
+                            }
+                        }
+                    } else if (tableId != null) {
+                        if (!Modifier.isStatic(field.getModifiers())) {
+                            if (!tableId.value().equals("")) {
+                                fieldName.add(tableId.value());
                             }
                         }
                     } else {
@@ -363,10 +370,17 @@ public class Builder<M extends IMapper<T>, T extends BaseModel> {
             } else if (columnCamel != null || Arrays.toString(objectClass.getInterfaces()).contains(IColumnCamel.class.getName())) {
                 for (Field field : fields) {
                     TableField tableField = field.getAnnotation(TableField.class);
+                    TableId tableId = field.getAnnotation(TableId.class);
                     if (tableField != null) {
                         if (!Modifier.isStatic(field.getModifiers())) {
                             if (tableField.select()) {
                                 fieldName.add(tableField.value());
+                            }
+                        }
+                    } else if (tableId != null) {
+                        if (!Modifier.isStatic(field.getModifiers())) {
+                            if (!tableId.value().equals("")) {
+                                fieldName.add(tableId.value());
                             }
                         }
                     } else {
@@ -378,10 +392,17 @@ public class Builder<M extends IMapper<T>, T extends BaseModel> {
             } else if (columnCustom != null || Arrays.toString(objectClass.getInterfaces()).contains(IColumnCustom.class.getName())) {
                 for (Field field : fields) {
                     TableField tableField = field.getAnnotation(TableField.class);
+                    TableId tableId = field.getAnnotation(TableId.class);
                     if (tableField != null) {
                         if (!Modifier.isStatic(field.getModifiers())) {
                             if (tableField.select()) {
                                 fieldName.add(tableField.value());
+                            }
+                        }
+                    } else if (tableId != null) {
+                        if (!Modifier.isStatic(field.getModifiers())) {
+                            if (!tableId.value().equals("")) {
+                                fieldName.add(tableId.value());
                             }
                         }
                     } else {
@@ -393,10 +414,17 @@ public class Builder<M extends IMapper<T>, T extends BaseModel> {
             } else {
                 for (Field field : fields) {
                     TableField tableField = field.getAnnotation(TableField.class);
+                    TableId tableId = field.getAnnotation(TableId.class);
                     if (tableField != null) {
                         if (!Modifier.isStatic(field.getModifiers())) {
                             if (tableField.select()) {
                                 fieldName.add(tableField.value());
+                            }
+                        }
+                    } else if (tableId != null) {
+                        if (!Modifier.isStatic(field.getModifiers())) {
+                            if (!tableId.value().equals("")) {
+                                fieldName.add(tableId.value());
                             }
                         }
                     } else {

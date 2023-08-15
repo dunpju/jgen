@@ -39,6 +39,7 @@ public class ModelStub {
                 import com.baomidou.mybatisplus.annotation.TableName;
                 import io.dunpju.orm.BaseField;
                 import io.dunpju.orm.BaseModel;
+                import io.dunpju.orm.Join;
                 import lombok.Data;
                 import lombok.EqualsAndHashCode;
                                 
@@ -55,9 +56,29 @@ public class ModelStub {
                         %FIELD%;
                     }
                     
+                    @TableField(select = false)
+                    private final static String _tableName = "%TABLE_NAME%";
+                    
                     @Serial
                     @TableField(select = false)
                     private static final long serialVersionUID = 1L;
+                    
+                    public String tableName() {
+                        return %CLASS_NAME%._tableName;
+                    }
+                    
+                    public static Join AS(String alias) {
+                        Join join = new Join();
+                        join.setTable(%CLASS_NAME%._tableName);
+                        join.AS(alias);
+                        return join;
+                    }
+                    
+                    public static String ON(String first, String operator, String second, String... other) {
+                        Join join = new Join();
+                        join.setTable(%CLASS_NAME%._tableName);
+                        return join.ON(first, operator, second, other);
+                    }
                                 
                     %PROPERTY%
                     @Override
@@ -101,9 +122,11 @@ public class ModelStub {
             } else {
                 this.property.append(this.fieldDescriptionStub.replaceAll("%FIELD_DESCRIPTION%", columnsInfo.get(key).getRemarks()));
             }
-            this.property.append(this.tableFieldStub.replaceAll("%TABLE_FIELD%", columnsInfo.get(key).getName()));
+
             if (columnsInfo.get(key).isPrimaryKey()) {
                 this.property.append(this.tableIdStub.replaceAll("%TABLE_PRIMARY_KEY%", columnsInfo.get(key).getName()));
+            } else {
+                this.property.append(this.tableFieldStub.replaceAll("%TABLE_FIELD%", columnsInfo.get(key).getName()));
             }
             String camelCasePropertyName = CamelizeUtil.toCamelCase(columnsInfo.get(key).getName());
             String propertyStub = this.propertyStub;
