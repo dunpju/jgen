@@ -66,7 +66,7 @@ public class EntityStub {
         this.processProperty();
         tpl = tpl.replaceAll("%PACKAGE%", this.outPackage);
         tpl = tpl.replaceAll("%IMPORTS%", String.join("\n", this.imports));
-        tpl = tpl.replaceAll("%CLASS_DESC%", this.classDesc);
+        tpl = tpl.replaceAll("%CLASS_DESC%", this.classDesc.replaceAll("\r|\n", ""));
         tpl = tpl.replaceAll("%CLASS_NAME%", this.className);
         tpl = tpl.replaceAll("%CREATE_TIME_INIT_TEMP%", this.createTimeInitTemp);
         tpl = tpl.replaceAll("%UPDATE_TIME_INIT_TEMP%", this.updateTimeInitTemp);
@@ -83,9 +83,9 @@ public class EntityStub {
             TableField.MetaInfo metaInfo = new TableField.MetaInfo(columnsInfo.get(key), tableInfo);
             IColumnType iColumnType = typeRegistry.getColumnType(metaInfo);
             if (i == 0) {
-                this.property.append(this.messageStub.replaceAll("%FIELD_DESCRIPTION%", columnsInfo.get(key).getRemarks()).replaceAll(" ", ""));
+                this.property.append(this.messageStub.replaceAll("%FIELD_DESCRIPTION%", columnsInfo.get(key).getRemarks().replaceAll("\r|\n", "")).replaceAll(" ", ""));
             } else {
-                this.property.append(this.messageStub.replaceAll("%FIELD_DESCRIPTION%", columnsInfo.get(key).getRemarks()));
+                this.property.append(this.messageStub.replaceAll("%FIELD_DESCRIPTION%", columnsInfo.get(key).getRemarks().replaceAll("\r|\n", "")));
             }
             String columnName = columnsInfo.get(key).getName();
             String camelCasePropertyName = CamelizeUtil.toCamelCase(columnName);

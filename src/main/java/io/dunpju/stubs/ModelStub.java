@@ -100,7 +100,7 @@ public class ModelStub {
         tpl = tpl.replaceAll("%PROPERTY%", this.property.toString());
         tpl = tpl.replaceAll("%IMPORTS%", String.join("\n", this.imports));
         tpl = tpl.replaceAll("%TABLE_NAME%", this.tableName);
-        tpl = tpl.replaceAll("%TABLE_DESCRIPTION%", this.tableDescription);
+        tpl = tpl.replaceAll("%TABLE_DESCRIPTION%", this.tableDescription.replaceAll("\r|\n", ""));
         tpl = tpl.replaceAll("%CLASS_NAME%", this.className);
         tpl = tpl.replaceAll("%TO_STRING%", this.to_str.toString());
         return tpl;
@@ -118,9 +118,9 @@ public class ModelStub {
                 this.fieldDescriptionStub = this.fieldDescriptionStub.replaceAll("%MESSAGE%", "io.dunpju.annotations.Message");
             }
             if (i == 0) {
-                this.property.append(this.fieldDescriptionStub.replaceAll("%FIELD_DESCRIPTION%", columnsInfo.get(key).getRemarks()).replaceAll(" ", ""));
+                this.property.append(this.fieldDescriptionStub.replaceAll("%FIELD_DESCRIPTION%", columnsInfo.get(key).getRemarks().replaceAll("\r|\n", "")).replaceAll(" ", ""));
             } else {
-                this.property.append(this.fieldDescriptionStub.replaceAll("%FIELD_DESCRIPTION%", columnsInfo.get(key).getRemarks()));
+                this.property.append(this.fieldDescriptionStub.replaceAll("%FIELD_DESCRIPTION%", columnsInfo.get(key).getRemarks().replaceAll("\r|\n", "")));
             }
 
             if (columnsInfo.get(key).isPrimaryKey()) {
