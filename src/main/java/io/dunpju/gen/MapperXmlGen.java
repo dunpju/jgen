@@ -20,7 +20,7 @@ public class MapperXmlGen implements IGen {
         MapperXmlStub mapperXmlStub = new MapperXmlStub();
         mapperXmlStub.setNamespace(this.namespace);
         String stub = mapperXmlStub.stub();
-        String outClassFile = this.outDir + "/" + fileName + ".xml";
+        String outClassFile = this.outDir + ModelGen.separatorChar + fileName + ".xml";
         File file = new File(outClassFile);
         if (!file.exists()) {
             try {

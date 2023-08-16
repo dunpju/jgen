@@ -26,7 +26,7 @@ public class ParamGen implements IGen {
         paramAddStub.setOutPackage(this.outPackage);
         paramAddStub.setClassName(this.addClassName);
         String stub = paramAddStub.stub();
-        String outClassFile = this.outDir + "/" + paramAddStub.getClassName() + ".java";
+        String outClassFile = this.outDir + ModelGen.separatorChar + paramAddStub.getClassName() + ".java";
         File file = new File(outClassFile);
         if (!file.exists()) {
             try {
@@ -50,7 +50,7 @@ public class ParamGen implements IGen {
         paramEditStub.setClassName(this.editClassName);
         paramEditStub.setExtendsClassName(paramAddStub.getClassName());
         stub = paramEditStub.stub();
-        outClassFile = this.outDir + "/" + paramEditStub.getClassName() + ".java";
+        outClassFile = this.outDir + ModelGen.separatorChar + paramEditStub.getClassName() + ".java";
         file = new File(outClassFile);
         if (!file.exists()) {
             try {
@@ -73,7 +73,7 @@ public class ParamGen implements IGen {
         paramListStub.setOutPackage(this.outPackage);
         paramListStub.setClassName(this.listClassName);
         stub = paramListStub.stub();
-        outClassFile = this.outDir + "/" + paramListStub.getClassName() + ".java";
+        outClassFile = this.outDir + ModelGen.separatorChar + paramListStub.getClassName() + ".java";
         file = new File(outClassFile);
         if (!file.exists()) {
             try {

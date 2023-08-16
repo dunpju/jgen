@@ -44,7 +44,7 @@ public class DaoGen implements IGen{
         daoStub.setConfigBuilder(this.configBuilder);
         daoStub.setTypeRegistry(this.typeRegistry);
         String stub = daoStub.stub();
-        String outClassFile = this.outDir + "/" + className + ".java";
+        String outClassFile = this.outDir + ModelGen.separatorChar + className + ".java";
         File file = new File(outClassFile);
         if (!file.exists()) {
             try {

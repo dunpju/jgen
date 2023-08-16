@@ -21,7 +21,7 @@ public class VOGen implements IGen{
         voStub.setOutPackage(this.outPackage);
         voStub.setClassName(this.className);
         String stub = voStub.stub();
-        String outClassFile = this.outDir + "/" + className + ".java";
+        String outClassFile = this.outDir + ModelGen.separatorChar + className + ".java";
         File file = new File(outClassFile);
         if (!file.exists()) {
             try {

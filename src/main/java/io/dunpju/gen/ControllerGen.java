@@ -9,9 +9,11 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.regex.Matcher;
 
 @Data
 public class ControllerGen implements IGen {
+    private String separator = "" + ModelGen.separatorChar;
     private String outDir;
     private String outPackage;
     private String importResponse;
@@ -28,12 +30,12 @@ public class ControllerGen implements IGen {
         }
         if (null == this.requestMappingValue) {
             String className = this.className.replaceAll("Controller", "");
-            this.requestMappingValue = "/" + StrUtil.lowerFirst(className);
+            this.requestMappingValue = this.separator + StrUtil.lowerFirst(className);
         }
         controllerStub.setRequestMappingValue(this.requestMappingValue);
         controllerStub.setClassName(this.className);
         String stub = controllerStub.stub();
-        String outClassFile = this.outDir + "/" + className + ".java";
+        String outClassFile = this.outDir + this.separator + className + ".java";
         File file = new File(outClassFile);
         if (!file.exists()) {
             try {
@@ -55,6 +57,11 @@ public class ControllerGen implements IGen {
     }
 
     public ControllerGen setOutDir(String outDir) {
+        if (outDir.contains("\\")) {
+            outDir = outDir.replaceAll("\\\\", Matcher.quoteReplacement(this.separator));
+        } else if (outDir.contains("/")){
+            outDir = outDir.replaceAll("/", Matcher.quoteReplacement(this.separator));
+        }
         this.outDir = outDir;
         return this;
     }

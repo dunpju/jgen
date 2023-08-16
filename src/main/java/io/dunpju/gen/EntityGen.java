@@ -57,7 +57,7 @@ public class EntityGen implements IGen{
         String stub = entityStub.stub();
         this.entityPrimaryKey = entityStub.getEntityPrimaryKey();
         this.entityPrimaryKeyType = entityStub.getEntityPrimaryKeyType();
-        String outClassFile = this.outDir + "/" + className + ".java";
+        String outClassFile = this.outDir + ModelGen.separatorChar + className + ".java";
         File file = new File(outClassFile);
         if (!file.exists()) {
             try {

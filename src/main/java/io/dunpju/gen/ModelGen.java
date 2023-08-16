@@ -18,14 +18,13 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
 import java.util.logging.Logger;
+import java.util.regex.Matcher;
 
 public class ModelGen implements IGen {
+    public static final char separatorChar = File.separatorChar;
+    private String separator = "" + ModelGen.separatorChar;
     private String basePackage;
-    /**
-     * 输出目录，绝对路径
-     */
     private String baseDir;
-    private String outDir;
     private String outMapperXmlDir;
     private boolean isAll;
     private Set<String> tableNames;
@@ -86,7 +85,7 @@ public class ModelGen implements IGen {
         modelStub.setTypeRegistry(this.typeRegistry);
         modelStub.setPropertyTypeConvertMap(this.typeConvertMap);
         String stub = modelStub.stub();
-        String outClassFile = this.baseDir + "/" + catalog + "/" + className + ".java";
+        String outClassFile = this.baseDir + this.separator + catalog + this.separator + className + ".java";
         try {
             File file = new File(outClassFile);
             if (!file.getParentFile().exists()) {
@@ -149,9 +148,9 @@ public class ModelGen implements IGen {
         mapperGen.setImports(modelImports);
         mapperGen.setClassName(className + "Mapper");
         mapperGen.setModelName(className);
-        mapperGen.setOutMapperXmlDir(this.outMapperXmlDir + "/" + catalog);
+        mapperGen.setOutMapperXmlDir(this.outMapperXmlDir + this.separator + catalog);
         File file = new File(this.baseDir);
-        mapperGen.setOutDir(file.getParentFile() + "/mapper/" + catalog);
+        mapperGen.setOutDir(file.getParentFile() + this.separator + "mapper" + this.separator + catalog);
         mapperGen.setShieldExistedOut(shieldExistedOut);
         mapperGen.run();
 
@@ -159,7 +158,7 @@ public class ModelGen implements IGen {
         voGen.setOutPackage(String.join(".", voPackageArray));
         voGen.setClassName(className + "VO");
         voGen.setShieldExistedOut(this.shieldExistedOut);
-        voGen.setOutDir(file.getParentFile() + "/vo/" + catalog + "/" + className);
+        voGen.setOutDir(file.getParentFile() + this.separator + "vo" + this.separator + catalog + this.separator + className);
         voGen.run();
 
         EntityGen entityGen = new EntityGen();
@@ -176,7 +175,7 @@ public class ModelGen implements IGen {
         entityGen.setCreateTime(this.createTime);
         entityGen.setUpdateTime(this.updateTime);
         entityGen.setDeleteTime(this.deleteTime);
-        entityGen.setOutDir(file.getParentFile() + "/entity/" + catalog);
+        entityGen.setOutDir(file.getParentFile() + this.separator + "entity" + this.separator + catalog);
         entityGen.run();
 
         DaoGen daoGen = new DaoGen();
@@ -197,7 +196,7 @@ public class ModelGen implements IGen {
         daoGen.setShieldExistedOut(this.shieldExistedOut);
         daoGen.setTableName(tableName);
         daoGen.setVoName(voGen.getClassName());
-        daoGen.setOutDir(file.getParentFile() + "/dao/" + catalog);
+        daoGen.setOutDir(file.getParentFile() + this.separator + "dao" + this.separator + catalog);
         daoGen.run();
 
         IServiceGen iServiceGen = new IServiceGen();
@@ -206,13 +205,13 @@ public class ModelGen implements IGen {
         iServiceGen.setClassName("I" + className + "Service");
         iServiceGen.setModelName(className);
         iServiceGen.setShieldExistedOut(this.shieldExistedOut);
-        iServiceGen.setOutDir(file.getParentFile() + "/service/" + catalog);
+        iServiceGen.setOutDir(file.getParentFile() + this.separator + "service" + this.separator + catalog);
         iServiceGen.run();
 
         ParamGen paramGen = new ParamGen();
         paramGen.setShieldExistedOut(this.shieldExistedOut);
         paramGen.setOutPackage(String.join(".", paramPackageArray));
-        paramGen.setOutDir(file.getParentFile() + "/params/" + catalog + "/" + className + "Service");
+        paramGen.setOutDir(file.getParentFile() + this.separator + "params" + this.separator + catalog + this.separator + className + "Service");
         paramGen.run();
 
         ServiceImplGen serviceImplGen = new ServiceImplGen();
@@ -241,7 +240,7 @@ public class ModelGen implements IGen {
         serviceImplGen.setEntityPrimaryKeyType(entityGen.getEntityPrimaryKeyType());
         serviceImplGen.setUpperFirstEntityPrimaryKey(StrUtil.upperFirst(entityGen.getEntityPrimaryKey()));
         serviceImplGen.setShieldExistedOut(this.shieldExistedOut);
-        serviceImplGen.setOutDir(iServiceGen.getOutDir() + "/impl");
+        serviceImplGen.setOutDir(iServiceGen.getOutDir() + this.separator + "impl");
         serviceImplGen.run();
     }
 
@@ -275,11 +274,21 @@ public class ModelGen implements IGen {
     }
 
     public ModelGen setBaseDir(String baseDir) {
-        this.baseDir = baseDir + "/model";
+        if (baseDir.contains("\\")) {
+            baseDir = baseDir.replaceAll("\\\\", Matcher.quoteReplacement(this.separator));
+        } else if (baseDir.contains("/")){
+            baseDir = baseDir.replaceAll("/", Matcher.quoteReplacement(this.separator));
+        }
+        this.baseDir = baseDir + this.separator + "model";
         return this;
     }
 
     public ModelGen setOutMapperXmlDir(String outMapperXmlDir) {
+        if (outMapperXmlDir.contains("\\")) {
+            outMapperXmlDir = outMapperXmlDir.replaceAll("\\\\", Matcher.quoteReplacement(this.separator));
+        } else if (outMapperXmlDir.contains("/")){
+            outMapperXmlDir = outMapperXmlDir.replaceAll("/", Matcher.quoteReplacement(this.separator));
+        }
         this.outMapperXmlDir = outMapperXmlDir;
         return this;
     }

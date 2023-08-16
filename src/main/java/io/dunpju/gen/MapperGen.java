@@ -28,7 +28,7 @@ public class MapperGen implements IGen {
         mapperStub.setClassName(this.className);
         mapperStub.setModelName(this.modelName);
         String stub = mapperStub.stub();
-        String outClassFile = this.outDir + "/" + className + ".java";
+        String outClassFile = this.outDir + ModelGen.separatorChar + className + ".java";
         File file = new File(outClassFile);
         if (!file.exists()) {
             try {
@@ -52,7 +52,7 @@ public class MapperGen implements IGen {
         mapperXmlGen.setNamespace(String.format("%s.%s", this.outPackage, className));
         mapperXmlGen.setShieldExistedOut(this.shieldExistedOut);
         if (this.outMapperXmlDir == null) {
-            this.outMapperXmlDir = String.format("%s/%s", this.outDir, "xml");
+            this.outMapperXmlDir = String.format("%s%s%s", this.outDir, ModelGen.separatorChar, "xml");
         }
         mapperXmlGen.setOutDir(this.outMapperXmlDir);
         mapperXmlGen.run();
