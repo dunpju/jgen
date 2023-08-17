@@ -58,7 +58,7 @@ public class EnumStub {
                 "                return e;\n" +
                 "            }\n" +
                 "        }\n" +
-                "        throw new Exception(String.format(\"%d不存在与枚举%s中\", code, %CLASS_NAME%.class.getSimpleName()));\n" +
+                "        throw new Exception(String.format(\"%d不存在枚举%s中\", code, %CLASS_NAME%.class.getSimpleName()));\n" +
                 "    }\n" +
                 "    \n" +
                 "    public static List<Map<String, Object>> select() {\n" +
