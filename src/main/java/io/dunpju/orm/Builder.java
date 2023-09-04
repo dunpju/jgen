@@ -1,5 +1,6 @@
 package io.dunpju.orm;
 
+import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson2.JSONObject;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
@@ -451,7 +452,9 @@ public class Builder<M extends IMapper<T>, T extends BaseModel> {
         this.sql.LIMIT(1);
 
         Map<String, Object> map = this.baseMapper.first(this.map(this.toSql()));
-        return JSONObject.parseObject(CamelizeUtil.toCamelCase(JSONObject.toJSONString(map)), objectClass);
+        Map<String, Object> camelCaseKeyMap = new HashMap<>();
+        map.forEach((k,v) -> camelCaseKeyMap.put(StrUtil.toCamelCase(k), v));
+        return JSONObject.parseObject(JSONObject.toJSONString(camelCaseKeyMap), objectClass);
     }
 
     /**
@@ -465,7 +468,9 @@ public class Builder<M extends IMapper<T>, T extends BaseModel> {
         if (!list.isEmpty()) {
             List<E> result = new ArrayList<>();
             for (Map<String, Object> map : list) {
-                result.add(JSONObject.parseObject(CamelizeUtil.toCamelCase(JSONObject.toJSONString(map)), objectClass));
+                Map<String, Object> camelCaseKeyMap = new HashMap<>();
+                map.forEach((k,v) -> camelCaseKeyMap.put(StrUtil.toCamelCase(k), v));
+                result.add(JSONObject.parseObject(JSONObject.toJSONString(camelCaseKeyMap), objectClass));
             }
             return result;
         }
@@ -516,7 +521,9 @@ public class Builder<M extends IMapper<T>, T extends BaseModel> {
         List<Map<String, Object>> list = this.baseMapper.get(this.map(_sql_));
         if (!list.isEmpty()) {
             for (Map<String, Object> map : list) {
-                result.add(JSONObject.parseObject(CamelizeUtil.toCamelCase(JSONObject.toJSONString(map)), objectClass));
+                Map<String, Object> camelCaseKeyMap = new HashMap<>();
+                map.forEach((k,v) -> camelCaseKeyMap.put(StrUtil.toCamelCase(k), v));
+                result.add(JSONObject.parseObject(JSONObject.toJSONString(camelCaseKeyMap), objectClass));
             }
             return new Paged<>(total, current, size, result);
         }
