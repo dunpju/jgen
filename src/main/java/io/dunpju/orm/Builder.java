@@ -452,9 +452,12 @@ public class Builder<M extends IMapper<T>, T extends BaseModel> {
         this.sql.LIMIT(1);
 
         Map<String, Object> map = this.baseMapper.first(this.map(this.toSql()));
-        Map<String, Object> camelCaseKeyMap = new HashMap<>();
-        map.forEach((k,v) -> camelCaseKeyMap.put(StrUtil.toCamelCase(k), v));
-        return JSONObject.parseObject(JSONObject.toJSONString(camelCaseKeyMap), objectClass);
+        if (map != null) {
+            Map<String, Object> camelCaseKeyMap = new HashMap<>();
+            map.forEach((k,v) -> camelCaseKeyMap.put(StrUtil.toCamelCase(k), v));
+            return JSONObject.parseObject(JSONObject.toJSONString(camelCaseKeyMap), objectClass);
+        }
+        return null;
     }
 
     /**
