@@ -63,7 +63,7 @@ public class EnumStub {
                 "    \n" +
                 "    public static List<Map<String, Object>> select() {\n" +
                 "        List<Map<String, Object>> list = new ArrayList<>();\n" +
-                "        for (EnumPeriodLevel e : EnumPeriodLevel.values()) {\n" +
+                "        for (%CLASS_NAME% e : %CLASS_NAME%.values()) {\n" +
                 "            Map<String, Object> m = new LinkedHashMap<>();\n" +
                 "            m.put(\"id\", e.getCode());\n" +
                 "            m.put(\"title\", e.getMessage());\n" +
@@ -74,7 +74,7 @@ public class EnumStub {
                 "    \n" +
                 "    public static List<Map<String, Object>> select(String key, String title) {\n" +
                 "        List<Map<String, Object>> list = new ArrayList<>();\n" +
-                "        for (EnumPeriodLevel e : EnumPeriodLevel.values()) {\n" +
+                "        for (%CLASS_NAME% e : %CLASS_NAME%.values()) {\n" +
                 "            Map<String, Object> m = new LinkedHashMap<>();\n" +
                 "            m.put(key, e.getCode());\n" +
                 "            m.put(title, e.getMessage());\n" +
