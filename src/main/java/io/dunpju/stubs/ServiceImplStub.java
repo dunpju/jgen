@@ -29,18 +29,29 @@ public class ServiceImplStub {
                 import cn.hutool.extra.spring.SpringUtil;
                 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
                 import io.dunpju.orm.Paged;
+                import lombok.Data;
                 import org.springframework.stereotype.Service;
                 import org.springframework.transaction.annotation.Transactional;
                 %IMPORTS%
                                 
                 @Service
                 public class %CLASS_NAME% extends ServiceImpl<%MAPPER_NAME%, %MODEL_NAME%> implements %SERVICE_NAME% {
-                                
+                    
+                    @Data
+                    public static class ListParam {
+                        private Long page;
+                        private Long pageSize;
+                    }
+                    
                     public Paged<%MODEL_NAME%> getList(ListParam params) {
                         %UPPER_FIRST_DAO_NAME% %DAO_NAME% = SpringUtil.getBean(%UPPER_FIRST_DAO_NAME%.class);
                         return %DAO_NAME%.getList(params.getPage(), params.getPageSize());
                     }
-                                
+                    
+                    @Data
+                    public static class AddParam {
+                    }
+                    
                     @Transactional(rollbackFor = Exception.class)
                     public void add(AddParam params) {
                         %UPPER_FIRST_DAO_NAME% %DAO_NAME% = SpringUtil.getBean(%UPPER_FIRST_DAO_NAME%.class);
@@ -49,7 +60,11 @@ public class ServiceImplStub {
                         %DAO_NAME%.setData(%ENTITY_NAME%);
                         %DAO_NAME%.Add();
                     }
-                                
+                    
+                    @Data
+                    public static class EditParam {
+                    }
+                    
                     @Transactional(rollbackFor = Exception.class)
                     public void edit(EditParam params) {
                         %UPPER_FIRST_DAO_NAME% %DAO_NAME% = SpringUtil.getBean(%UPPER_FIRST_DAO_NAME%.class);

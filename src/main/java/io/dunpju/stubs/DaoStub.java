@@ -38,10 +38,8 @@ public class DaoStub {
                 
                 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
                 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
-                import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
                 import io.dunpju.entity.IFlag;
                 import io.dunpju.orm.BaseDao;
-                import io.dunpju.orm.Builder;
                 import io.dunpju.orm.Paged;
                 import lombok.EqualsAndHashCode;
                 import org.springframework.context.annotation.Scope;
