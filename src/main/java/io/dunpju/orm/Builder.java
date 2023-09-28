@@ -197,8 +197,9 @@ public class Builder<M extends IMapper<T>, T extends BaseModel> {
 
     public Builder<M, T> WHERE(Object column, String operator, Object value) {
         String columnStr = column.toString().replaceAll("\\.", "_");
-        this.sql.WHERE(String.format("%s %s #{%s}", column, operator, columnStr));
-        this.parameters.put(columnStr, value);
+        String parameterName = String.format("%s_%d", columnStr, this.parameters.size());
+        this.sql.WHERE(String.format("%s %s #{%s}", column, operator, parameterName));
+        this.parameters.put(parameterName, value);
         return this;
     }
 
@@ -292,12 +293,13 @@ public class Builder<M extends IMapper<T>, T extends BaseModel> {
         inStr.add("(");
         int i = 0;
         for (Object v : value) {
-            String key = String.format("#{%s_%s}", column, i);
+            String parameterName = String.format("%s_%d", column, this.parameters.size());
+            String key = String.format("#{%s}", parameterName);
             inStr.add(key);
             if (value.size() - 1 > i) {
                 inStr.add(",");
             }
-            this.parameters.put(String.format("%s_%s", column, i), v);
+            this.parameters.put(parameterName, v);
             i++;
         }
         inStr.add(")");
@@ -306,15 +308,18 @@ public class Builder<M extends IMapper<T>, T extends BaseModel> {
     }
 
     public Builder<M, T> WHERE_NULL(Object column) {
-        this.sql.WHERE(String.format("%s %s #{%s}", column.toString(), "IS", "NULL"));
-        this.parameters.put(column.toString(), "NULL");
+        String parameterName = String.format("%s_%d", column.toString(), this.parameters.size());
+        this.sql.WHERE(String.format("%s %s #{%s}", column, "IS", parameterName));
+        this.parameters.put(parameterName, "NULL");
         return this;
     }
 
-    public Builder<M, T> BETWEEN(String column, Object begin, Object end) {
-        this.sql.WHERE(String.format("%s BETWEEN #{%s} AND #{%s}", column, "_begin_", "_end_"));
-        this.parameters.put("_begin_", begin);
-        this.parameters.put("_end_", end);
+    public Builder<M, T> BETWEEN(String column, Object first, Object second) {
+        String beginName = String.format("%s_%d", column, this.parameters.size());
+        this.parameters.put(beginName, first);
+        String endName = String.format("%s_%d", column, this.parameters.size());
+        this.parameters.put(endName, second);
+        this.sql.WHERE(String.format("%s BETWEEN #{%s} AND #{%s}", column, beginName, endName));
         return this;
     }
 
