@@ -145,14 +145,14 @@ public class ModelStub {
 
             if (i == 0) {
                 this.to_str.append(String.format("\"%s = \" + %s +\n", camelCasePropertyName, camelCasePropertyName));
-                this.field.append(key);
+                this.field.append(columnsInfo.get(key).getName());
             } else {
                 if (columnsInfo.size() - 1 > i) {
                     this.to_str.append(String.format("            \", %s = \" + %s +\n", camelCasePropertyName, camelCasePropertyName));
                 } else {
                     this.to_str.append(String.format("            \", %s = \" + %s +", camelCasePropertyName, camelCasePropertyName));
                 }
-                this.field.append("        ").append(key);
+                this.field.append("        ").append(columnsInfo.get(key).getName());
             }
             if (i < columnsInfo.size() - 1) {
                 this.field.append(",");
