@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.generator.config.po.TableInfo;
 import com.baomidou.mybatisplus.generator.config.rules.IColumnType;
 import com.baomidou.mybatisplus.generator.jdbc.DatabaseMetaDataWrapper;
 import com.baomidou.mybatisplus.generator.type.TypeRegistry;
+import io.dunpju.gen.TypeConvert;
 import io.dunpju.utils.CamelizeUtil;
 
 import java.util.*;
@@ -27,7 +28,7 @@ public class ModelStub {
     private ConfigBuilder configBuilder;
     private Map<String, DatabaseMetaDataWrapper.Column> columnsInfo;
     private TypeRegistry typeRegistry;
-    private Map<String, String> propertyTypeConvertMap;
+    private Map<String, TypeConvert> propertyTypeConvertMap;
 
     public String stub() {
         String tpl = """
@@ -133,7 +134,10 @@ public class ModelStub {
             String getType = iColumnType.getType();
             if (this.propertyTypeConvertMap.size() > 0) {
                 if (this.propertyTypeConvertMap.containsKey(getType)) {
-                    getType = this.propertyTypeConvertMap.get(getType);
+                    getType = this.propertyTypeConvertMap.get(getType).getTarget();
+                    if (null != this.propertyTypeConvertMap.get(getType).getPkg() && !this.propertyTypeConvertMap.get(getType).getPkg().equals("")) {
+                        this.imports.add("import " + this.propertyTypeConvertMap.get(getType).getPkg() + ";");
+                    }
                 }
             }
             propertyStub = propertyStub.replaceAll("%PROPERTY_TYPE%", getType);
@@ -197,7 +201,7 @@ public class ModelStub {
         this.typeRegistry = typeRegistry;
     }
 
-    public void setPropertyTypeConvertMap(Map<String, String> propertyTypeConvertMap) {
+    public void setPropertyTypeConvertMap(Map<String, TypeConvert> propertyTypeConvertMap) {
         this.propertyTypeConvertMap = propertyTypeConvertMap;
     }
 }

@@ -23,7 +23,7 @@ public class EntityGen implements IGen{
     private Map<String, DatabaseMetaDataWrapper.Column> columnsInfo;
     private ConfigBuilder configBuilder;
     private TypeRegistry typeRegistry;
-    private Map<String, String> propertyTypeConvertMap;
+    private Map<String, TypeConvert> propertyTypeConvertMap;
     private String entityPrimaryKey;
     private String entityPrimaryKeyType;
     private boolean shieldExistedOut;

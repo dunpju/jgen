@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.generator.config.po.TableInfo;
 import com.baomidou.mybatisplus.generator.config.rules.IColumnType;
 import com.baomidou.mybatisplus.generator.jdbc.DatabaseMetaDataWrapper;
 import com.baomidou.mybatisplus.generator.type.TypeRegistry;
+import io.dunpju.gen.TypeConvert;
 import io.dunpju.utils.CamelizeUtil;
 import io.dunpju.utils.StrUtil;
 
@@ -25,7 +26,7 @@ public class EntityStub {
     private TypeRegistry typeRegistry;
     private String entityPrimaryKey;
     private String entityPrimaryKeyType;
-    private Map<String, String> propertyTypeConvertMap;
+    private Map<String, TypeConvert> propertyTypeConvertMap;
     private String createTimeInitTemp = "this.set%CREATE_TIME%(%CREATE_TIME_INIT%);";
     private String updateTimeInitTemp = "this.set%UPDATE_TIME%(%UPDATE_TIME_INIT%);";
     private String createTimeInit = "LocalDateTime.now()";
@@ -97,7 +98,10 @@ public class EntityStub {
             String getType = iColumnType.getType();
             if (this.propertyTypeConvertMap.size() > 0) {
                 if (this.propertyTypeConvertMap.containsKey(getType)) {
-                    getType = this.propertyTypeConvertMap.get(getType);
+                    getType = this.propertyTypeConvertMap.get(getType).getTarget();
+                    if (null != this.propertyTypeConvertMap.get(getType).getPkg() && !this.propertyTypeConvertMap.get(getType).getPkg().equals("")) {
+                        this.imports.add("import " + this.propertyTypeConvertMap.get(getType).getPkg() + ";");
+                    }
                 }
             }
             propertyStub = propertyStub.replaceAll("%PROPERTY_TYPE%", getType);
@@ -155,7 +159,7 @@ public class EntityStub {
         this.typeRegistry = typeRegistry;
     }
 
-    public void setPropertyTypeConvertMap(Map<String, String> propertyTypeConvertMap) {
+    public void setPropertyTypeConvertMap(Map<String, TypeConvert> propertyTypeConvertMap) {
         this.propertyTypeConvertMap = propertyTypeConvertMap;
     }
 

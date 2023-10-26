@@ -36,7 +36,7 @@ public class ModelGen implements IGen {
     private ConfigBuilder configBuilder;
     private TypeRegistry typeRegistry;
     private ResultSet tableResultSet;
-    private final Map<String, String> typeConvertMap;
+    private final Map<String, TypeConvert> typeConvertMap;
     private boolean shieldExistedOut;
     private String createTimeInit;
     private String createTime;
@@ -311,6 +311,11 @@ public class ModelGen implements IGen {
     }
 
     public ModelGen typeConvert(String source, String target) {
+        this.typeConvertMap.put(source, new TypeConvert(source, target, ""));
+        return this;
+    }
+
+    public ModelGen typeConvert(String source, TypeConvert target) {
         this.typeConvertMap.put(source, target);
         return this;
     }
