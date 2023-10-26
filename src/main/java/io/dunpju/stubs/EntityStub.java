@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.generator.config.po.TableInfo;
 import com.baomidou.mybatisplus.generator.config.rules.IColumnType;
 import com.baomidou.mybatisplus.generator.jdbc.DatabaseMetaDataWrapper;
 import com.baomidou.mybatisplus.generator.type.TypeRegistry;
+import io.dunpju.gen.ITypeConvert;
 import io.dunpju.gen.TypeConvert;
 import io.dunpju.utils.CamelizeUtil;
 import io.dunpju.utils.StrUtil;
@@ -98,9 +99,13 @@ public class EntityStub {
             String getType = iColumnType.getType();
             if (this.propertyTypeConvertMap.size() > 0) {
                 if (this.propertyTypeConvertMap.containsKey(getType)) {
-                    getType = this.propertyTypeConvertMap.get(getType).getTarget();
-                    if (null != this.propertyTypeConvertMap.get(getType).getPkg() && !this.propertyTypeConvertMap.get(getType).getPkg().equals("")) {
-                        this.imports.add("import " + this.propertyTypeConvertMap.get(getType).getPkg() + ";");
+                    if (this.propertyTypeConvertMap.get(getType) instanceof ITypeConvert) {
+                        getType =  ((ITypeConvert) this.propertyTypeConvertMap.get(getType)).handle().getTarget()
+                    } else {
+                        getType = this.propertyTypeConvertMap.get(getType).getTarget();
+                        if (null != this.propertyTypeConvertMap.get(getType).getPkg() && !this.propertyTypeConvertMap.get(getType).getPkg().equals("")) {
+                            this.imports.add("import " + this.propertyTypeConvertMap.get(getType).getPkg() + ";");
+                        }
                     }
                 }
             }
