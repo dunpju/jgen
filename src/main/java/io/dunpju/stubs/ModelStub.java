@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.generator.config.po.TableInfo;
 import com.baomidou.mybatisplus.generator.config.rules.IColumnType;
 import com.baomidou.mybatisplus.generator.jdbc.DatabaseMetaDataWrapper;
 import com.baomidou.mybatisplus.generator.type.TypeRegistry;
+import io.dunpju.gen.ITypeConvert;
 import io.dunpju.gen.TypeConvert;
 import io.dunpju.utils.CamelizeUtil;
 
@@ -129,14 +130,23 @@ public class ModelStub {
             } else {
                 this.property.append(this.tableFieldStub.replaceAll("%TABLE_FIELD%", columnsInfo.get(key).getName()));
             }
-            String camelCasePropertyName = CamelizeUtil.toCamelCase(columnsInfo.get(key).getName());
+            String columnName = columnsInfo.get(key).getName();
+            String camelCasePropertyName = CamelizeUtil.toCamelCase(columnName);
             String propertyStub = this.propertyStub;
             String getType = iColumnType.getType();
             if (this.propertyTypeConvertMap.size() > 0) {
                 if (this.propertyTypeConvertMap.containsKey(getType)) {
-                    getType = this.propertyTypeConvertMap.get(getType).getTarget();
-                    if (null != this.propertyTypeConvertMap.get(getType).getPkg() && !this.propertyTypeConvertMap.get(getType).getPkg().equals("")) {
-                        this.imports.add("import " + this.propertyTypeConvertMap.get(getType).getPkg() + ";");
+                    if (this.propertyTypeConvertMap.get(getType) instanceof ITypeConvert) {
+                        TypeConvert typeConvert =  ((ITypeConvert) this.propertyTypeConvertMap.get(getType)).handle(getType, columnName);
+                        getType = typeConvert.getTarget();
+                        if (null != typeConvert.getPkg() && !typeConvert.getPkg().equals("")) {
+                            this.imports.add("import " + typeConvert.getPkg() + ";");
+                        }
+                    } else {
+                        getType = this.propertyTypeConvertMap.get(getType).getTarget();
+                        if (null != this.propertyTypeConvertMap.get(getType).getPkg() && !this.propertyTypeConvertMap.get(getType).getPkg().equals("")) {
+                            this.imports.add("import " + this.propertyTypeConvertMap.get(getType).getPkg() + ";");
+                        }
                     }
                 }
             }

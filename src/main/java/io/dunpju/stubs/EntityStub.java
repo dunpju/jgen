@@ -100,7 +100,11 @@ public class EntityStub {
             if (this.propertyTypeConvertMap.size() > 0) {
                 if (this.propertyTypeConvertMap.containsKey(getType)) {
                     if (this.propertyTypeConvertMap.get(getType) instanceof ITypeConvert) {
-                        getType =  ((ITypeConvert) this.propertyTypeConvertMap.get(getType)).handle().getTarget()
+                        TypeConvert typeConvert =  ((ITypeConvert) this.propertyTypeConvertMap.get(getType)).handle(getType, columnName);
+                        getType = typeConvert.getTarget();
+                        if (null != typeConvert.getPkg() && !typeConvert.getPkg().equals("")) {
+                            this.imports.add("import " + typeConvert.getPkg() + ";");
+                        }
                     } else {
                         getType = this.propertyTypeConvertMap.get(getType).getTarget();
                         if (null != this.propertyTypeConvertMap.get(getType).getPkg() && !this.propertyTypeConvertMap.get(getType).getPkg().equals("")) {

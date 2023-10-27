@@ -1,5 +1,5 @@
 package io.dunpju.gen;
 
 public interface ITypeConvert {
-    public TypeConvert handle();
+    public TypeConvert handle(String source, String columnName);
 }
