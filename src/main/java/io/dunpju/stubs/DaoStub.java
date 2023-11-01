@@ -35,7 +35,7 @@ public class DaoStub {
     public String stub() {
         String tpl = """
                 package %PACKAGE%;
-                
+                                
                 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
                 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
                 import io.dunpju.entity.IFlag;
@@ -121,11 +121,11 @@ public class DaoStub {
         tpl = tpl.replaceAll("%MAPPER_NAME%", this.mapperName);
         tpl = tpl.replaceAll("%MODEL_NAME%", this.modelName);
         tpl = tpl.replaceAll("%ENTITY_NAME%", this.entityName);
-        tpl = tpl.replaceAll("%TABLE_PRIMARY_KEY%", this.tablePrimaryKey);
-        tpl = tpl.replaceAll("%ENTITY_PRIMARY_KEY%", this.entityPrimaryKey);
+        tpl = tpl.replaceAll("%TABLE_PRIMARY_KEY%", this.tablePrimaryKey != null ? this.tablePrimaryKey : "id");
+        tpl = tpl.replaceAll("%ENTITY_PRIMARY_KEY%", this.entityPrimaryKey != null ? this.entityPrimaryKey : "id");
         tpl = tpl.replaceAll("%CREATE_PROPERTY_MAPPER%", this.createPropertyMapper.toString());
-        tpl = tpl.replaceAll("%ENTITY_PRIMARY_KEY_TYPE%", this.entityPrimaryKeyType);
-        tpl = tpl.replaceAll("%CAME_ENTITY_PRIMARY_KEY%", this.cameEntityPrimaryKey);
+        tpl = tpl.replaceAll("%ENTITY_PRIMARY_KEY_TYPE%", this.entityPrimaryKeyType != null ? this.entityPrimaryKeyType : "Long");
+        tpl = tpl.replaceAll("%CAME_ENTITY_PRIMARY_KEY%", this.cameEntityPrimaryKey != null ? this.cameEntityPrimaryKey : "Id");
         //tpl = tpl.replaceAll("%VO_NAME%", this.voName);
         return tpl;
     }

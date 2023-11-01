@@ -102,9 +102,9 @@ public class ServiceImplStub {
         tpl = tpl.replaceAll("%DAO_NAME%", this.daoName);
         tpl = tpl.replaceAll("%UPPER_FIRST_ENTITY_NAME%", this.upperFirstEntityName);
         tpl = tpl.replaceAll("%ENTITY_NAME%", this.entityName);
-        tpl = tpl.replaceAll("%ENTITY_PRIMARY_KEY_TYPE%", this.entityPrimaryKeyType);
-        tpl = tpl.replaceAll("%ENTITY_PRIMARY_KEY%", this.entityPrimaryKey);
-        tpl = tpl.replaceAll("%UPPER_FIRST_ENTITY_PRIMARY_KEY%", this.upperFirstEntityPrimaryKey);
+        tpl = tpl.replaceAll("%ENTITY_PRIMARY_KEY_TYPE%", this.entityPrimaryKeyType != null ? this.entityPrimaryKeyType : "Long");
+        tpl = tpl.replaceAll("%ENTITY_PRIMARY_KEY%", this.entityPrimaryKey != null ? this.entityPrimaryKey : "id");
+        tpl = tpl.replaceAll("%UPPER_FIRST_ENTITY_PRIMARY_KEY%", this.upperFirstEntityPrimaryKey != null ? this.upperFirstEntityPrimaryKey : "Id");
         return tpl;
     }
 }
