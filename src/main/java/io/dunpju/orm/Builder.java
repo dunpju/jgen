@@ -519,7 +519,7 @@ public class Builder<M extends IMapper<T>, T extends BaseModel> {
         }
         List<Map<String, Object>> countResult = this.baseMapper.count(countMap);
         long total = 0L;
-        if (countResult != null) {
+        if (countResult != null && countResult.size() > 0) {
             if (countResult.size() > 1) {
                 total = countResult.size();
             } else {
