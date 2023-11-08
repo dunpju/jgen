@@ -106,10 +106,10 @@ public class EntityStub {
                             this.imports.add("import " + typeConvert.getPkg() + ";");
                         }
                     } else {
-                        getType = this.propertyTypeConvertMap.get(getType).getTarget();
                         if (null != this.propertyTypeConvertMap.get(getType).getPkg() && !this.propertyTypeConvertMap.get(getType).getPkg().equals("")) {
                             this.imports.add("import " + this.propertyTypeConvertMap.get(getType).getPkg() + ";");
                         }
+                        getType = this.propertyTypeConvertMap.get(getType).getTarget();
                     }
                 }
             }
