@@ -15,6 +15,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.math.BigDecimal;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -458,9 +459,14 @@ public class Builder<M extends IMapper<T>, T extends BaseModel> {
 
         Map<String, Object> map = this.baseMapper.first(this.map(this.toSql()));
         if (map != null) {
-            Map<String, Object> camelCaseKeyMap = new HashMap<>();
-            map.forEach((k,v) -> camelCaseKeyMap.put(StrUtil.toCamelCase(k), v));
-            return JSONObject.parseObject(JSONObject.toJSONString(camelCaseKeyMap), objectClass);
+            Class<?> superclass = objectClass.getSuperclass();
+            if (superclass == Number.class) {
+                return (E) map.get(map.keySet().iterator().next());
+            } else {
+                Map<String, Object> camelCaseKeyMap = new HashMap<>();
+                map.forEach((k,v) -> camelCaseKeyMap.put(StrUtil.toCamelCase(k), v));
+                return JSONObject.parseObject(JSONObject.toJSONString(camelCaseKeyMap), objectClass);
+            }
         }
         return null;
     }
@@ -475,10 +481,15 @@ public class Builder<M extends IMapper<T>, T extends BaseModel> {
         List<Map<String, Object>> list = this.baseMapper.get(this.map(this.toSql()));
         if (!list.isEmpty()) {
             List<E> result = new ArrayList<>();
+            Class<?> superclass = objectClass.getSuperclass();
             for (Map<String, Object> map : list) {
-                Map<String, Object> camelCaseKeyMap = new HashMap<>();
-                map.forEach((k,v) -> camelCaseKeyMap.put(StrUtil.toCamelCase(k), v));
-                result.add(JSONObject.parseObject(JSONObject.toJSONString(camelCaseKeyMap), objectClass));
+                if (superclass == Number.class) {
+                    map.forEach((k,v) -> result.add((E) v));
+                } else {
+                    Map<String, Object> camelCaseKeyMap = new HashMap<>();
+                    map.forEach((k,v) -> camelCaseKeyMap.put(StrUtil.toCamelCase(k), v));
+                    result.add(JSONObject.parseObject(JSONObject.toJSONString(camelCaseKeyMap), objectClass));
+                }
             }
             return result;
         }
@@ -530,10 +541,15 @@ public class Builder<M extends IMapper<T>, T extends BaseModel> {
         List<E> result = new ArrayList<>();
         List<Map<String, Object>> list = this.baseMapper.get(this.map(_sql_));
         if (!list.isEmpty()) {
+            Class<?> superclass = objectClass.getSuperclass();
             for (Map<String, Object> map : list) {
-                Map<String, Object> camelCaseKeyMap = new HashMap<>();
-                map.forEach((k,v) -> camelCaseKeyMap.put(StrUtil.toCamelCase(k), v));
-                result.add(JSONObject.parseObject(JSONObject.toJSONString(camelCaseKeyMap), objectClass));
+                if (superclass == Number.class) {
+                    map.forEach((k,v) -> result.add((E) v));
+                } else {
+                    Map<String, Object> camelCaseKeyMap = new HashMap<>();
+                    map.forEach((k,v) -> camelCaseKeyMap.put(StrUtil.toCamelCase(k), v));
+                    result.add(JSONObject.parseObject(JSONObject.toJSONString(camelCaseKeyMap), objectClass));
+                }
             }
             return new Paged<>(total, current, size, result);
         }
