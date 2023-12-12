@@ -204,6 +204,11 @@ public class Builder<M extends IMapper<T>, T extends BaseModel> {
         return this;
     }
 
+    public Builder<M, T> WHERE(String conditions) {
+        this.sql.WHERE(conditions);
+        return this;
+    }
+
     public Builder<M, T> OR() {
         this.sql.OR();
         return this;
