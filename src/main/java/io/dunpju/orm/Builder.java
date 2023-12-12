@@ -460,7 +460,7 @@ public class Builder<M extends IMapper<T>, T extends BaseModel> {
         Map<String, Object> map = this.baseMapper.first(this.map(this.toSql()));
         if (map != null) {
             Class<?> superclass = objectClass.getSuperclass();
-            if (superclass == Number.class) {
+            if (superclass == Number.class || objectClass == String.class) {
                 return (E) map.get(map.keySet().iterator().next());
             } else {
                 Map<String, Object> camelCaseKeyMap = new HashMap<>();
@@ -483,7 +483,7 @@ public class Builder<M extends IMapper<T>, T extends BaseModel> {
             List<E> result = new ArrayList<>();
             Class<?> superclass = objectClass.getSuperclass();
             for (Map<String, Object> map : list) {
-                if (superclass == Number.class) {
+                if (superclass == Number.class || objectClass == String.class) {
                     map.forEach((k,v) -> result.add((E) v));
                 } else {
                     Map<String, Object> camelCaseKeyMap = new HashMap<>();
@@ -543,7 +543,7 @@ public class Builder<M extends IMapper<T>, T extends BaseModel> {
         if (!list.isEmpty()) {
             Class<?> superclass = objectClass.getSuperclass();
             for (Map<String, Object> map : list) {
-                if (superclass == Number.class) {
+                if (superclass == Number.class || objectClass == String.class) {
                     map.forEach((k,v) -> result.add((E) v));
                 } else {
                     Map<String, Object> camelCaseKeyMap = new HashMap<>();
