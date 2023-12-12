@@ -309,13 +309,16 @@ public class Builder<M extends IMapper<T>, T extends BaseModel> {
     }
 
     public Builder<M, T> WHERE_NULL(Object column) {
-        String parameterName = String.format("%s_%d", column.toString(), this.parameters.size());
-        this.sql.WHERE(String.format("%s %s #{%s}", column, "IS", parameterName));
-        this.parameters.put(parameterName, "NULL");
+        this.sql.WHERE(String.format("%s %s %s", column, "IS", "NULL"));
         return this;
     }
 
-    public Builder<M, T> BETWEEN(String column, Object first, Object second) {
+    public Builder<M, T> WHERE_NOT_NULL(Object column) {
+        this.sql.WHERE(String.format("%s %s %s", column, "IS", "NOT NULL"));
+        return this;
+    }
+
+    public Builder<M, T> BETWEEN(Object column, Object first, Object second) {
         String beginName = String.format("%s_%d", column, this.parameters.size());
         this.parameters.put(beginName, first);
         String endName = String.format("%s_%d", column, this.parameters.size());
@@ -324,8 +327,13 @@ public class Builder<M extends IMapper<T>, T extends BaseModel> {
         return this;
     }
 
-    public Builder<M, T> LIKE(String column, Object value) {
+    public Builder<M, T> LIKE(Object column, Object value) {
         this.WHERE(column, "LIKE", value);
+        return this;
+    }
+
+    public Builder<M, T> NOT_LIKE(Object column, Object value) {
+        this.WHERE(column, "NOT LIKE", value);
         return this;
     }
 
