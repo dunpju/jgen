@@ -15,7 +15,6 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.math.BigDecimal;
 import java.util.*;
-import java.util.concurrent.atomic.AtomicReference;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -24,6 +23,7 @@ public class Builder<M extends IMapper<T>, T extends BaseModel> {
     protected Map<String, Object> parameters;
     protected String table;
     protected String tableAlias;
+    protected String _pred = null;
     protected String _columns = null;
     protected M baseMapper;
     protected T model;
@@ -342,16 +342,29 @@ public class Builder<M extends IMapper<T>, T extends BaseModel> {
         return this;
     }
 
+    public Builder<M, T> RAW(String pred, Object ...args) {
+        for (Object arg : args) {
+            String argName = String.format("%s_%d", "arg", this.parameters.size());
+            this.parameters.put(argName, arg);
+        }
+        this._pred = pred;
+        return this;
+    }
+
     private Map<String, Object> map(String _sql_) {
         this.parameters.put("_sql_", _sql_);
         Map<String, Object> map = this.parameters;
         this.parameters = new HashMap<>();
+        this._pred = null;
         this._columns = null;
         this.sql = new SQL();
         return map;
     }
 
     public String toSql() {
+        if (this._pred != null) {
+            return this._pred;
+        }
         return this.sql.FROM(this.table).toString();
     }
 
