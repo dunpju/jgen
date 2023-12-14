@@ -332,6 +332,15 @@ public class Builder<M extends IMapper<T>, T extends BaseModel> {
         return this;
     }
 
+    public Builder<M, T> NOT_BETWEEN(Object column, Object first, Object second) {
+        String beginName = String.format("%s_%d", column, this.parameters.size());
+        this.parameters.put(beginName, first);
+        String endName = String.format("%s_%d", column, this.parameters.size());
+        this.parameters.put(endName, second);
+        this.sql.WHERE(String.format("%s NOT BETWEEN #{%s} AND #{%s}", column, beginName, endName));
+        return this;
+    }
+
     public Builder<M, T> LIKE(Object column, Object value) {
         this.WHERE(column, "LIKE", value);
         return this;
