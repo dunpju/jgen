@@ -20,8 +20,8 @@ public class ModelStub {
     private String tableDescription;
     private String className;
     private String fieldDescriptionStub = "    @%MESSAGE%(\"%FIELD_DESCRIPTION%\")\n";
-    private String tableFieldStub = "    @TableField(\"%TABLE_FIELD%\")\n";
-    private final String tableIdStub = "    @TableId(value = \"%TABLE_PRIMARY_KEY%\", type = IdType.AUTO)\n";
+    private String tableFieldStub = "    @TableField(\"`%TABLE_FIELD%`\")\n";
+    private final String tableIdStub = "    @TableId(value = \"`%TABLE_PRIMARY_KEY%`\", type = IdType.AUTO)\n";
     private final String propertyStub = "    private %PROPERTY_TYPE% %PROPERTY_NAME%;\n";
     private final StringBuffer field = new StringBuffer();
     private final StringBuffer property = new StringBuffer();
