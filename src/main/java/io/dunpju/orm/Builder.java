@@ -196,9 +196,12 @@ public class Builder<M extends IMapper<T>, T extends BaseModel> {
         return this;
     }
 
+    private String dotToUnderline(Object column) {
+        return column.toString().replaceAll("\\.", "_");
+    }
+
     public Builder<M, T> WHERE(Object column, String operator, Object value) {
-        String columnStr = column.toString().replaceAll("\\.", "_");
-        String parameterName = String.format("%s_%d", columnStr, this.parameters.size());
+        String parameterName = String.format("%s_%d", this.dotToUnderline(column), this.parameters.size());
         this.sql.WHERE(String.format("%s %s #{%s}", column, operator, parameterName));
         this.parameters.put(parameterName, value);
         return this;
@@ -299,7 +302,7 @@ public class Builder<M extends IMapper<T>, T extends BaseModel> {
         inStr.add("(");
         int i = 0;
         for (Object v : value) {
-            String parameterName = String.format("%s_%d", column, this.parameters.size());
+            String parameterName = String.format("%s_%d", this.dotToUnderline(column), this.parameters.size());
             String key = String.format("#{%s}", parameterName);
             inStr.add(key);
             if (value.size() - 1 > i) {
@@ -324,18 +327,18 @@ public class Builder<M extends IMapper<T>, T extends BaseModel> {
     }
 
     public Builder<M, T> BETWEEN(Object column, Object first, Object second) {
-        String beginName = String.format("%s_%d", column, this.parameters.size());
+        String beginName = String.format("%s_%d", this.dotToUnderline(column), this.parameters.size());
         this.parameters.put(beginName, first);
-        String endName = String.format("%s_%d", column, this.parameters.size());
+        String endName = String.format("%s_%d", this.dotToUnderline(column), this.parameters.size());
         this.parameters.put(endName, second);
         this.sql.WHERE(String.format("%s BETWEEN #{%s} AND #{%s}", column, beginName, endName));
         return this;
     }
 
     public Builder<M, T> NOT_BETWEEN(Object column, Object first, Object second) {
-        String beginName = String.format("%s_%d", column, this.parameters.size());
+        String beginName = String.format("%s_%d", this.dotToUnderline(column), this.parameters.size());
         this.parameters.put(beginName, first);
-        String endName = String.format("%s_%d", column, this.parameters.size());
+        String endName = String.format("%s_%d", this.dotToUnderline(column), this.parameters.size());
         this.parameters.put(endName, second);
         this.sql.WHERE(String.format("%s NOT BETWEEN #{%s} AND #{%s}", column, beginName, endName));
         return this;
