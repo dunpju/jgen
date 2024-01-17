@@ -316,6 +316,27 @@ public class Builder<M extends IMapper<T>, T extends BaseModel> {
         return this;
     }
 
+    public Builder<M, T> WHERE_NOT_IN(Object column, List<Object> value) {
+        List<String> inStr = new ArrayList<>();
+        inStr.add(column.toString());
+        inStr.add("NOT IN");
+        inStr.add("(");
+        int i = 0;
+        for (Object v : value) {
+            String parameterName = String.format("%s_%d", this.dotToUnderline(column), this.parameters.size());
+            String key = String.format("#{%s}", parameterName);
+            inStr.add(key);
+            if (value.size() - 1 > i) {
+                inStr.add(",");
+            }
+            this.parameters.put(parameterName, v);
+            i++;
+        }
+        inStr.add(")");
+        this.sql.WHERE(String.join(" ", inStr));
+        return this;
+    }
+
     public Builder<M, T> WHERE_NULL(Object column) {
         this.sql.WHERE(String.format("%s %s %s", column, "IS", "NULL"));
         return this;
