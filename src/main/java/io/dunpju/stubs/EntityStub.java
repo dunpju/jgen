@@ -27,6 +27,7 @@ public class EntityStub {
     private TypeRegistry typeRegistry;
     private String entityPrimaryKey;
     private String entityPrimaryKeyType;
+    private Map<String, ITypeConvert> propertyITypeConvertMap;
     private Map<String, TypeConvert> propertyTypeConvertMap;
     private String createTimeInitTemp = "this.set%CREATE_TIME%(%CREATE_TIME_INIT%);";
     private String updateTimeInitTemp = "this.set%UPDATE_TIME%(%UPDATE_TIME_INIT%);";
@@ -97,22 +98,20 @@ public class EntityStub {
             }
             String propertyStub = this.propertyStub;
             String getType = iColumnType.getType();
-            if (this.propertyTypeConvertMap.size() > 0) {
-                if (this.propertyTypeConvertMap.containsKey(getType)) {
-                    if (this.propertyTypeConvertMap.get(getType) instanceof ITypeConvert) {
-                        TypeConvert typeConvert = ((ITypeConvert) this.propertyTypeConvertMap.get(getType)).handle(getType, columnName);
-                        if (typeConvert != null) {
-                            getType = typeConvert.getTarget();
-                            if (null != typeConvert.getPkg() && !typeConvert.getPkg().equals("")) {
-                                this.imports.add("import " + typeConvert.getPkg() + ";");
-                            }
-                        }
-                    } else {
-                        if (null != this.propertyTypeConvertMap.get(getType).getPkg() && !this.propertyTypeConvertMap.get(getType).getPkg().equals("")) {
-                            this.imports.add("import " + this.propertyTypeConvertMap.get(getType).getPkg() + ";");
-                        }
-                        getType = this.propertyTypeConvertMap.get(getType).getTarget();
+
+            if (this.propertyITypeConvertMap != null && this.propertyITypeConvertMap.get(getType) != null) {
+                TypeConvert typeConvert = (this.propertyITypeConvertMap.get(getType)).handle(getType, columnName);
+                if (typeConvert != null) {
+                    getType = typeConvert.getTarget();
+                    if (null != typeConvert.getPkg() && !typeConvert.getPkg().equals("")) {
+                        this.imports.add("import " + typeConvert.getPkg() + ";");
                     }
+                }
+            } else if (this.propertyTypeConvertMap != null && this.propertyTypeConvertMap.get(getType) != null) {
+                TypeConvert typeConvert = this.propertyTypeConvertMap.get(getType);
+                getType = typeConvert.getTarget();
+                if (null != typeConvert.getPkg() && !typeConvert.getPkg().equals("")) {
+                    this.imports.add("import " + typeConvert.getPkg() + ";");
                 }
             }
             propertyStub = propertyStub.replaceAll("%PROPERTY_TYPE%", getType);
@@ -172,6 +171,10 @@ public class EntityStub {
 
     public void setPropertyTypeConvertMap(Map<String, TypeConvert> propertyTypeConvertMap) {
         this.propertyTypeConvertMap = propertyTypeConvertMap;
+    }
+
+    public void setPropertyITypeConvertMap(Map<String, ITypeConvert> propertyITypeConvertMap) {
+        this.propertyITypeConvertMap = propertyITypeConvertMap;
     }
 
     public String getEntityPrimaryKey() {

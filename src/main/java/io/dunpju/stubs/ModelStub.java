@@ -30,6 +30,7 @@ public class ModelStub {
     private Map<String, DatabaseMetaDataWrapper.Column> columnsInfo;
     private TypeRegistry typeRegistry;
     private Map<String, TypeConvert> propertyTypeConvertMap;
+    private Map<String, ITypeConvert> propertyITypeConvertMap;
 
     public String stub() {
         String tpl = """
@@ -134,24 +135,23 @@ public class ModelStub {
             String camelCasePropertyName = CamelizeUtil.toCamelCase(columnName);
             String propertyStub = this.propertyStub;
             String getType = iColumnType.getType();
-            if (this.propertyTypeConvertMap.size() > 0) {
-                if (this.propertyTypeConvertMap.containsKey(getType)) {
-                    if (this.propertyTypeConvertMap.get(getType) instanceof ITypeConvert) {
-                        TypeConvert typeConvert =  ((ITypeConvert) this.propertyTypeConvertMap.get(getType)).handle(getType, columnName);
-                        if (typeConvert != null) {
-                            getType = typeConvert.getTarget();
-                            if (null != typeConvert.getPkg() && !typeConvert.getPkg().equals("")) {
-                                this.imports.add("import " + typeConvert.getPkg() + ";");
-                            }
-                        }
-                    } else {
-                        if (null != this.propertyTypeConvertMap.get(getType).getPkg() && !this.propertyTypeConvertMap.get(getType).getPkg().equals("")) {
-                            this.imports.add("import " + this.propertyTypeConvertMap.get(getType).getPkg() + ";");
-                        }
-                        getType = this.propertyTypeConvertMap.get(getType).getTarget();
+
+            if (this.propertyITypeConvertMap != null && this.propertyITypeConvertMap.get(getType) != null) {
+                TypeConvert typeConvert = (this.propertyITypeConvertMap.get(getType)).handle(getType, columnName);
+                if (typeConvert != null) {
+                    getType = typeConvert.getTarget();
+                    if (null != typeConvert.getPkg() && !typeConvert.getPkg().equals("")) {
+                        this.imports.add("import " + typeConvert.getPkg() + ";");
                     }
                 }
+            } else if (this.propertyTypeConvertMap != null && this.propertyTypeConvertMap.get(getType) != null) {
+                TypeConvert typeConvert = this.propertyTypeConvertMap.get(getType);
+                getType = typeConvert.getTarget();
+                if (null != typeConvert.getPkg() && !typeConvert.getPkg().equals("")) {
+                    this.imports.add("import " + typeConvert.getPkg() + ";");
+                }
             }
+
             propertyStub = propertyStub.replaceAll("%PROPERTY_TYPE%", getType);
             propertyStub = propertyStub.replaceAll("%PROPERTY_NAME%", camelCasePropertyName);
             this.property.append(propertyStub);
@@ -197,6 +197,7 @@ public class ModelStub {
     public String getClassName() {
         return className;
     }
+
     public String getOutPackage() {
         return outPackage;
     }
@@ -215,5 +216,9 @@ public class ModelStub {
 
     public void setPropertyTypeConvertMap(Map<String, TypeConvert> propertyTypeConvertMap) {
         this.propertyTypeConvertMap = propertyTypeConvertMap;
+    }
+
+    public void setPropertyITypeConvertMap(Map<String, ITypeConvert> propertyITypeConvertMap) {
+        this.propertyITypeConvertMap = propertyITypeConvertMap;
     }
 }

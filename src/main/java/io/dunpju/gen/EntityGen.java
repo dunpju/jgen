@@ -24,6 +24,7 @@ public class EntityGen implements IGen{
     private ConfigBuilder configBuilder;
     private TypeRegistry typeRegistry;
     private Map<String, TypeConvert> propertyTypeConvertMap;
+    private Map<String, ITypeConvert> propertyITypeConvertMap;
     private String entityPrimaryKey;
     private String entityPrimaryKeyType;
     private boolean shieldExistedOut;
@@ -42,6 +43,7 @@ public class EntityGen implements IGen{
         entityStub.setConfigBuilder(this.configBuilder);
         entityStub.setTypeRegistry(this.typeRegistry);
         entityStub.setPropertyTypeConvertMap(this.propertyTypeConvertMap);
+        entityStub.setPropertyITypeConvertMap(this.propertyITypeConvertMap);
         if (this.createTimeInit != null) {
             entityStub.setCreateTimeInit(this.createTimeInit);
         }

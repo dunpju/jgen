@@ -37,6 +37,7 @@ public class ModelGen implements IGen {
     private TypeRegistry typeRegistry;
     private ResultSet tableResultSet;
     private final Map<String, TypeConvert> typeConvertMap;
+    private final Map<String, ITypeConvert> iTypeConvertMap;
     private boolean shieldExistedOut;
     private String createTimeInit;
     private String createTime;
@@ -45,6 +46,7 @@ public class ModelGen implements IGen {
 
     public ModelGen() {
         this.typeConvertMap = new HashMap<>();
+        this.iTypeConvertMap = new HashMap<>();
         this.tableNames = new HashSet<>();
     }
 
@@ -88,6 +90,7 @@ public class ModelGen implements IGen {
         modelStub.setConfigBuilder(this.configBuilder);
         modelStub.setTypeRegistry(this.typeRegistry);
         modelStub.setPropertyTypeConvertMap(this.typeConvertMap);
+        modelStub.setPropertyITypeConvertMap(this.iTypeConvertMap);
         String stub = modelStub.stub();
         String outClassFile = this.baseDir + this.separator + catalog + this.separator + className + ".java";
         try {
@@ -174,6 +177,7 @@ public class ModelGen implements IGen {
         entityGen.setConfigBuilder(this.configBuilder);
         entityGen.setTypeRegistry(this.typeRegistry);
         entityGen.setPropertyTypeConvertMap(this.typeConvertMap);
+        entityGen.setPropertyITypeConvertMap(this.iTypeConvertMap);
         entityGen.setShieldExistedOut(this.shieldExistedOut);
         entityGen.setCreateTimeInit(this.createTimeInit);
         entityGen.setCreateTime(this.createTime);
@@ -317,6 +321,11 @@ public class ModelGen implements IGen {
 
     public ModelGen typeConvert(String source, TypeConvert target) {
         this.typeConvertMap.put(source, target);
+        return this;
+    }
+
+    public ModelGen typeConvert(String source, ITypeConvert target) {
+        this.iTypeConvertMap.put(source, target);
         return this;
     }
 
