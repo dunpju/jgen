@@ -138,9 +138,11 @@ public class ModelStub {
                 if (this.propertyTypeConvertMap.containsKey(getType)) {
                     if (this.propertyTypeConvertMap.get(getType) instanceof ITypeConvert) {
                         TypeConvert typeConvert =  ((ITypeConvert) this.propertyTypeConvertMap.get(getType)).handle(getType, columnName);
-                        getType = typeConvert.getTarget();
-                        if (null != typeConvert.getPkg() && !typeConvert.getPkg().equals("")) {
-                            this.imports.add("import " + typeConvert.getPkg() + ";");
+                        if (typeConvert != null) {
+                            getType = typeConvert.getTarget();
+                            if (null != typeConvert.getPkg() && !typeConvert.getPkg().equals("")) {
+                                this.imports.add("import " + typeConvert.getPkg() + ";");
+                            }
                         }
                     } else {
                         if (null != this.propertyTypeConvertMap.get(getType).getPkg() && !this.propertyTypeConvertMap.get(getType).getPkg().equals("")) {
