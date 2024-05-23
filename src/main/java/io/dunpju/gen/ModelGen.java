@@ -44,6 +44,8 @@ public class ModelGen implements IGen {
     private String updateTime;
     private String deleteTime;
 
+    private boolean isBuildDao = true;
+
     public ModelGen() {
         this.typeConvertMap = new HashMap<>();
         this.iTypeConvertMap = new HashMap<>();
@@ -168,44 +170,46 @@ public class ModelGen implements IGen {
         voGen.setOutDir(file.getParentFile() + this.separator + "vo" + this.separator + catalog + this.separator + className);
         voGen.run();*/
 
-        EntityGen entityGen = new EntityGen();
-        entityGen.setOutPackage(String.join(".", entityPackageArray));
-        entityGen.setClassDesc(table.getRemarks());
-        entityGen.setClassName(className + "Entity");
-        entityGen.setTableName(tableName);
-        entityGen.setColumnsInfo(columnsInfo);
-        entityGen.setConfigBuilder(this.configBuilder);
-        entityGen.setTypeRegistry(this.typeRegistry);
-        entityGen.setPropertyTypeConvertMap(this.typeConvertMap);
-        entityGen.setPropertyITypeConvertMap(this.iTypeConvertMap);
-        entityGen.setShieldExistedOut(this.shieldExistedOut);
-        entityGen.setCreateTimeInit(this.createTimeInit);
-        entityGen.setCreateTime(this.createTime);
-        entityGen.setUpdateTime(this.updateTime);
-        entityGen.setDeleteTime(this.deleteTime);
-        entityGen.setOutDir(file.getParentFile() + this.separator + "entity" + this.separator + catalog);
-        entityGen.run();
+        if (this.isBuildDao) {
+            EntityGen entityGen = new EntityGen();
+            entityGen.setOutPackage(String.join(".", entityPackageArray));
+            entityGen.setClassDesc(table.getRemarks());
+            entityGen.setClassName(className + "Entity");
+            entityGen.setTableName(tableName);
+            entityGen.setColumnsInfo(columnsInfo);
+            entityGen.setConfigBuilder(this.configBuilder);
+            entityGen.setTypeRegistry(this.typeRegistry);
+            entityGen.setPropertyTypeConvertMap(this.typeConvertMap);
+            entityGen.setPropertyITypeConvertMap(this.iTypeConvertMap);
+            entityGen.setShieldExistedOut(this.shieldExistedOut);
+            entityGen.setCreateTimeInit(this.createTimeInit);
+            entityGen.setCreateTime(this.createTime);
+            entityGen.setUpdateTime(this.updateTime);
+            entityGen.setDeleteTime(this.deleteTime);
+            entityGen.setOutDir(file.getParentFile() + this.separator + "entity" + this.separator + catalog);
+            entityGen.run();
 
-        DaoGen daoGen = new DaoGen();
-        daoGen.setOutPackage(String.join(".", daoPackageArray));
-        List<String> daoImports = new ArrayList<>();
-        daoImports.add("import " + String.format("%s.%s", entityGen.getOutPackage(), entityGen.getClassName()) + ";");
-        daoImports.add("import " + String.format("%s.%s", mapperGen.getOutPackage(), mapperGen.getClassName()) + ";");
-        daoImports.add("import " + String.format("%s.%s", modelStub.getOutPackage(), className) + ";");
-        //daoImports.add("import " + String.format("%s.%s", voGen.getOutPackage(), voGen.getClassName()) + ";");
-        daoGen.setImports(daoImports);
-        daoGen.setClassName(className + "Dao");
-        daoGen.setMapperName(mapperGen.getClassName());
-        daoGen.setModelName(className);
-        daoGen.setEntityName(entityGen.getClassName());
-        daoGen.setConfigBuilder(this.configBuilder);
-        daoGen.setColumnsInfo(columnsInfo);
-        daoGen.setTypeRegistry(this.typeRegistry);
-        daoGen.setShieldExistedOut(this.shieldExistedOut);
-        daoGen.setTableName(tableName);
-        //daoGen.setVoName(voGen.getClassName());
-        daoGen.setOutDir(file.getParentFile() + this.separator + "dao" + this.separator + catalog);
-        daoGen.run();
+            DaoGen daoGen = new DaoGen();
+            daoGen.setOutPackage(String.join(".", daoPackageArray));
+            List<String> daoImports = new ArrayList<>();
+            daoImports.add("import " + String.format("%s.%s", entityGen.getOutPackage(), entityGen.getClassName()) + ";");
+            daoImports.add("import " + String.format("%s.%s", mapperGen.getOutPackage(), mapperGen.getClassName()) + ";");
+            daoImports.add("import " + String.format("%s.%s", modelStub.getOutPackage(), className) + ";");
+            //daoImports.add("import " + String.format("%s.%s", voGen.getOutPackage(), voGen.getClassName()) + ";");
+            daoGen.setImports(daoImports);
+            daoGen.setClassName(className + "Dao");
+            daoGen.setMapperName(mapperGen.getClassName());
+            daoGen.setModelName(className);
+            daoGen.setEntityName(entityGen.getClassName());
+            daoGen.setConfigBuilder(this.configBuilder);
+            daoGen.setColumnsInfo(columnsInfo);
+            daoGen.setTypeRegistry(this.typeRegistry);
+            daoGen.setShieldExistedOut(this.shieldExistedOut);
+            daoGen.setTableName(tableName);
+            //daoGen.setVoName(voGen.getClassName());
+            daoGen.setOutDir(file.getParentFile() + this.separator + "dao" + this.separator + catalog);
+            daoGen.run();
+        }
 
         IServiceGen iServiceGen = new IServiceGen();
         iServiceGen.setOutPackage(String.join(".", iServicePackageArray));
@@ -225,8 +229,8 @@ public class ModelGen implements IGen {
         ServiceImplGen serviceImplGen = new ServiceImplGen();
         serviceImplGen.setOutPackage(String.join(".", serviceImplPackageArray));
         List<String> serviceImplImports = new ArrayList<>();
-        serviceImplImports.add("import " + String.format("%s.%s", daoGen.getOutPackage(), daoGen.getClassName()) + ";");
-        serviceImplImports.add("import " + String.format("%s.%s", entityGen.getOutPackage(), entityGen.getClassName()) + ";");
+//        serviceImplImports.add("import " + String.format("%s.%s", daoGen.getOutPackage(), daoGen.getClassName()) + ";");
+//        serviceImplImports.add("import " + String.format("%s.%s", entityGen.getOutPackage(), entityGen.getClassName()) + ";");
         serviceImplImports.add("import " + String.format("%s.%s", mapperGen.getOutPackage(), mapperGen.getClassName()) + ";");
         serviceImplImports.add("import " + String.format("%s.%s", modelStub.getOutPackage(), className) + ";");
 //        serviceImplImports.add("import " + String.format("%s.%s", paramGen.getOutPackage(), paramGen.getAddClassName()) + ";");
@@ -240,13 +244,13 @@ public class ModelGen implements IGen {
         serviceImplGen.setModelName(className);
         serviceImplGen.setServiceName(iServiceGen.getClassName());
         //serviceImplGen.setVoName(voGen.getClassName());
-        serviceImplGen.setUpperFirstDaoName(daoGen.getClassName());
-        serviceImplGen.setDaoName(StrUtil.lowerFirst(daoGen.getClassName()));
-        serviceImplGen.setUpperFirstEntityName(entityGen.getClassName());
-        serviceImplGen.setEntityName(StrUtil.lowerFirst(entityGen.getClassName()));
-        serviceImplGen.setEntityPrimaryKey(entityGen.getEntityPrimaryKey());
-        serviceImplGen.setEntityPrimaryKeyType(entityGen.getEntityPrimaryKeyType());
-        serviceImplGen.setUpperFirstEntityPrimaryKey(StrUtil.upperFirst(entityGen.getEntityPrimaryKey()));
+        //serviceImplGen.setUpperFirstDaoName(daoGen.getClassName());
+        //serviceImplGen.setDaoName(StrUtil.lowerFirst(daoGen.getClassName()));
+        //serviceImplGen.setUpperFirstEntityName(entityGen.getClassName());
+        //serviceImplGen.setEntityName(StrUtil.lowerFirst(entityGen.getClassName()));
+        //serviceImplGen.setEntityPrimaryKey(entityGen.getEntityPrimaryKey());
+        //serviceImplGen.setEntityPrimaryKeyType(entityGen.getEntityPrimaryKeyType());
+        //serviceImplGen.setUpperFirstEntityPrimaryKey(StrUtil.upperFirst(entityGen.getEntityPrimaryKey()));
         serviceImplGen.setShieldExistedOut(this.shieldExistedOut);
         serviceImplGen.setOutDir(iServiceGen.getOutDir() + this.separator + "impl");
         serviceImplGen.run();
@@ -363,4 +367,10 @@ public class ModelGen implements IGen {
         this.packageName = packageName;
         return this;
     }
+
+    public ModelGen setBuildDao(boolean is) {
+        isBuildDao = is;
+        return this;
+    }
+
 }
