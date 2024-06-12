@@ -15,4 +15,20 @@ public class Code {
     public String format(String tips) {
         return String.format(this.message, tips);
     }
+
+    public Code Format(String tips) {
+        return new Code(this.code, String.format(this.message, tips));
+    }
+
+    public Code Format() {
+        return new Code(this.code, this.message);
+    }
+
+    public void Throw(String tips) {
+        throw new CodeException(this.code, String.format(this.message, tips));
+    }
+
+    public void Throw() {
+        throw new CodeException(this.code, this.message);
+    }
 }

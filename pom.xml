@@ -6,7 +6,7 @@
 
     <groupId>io.github.dunpju</groupId>
     <artifactId>jgen</artifactId>
-    <version>1.0.44</version>
+    <version>1.0.45</version>
 
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
@@ -44,12 +44,6 @@
         <developerConnection>scm:git@github.com:dunpju/jgen.git</developerConnection>
         <url>https://github.com/dunpju/jgen</url>
     </scm>
-
-    <parent>
-        <artifactId>spring-boot-starter-parent</artifactId>
-        <groupId>org.springframework.boot</groupId>
-        <version>3.1.0</version>
-    </parent>
 
     <dependencies>
         <!-- https://mvnrepository.com/artifact/org.yaml/snakeyaml -->
@@ -111,7 +105,6 @@
             <artifactId>mybatis-plus-annotation</artifactId>
             <version>3.5.3.1</version>
         </dependency>
-
     </dependencies>
 
     <distributionManagement>
