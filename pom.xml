@@ -7,6 +7,8 @@
     <groupId>io.github.dunpju</groupId>
     <artifactId>jgen</artifactId>
     <version>1.0.45</version>
+    <name>jgen</name>
+    <description>jgen</description>
 
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
