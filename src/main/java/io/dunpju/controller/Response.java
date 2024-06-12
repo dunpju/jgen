@@ -1,6 +1,5 @@
 package io.dunpju.controller;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.dunpju.errcode.ICode;
 import lombok.Data;
 
@@ -52,7 +51,6 @@ public class Response<T> implements Serializable {
         return Objects.equals(code, 200);
     }
 
-    @JsonIgnore
     public boolean isSuccess() {
         try {
             return isSuccess(code);
@@ -61,7 +59,6 @@ public class Response<T> implements Serializable {
         }
     }
 
-    @JsonIgnore
     public boolean isError() {
         return !isSuccess();
     }
