@@ -46,6 +46,8 @@ public class ModelGen implements IGen {
 
     private boolean isBuildDao = true;
 
+    private boolean isForceUpdate = true;
+
     public ModelGen() {
         this.typeConvertMap = new HashMap<>();
         this.iTypeConvertMap = new HashMap<>();
@@ -95,18 +97,26 @@ public class ModelGen implements IGen {
         modelStub.setPropertyITypeConvertMap(this.iTypeConvertMap);
         String stub = modelStub.stub();
         String outClassFile = this.baseDir + this.separator + catalog + this.separator + className + ".java";
-        try {
-            File file = new File(outClassFile);
-            if (!file.getParentFile().exists()) {
-                file.getParentFile().mkdirs();
+        File file = new File(outClassFile);
+        if (!file.exists() || this.isForceUpdate) {
+            try {
+                if (!file.getParentFile().exists()) {
+                    file.getParentFile().mkdirs();
+                }
+                BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(outClassFile));
+                bufferedWriter.write(stub);
+                bufferedWriter.flush();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
             }
-            BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(outClassFile));
-            bufferedWriter.write(stub);
-            bufferedWriter.flush();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+            if (this.isForceUpdate) {
+                System.out.println(outClassFile + " force update successful");
+            } else {
+                System.out.println(outClassFile + " generate successful");
+            }
+        } else {
+            System.out.println(outClassFile + " already existed");
         }
-        System.out.println(outClassFile + " generate successful");
 
         String[] basePackageSplit = this.basePackage.split("\\.");
         ArrayList<String> mapperPackageArray = new ArrayList<>();
@@ -158,7 +168,7 @@ public class ModelGen implements IGen {
         mapperGen.setClassName(className + "Mapper");
         mapperGen.setModelName(className);
         mapperGen.setOutMapperXmlDir(this.outMapperXmlDir + this.separator + catalog);
-        File file = new File(this.baseDir);
+        file = new File(this.baseDir);
         mapperGen.setOutDir(file.getParentFile() + this.separator + "mapper" + this.separator + catalog);
         mapperGen.setShieldExistedOut(shieldExistedOut);
         mapperGen.run();
@@ -370,6 +380,11 @@ public class ModelGen implements IGen {
 
     public ModelGen setBuildDao(boolean is) {
         isBuildDao = is;
+        return this;
+    }
+
+    public ModelGen setForceUpdate(boolean is) {
+        isForceUpdate = is;
         return this;
     }
 
