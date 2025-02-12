@@ -6,7 +6,7 @@
 
     <groupId>io.github.dunpju</groupId>
     <artifactId>jgen</artifactId>
-    <version>1.0.46</version>
+    <version>1.0.48</version>
     <name>jgen</name>
     <description>jgen</description>
 
@@ -109,10 +109,10 @@
             <id>ossrh</id>
             <url>https://s01.oss.sonatype.org/content/repositories/snapshots/</url>
         </snapshotRepository>
-<!--        <repository>-->
-<!--            <id>ossrh</id>-->
-<!--            <url>https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/</url>-->
-<!--        </repository>-->
+        <repository>
+            <id>ossrh</id>
+            <url>https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+        </repository>
         <!--
         https://central.sonatype.com/publishing
         使用GPG/PGP签署文件，部署到本地仓库，执行： mvn clean package deploy
@@ -120,10 +120,12 @@
         目录结构：@see https://central.sonatype.org/publish/publish-portal-upload/ 再zip
         再手动上传zip包到中央仓库 @see https://central.sonatype.org/publish/publish-portal-upload/
         -->
+        <!--
         <repository>
             <id>localRepository</id>
             <url>file:D:\.m2\repository</url>
         </repository>
+        -->
     </distributionManagement>
 
     <build>
@@ -172,6 +174,15 @@
                         </goals>
                     </execution>
                 </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.sonatype.central</groupId>
+                <artifactId>central-publishing-maven-plugin</artifactId>
+                <version>0.7.0</version>
+                <extensions>true</extensions>
+                <configuration>
+                    <publishingServerId>central</publishingServerId>
+                </configuration>
             </plugin>
         </plugins>
     </build>
