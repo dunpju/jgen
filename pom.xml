@@ -181,6 +181,7 @@
                 <version>0.7.0</version>
                 <extensions>true</extensions>
                 <configuration>
+                    <deploymentName>${groupId}:${artifactId}:${version}</deploymentName>
                     <publishingServerId>central</publishingServerId>
                 </configuration>
             </plugin>
