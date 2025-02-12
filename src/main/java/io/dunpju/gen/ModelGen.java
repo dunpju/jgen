@@ -46,7 +46,7 @@ public class ModelGen implements IGen {
 
     private boolean isBuildDao = true;
 
-    private boolean isForceUpdate = true;
+    private boolean isForceUpdate = false;
 
     public ModelGen() {
         this.typeConvertMap = new HashMap<>();
