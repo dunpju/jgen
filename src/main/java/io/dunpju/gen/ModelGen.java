@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.generator.jdbc.DatabaseMetaDataWrapper;
 import com.baomidou.mybatisplus.generator.type.TypeRegistry;
 import io.dunpju.stubs.ModelStub;
 import io.dunpju.utils.CamelizeUtil;
+import io.dunpju.utils.ClassLoaderUtil;
 import io.dunpju.utils.StrUtil;
 import lombok.extern.log4j.Log4j;
 
@@ -13,6 +14,7 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -38,6 +40,8 @@ public class ModelGen implements IGen {
     private ResultSet tableResultSet;
     private final Map<String, TypeConvert> typeConvertMap;
     private final Map<String, ITypeConvert> iTypeConvertMap;
+    private final List<String> updatedField;
+    private final List<String> alreadyField;
     private boolean shieldExistedOut;
     private String createTimeInit;
     private String createTime;
@@ -51,6 +55,8 @@ public class ModelGen implements IGen {
     public ModelGen() {
         this.typeConvertMap = new HashMap<>();
         this.iTypeConvertMap = new HashMap<>();
+        this.updatedField = new ArrayList<>();
+        this.alreadyField = new ArrayList<>();
         this.tableNames = new HashSet<>();
     }
 
@@ -95,10 +101,27 @@ public class ModelGen implements IGen {
         modelStub.setTypeRegistry(this.typeRegistry);
         modelStub.setPropertyTypeConvertMap(this.typeConvertMap);
         modelStub.setPropertyITypeConvertMap(this.iTypeConvertMap);
-        String stub = modelStub.stub();
+        modelStub.setUpdatedField(this.updatedField);
+        modelStub.setForceUpdate(this.isForceUpdate);
+
         String outClassFile = this.baseDir + this.separator + catalog + this.separator + className + ".java";
         File file = new File(outClassFile);
-        if (!file.exists() || this.isForceUpdate) {
+        if (file.exists()) {
+            try {
+                Class<?> clazz = ClassLoaderUtil.load(this.basePackage + "." + catalog + "." + className);
+                Field[] fields = clazz.getDeclaredFields();
+                for (Field field : fields) {
+                    this.alreadyField.add(field.getName());
+                }
+                modelStub.setAlreadyField(this.alreadyField);
+            } catch (ClassNotFoundException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+        String stub = modelStub.stub();
+
+        if (!file.exists() || this.isForceUpdate || !this.updatedField.isEmpty()) {
             try {
                 if (!file.getParentFile().exists()) {
                     file.getParentFile().mkdirs();
@@ -111,6 +134,8 @@ public class ModelGen implements IGen {
             }
             if (this.isForceUpdate) {
                 System.out.println(outClassFile + " force update successful");
+            } else if (!this.updatedField.isEmpty()) {
+                System.out.println(outClassFile + " update successful");
             } else {
                 System.out.println(outClassFile + " generate successful");
             }
@@ -298,7 +323,7 @@ public class ModelGen implements IGen {
     public ModelGen setBaseDir(String baseDir) {
         if (baseDir.contains("\\")) {
             baseDir = baseDir.replaceAll("\\\\", Matcher.quoteReplacement(this.separator));
-        } else if (baseDir.contains("/")){
+        } else if (baseDir.contains("/")) {
             baseDir = baseDir.replaceAll("/", Matcher.quoteReplacement(this.separator));
         }
         this.baseDir = baseDir + this.separator + "model";
@@ -308,7 +333,7 @@ public class ModelGen implements IGen {
     public ModelGen setOutMapperXmlDir(String outMapperXmlDir) {
         if (outMapperXmlDir.contains("\\")) {
             outMapperXmlDir = outMapperXmlDir.replaceAll("\\\\", Matcher.quoteReplacement(this.separator));
-        } else if (outMapperXmlDir.contains("/")){
+        } else if (outMapperXmlDir.contains("/")) {
             outMapperXmlDir = outMapperXmlDir.replaceAll("/", Matcher.quoteReplacement(this.separator));
         }
         this.outMapperXmlDir = outMapperXmlDir;
@@ -340,6 +365,14 @@ public class ModelGen implements IGen {
 
     public ModelGen typeConvert(String source, ITypeConvert target) {
         this.iTypeConvertMap.put(source, target);
+        return this;
+    }
+
+    public ModelGen updatedField(String field, String... moreField) {
+        this.updatedField.add(field);
+        if (moreField.length > 0) {
+            this.updatedField.addAll(Arrays.asList(moreField));
+        }
         return this;
     }
 
@@ -387,5 +420,4 @@ public class ModelGen implements IGen {
         isForceUpdate = is;
         return this;
     }
-
 }

@@ -31,6 +31,10 @@ public class ModelStub {
     private TypeRegistry typeRegistry;
     private Map<String, TypeConvert> propertyTypeConvertMap;
     private Map<String, ITypeConvert> propertyITypeConvertMap;
+    private List<String> updatedField;
+    private List<String> alreadyField;
+
+    private boolean isForceUpdate = false;
 
     public String stub() {
         String tpl = """
@@ -112,6 +116,19 @@ public class ModelStub {
     private void processProperty() {
         int i = 0;
         for (String key : columnsInfo.keySet()) {
+            String columnName = columnsInfo.get(key).getName();
+            String camelCasePropertyName = CamelizeUtil.toCamelCase(columnName);
+
+            if (! this.isForceUpdate) {
+                if (! this.alreadyField.isEmpty()) {
+                    if (! this.alreadyField.contains(camelCasePropertyName)) {
+                        if (! this.updatedField.contains(columnName)) {
+                            continue;
+                        }
+                    }
+                }
+            }
+
             TableInfo tableInfo = new TableInfo(configBuilder, tableName);
             TableField.MetaInfo metaInfo = new TableField.MetaInfo(columnsInfo.get(key), tableInfo);
             IColumnType iColumnType = typeRegistry.getColumnType(metaInfo);
@@ -131,8 +148,7 @@ public class ModelStub {
             } else {
                 this.property.append(this.tableFieldStub.replaceAll("%TABLE_FIELD%", columnsInfo.get(key).getName()));
             }
-            String columnName = columnsInfo.get(key).getName();
-            String camelCasePropertyName = CamelizeUtil.toCamelCase(columnName);
+
             String propertyStub = this.propertyStub;
             String getType = iColumnType.getType();
 
@@ -220,5 +236,17 @@ public class ModelStub {
 
     public void setPropertyITypeConvertMap(Map<String, ITypeConvert> propertyITypeConvertMap) {
         this.propertyITypeConvertMap = propertyITypeConvertMap;
+    }
+
+    public void setUpdatedField(List<String> updatedField) {
+        this.updatedField = updatedField;
+    }
+
+    public void setAlreadyField(List<String> alreadyField) {
+        this.alreadyField = alreadyField;
+    }
+
+    public void setForceUpdate(boolean forceUpdate) {
+        this.isForceUpdate = forceUpdate;
     }
 }
