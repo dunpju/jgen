@@ -114,6 +114,7 @@
 <!--            <url>https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/</url>-->
 <!--        </repository>-->
         <!--
+        https://central.sonatype.com/publishing
         使用GPG/PGP签署文件，部署到本地仓库，执行： mvn clean package deploy
         包要求：@see https://central.sonatype.org/publish/requirements/  需要手动删除_remote.repositories文件，否则校验不通过
         目录结构：@see https://central.sonatype.org/publish/publish-portal-upload/ 再zip
