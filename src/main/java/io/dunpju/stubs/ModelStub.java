@@ -1,5 +1,6 @@
 package io.dunpju.stubs;
 
+import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
 import com.baomidou.mybatisplus.generator.config.builder.ConfigBuilder;
 import com.baomidou.mybatisplus.generator.config.po.TableField;
 import com.baomidou.mybatisplus.generator.config.po.TableInfo;
@@ -120,10 +121,12 @@ public class ModelStub {
             String camelCasePropertyName = CamelizeUtil.toCamelCase(columnName);
 
             if (! this.isForceUpdate) {
-                if (! this.alreadyField.isEmpty()) {
+                if (CollectionUtils.isNotEmpty(this.alreadyField)) {
                     if (! this.alreadyField.contains(camelCasePropertyName)) {
-                        if (! this.updatedField.contains(columnName)) {
-                            continue;
+                        if (CollectionUtils.isNotEmpty(this.updatedField)) {
+                            if (! this.updatedField.contains(columnName)) {
+                                continue;
+                            }
                         }
                     }
                 }
