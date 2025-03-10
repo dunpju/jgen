@@ -1,0 +1,96 @@
+package com.qimingdaren.tutoring.model.tutoring;
+
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
+import io.dunpju.orm.BaseField;
+import io.dunpju.orm.BaseModel;
+import io.dunpju.orm.Join;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+
+import java.io.Serial;
+import io.dunpju.annotations.Message;
+import java.time.LocalDateTime;
+
+@TableName("flow")
+@Message(value = "流程表")
+@Data
+@EqualsAndHashCode(callSuper=false)
+public class Flow extends BaseModel {
+
+    public enum FIELD implements BaseField {
+        flow_id,
+        flow_name,
+        question_id,
+        state,
+        is_delete,
+        create_time,
+        update_time,
+        delete_time;
+    }
+
+    @TableField(select = false)
+    private final static String _tableName = "flow";
+
+    @Serial
+    @TableField(select = false)
+    private static final long serialVersionUID = 1L;
+
+    public String tableName() {
+        return Flow._tableName;
+    }
+
+    public static Join AS(String alias) {
+        Join join = new Join();
+        join.setTable(Flow._tableName);
+        join.AS(alias);
+        return join;
+    }
+
+    public static String ON(String first, String operator, String second, String... other) {
+        Join join = new Join();
+        join.setTable(Flow._tableName);
+        return join.ON(first, operator, second, other);
+    }
+
+    @Message("主键")
+    @TableId(value = "`flow_id`", type = IdType.AUTO)
+    private Long flowId;
+    @Message("流程名称")
+    @TableField("`flow_name`")
+    private String flowName;
+    @Message("试题id(删除时标记null)")
+    @TableField("`question_id`")
+    private Long questionId;
+    @Message("发布状态:0-待发布,1-已发布")
+    @TableField("`state`")
+    private Integer state;
+    @Message("是否删除:1-否,2-是")
+    @TableField("`is_delete`")
+    private Integer isDelete;
+    @Message("创建时间")
+    @TableField("`create_time`")
+    private LocalDateTime createTime;
+    @Message("更新时间")
+    @TableField("`update_time`")
+    private LocalDateTime updateTime;
+    @Message("删除时间")
+    @TableField("`delete_time`")
+    private LocalDateTime deleteTime;
+
+    @Override
+    public String toString() {
+        return "Flow{" +
+            "flowId = " + flowId +
+            ", flowName = " + flowName +
+            ", questionId = " + questionId +
+            ", state = " + state +
+            ", isDelete = " + isDelete +
+            ", createTime = " + createTime +
+            ", updateTime = " + updateTime +
+            ", deleteTime = " + deleteTime +
+        "}";
+    }
+}

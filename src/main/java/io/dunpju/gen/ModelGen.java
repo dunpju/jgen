@@ -10,11 +10,13 @@ import io.dunpju.utils.ClassLoaderUtil;
 import io.dunpju.utils.StrUtil;
 import lombok.extern.log4j.Log4j;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.lang.reflect.Field;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -293,6 +295,22 @@ public class ModelGen implements IGen {
 
     @Override
     public void run() throws SQLException {
+
+        try (InputStream inputStream = getClass().getClassLoader().getResourceAsStream("stubs/model.stub")) {
+            if (inputStream != null) {
+                // 读取文本文件
+                BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8));
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    System.out.println(line);
+                }
+            } else {
+                System.out.println("文件未找到: ");
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
         if (!this.tableNames.isEmpty()) {
             for (String tn : this.tableNames) {
                 this.build(tn);
