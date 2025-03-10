@@ -295,22 +295,6 @@ public class ModelGen implements IGen {
 
     @Override
     public void run() throws SQLException {
-
-        try (InputStream inputStream = getClass().getClassLoader().getResourceAsStream("stubs/model.stub")) {
-            if (inputStream != null) {
-                // 读取文本文件
-                BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8));
-                String line;
-                while ((line = reader.readLine()) != null) {
-                    System.out.println(line);
-                }
-            } else {
-                System.out.println("文件未找到: ");
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
         if (!this.tableNames.isEmpty()) {
             for (String tn : this.tableNames) {
                 this.build(tn);

@@ -11,6 +11,11 @@ import io.dunpju.gen.ITypeConvert;
 import io.dunpju.gen.TypeConvert;
 import io.dunpju.utils.CamelizeUtil;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 public class ModelStub {
@@ -20,10 +25,10 @@ public class ModelStub {
     private String tableName;
     private String tableDescription;
     private String className;
-    private String fieldDescriptionStub = "    @%MESSAGE%(\"%FIELD_DESCRIPTION%\")\n";
-    private String tableFieldStub = "    @TableField(\"`%TABLE_FIELD%`\")\n";
-    private final String tableIdStub = "    @TableId(value = \"`%TABLE_PRIMARY_KEY%`\", type = IdType.AUTO)\n";
-    private final String propertyStub = "    private %PROPERTY_TYPE% %PROPERTY_NAME%;\n";
+    private String fieldDescriptionStub =  "";
+    private String tableFieldStub =  "";
+    private String tableIdStub =  "";
+    private String propertyStub =  "";
     private final StringBuffer field = new StringBuffer();
     private final StringBuffer property = new StringBuffer();
     private final StringBuffer to_str = new StringBuffer();
@@ -37,81 +42,98 @@ public class ModelStub {
 
     private boolean isForceUpdate = false;
 
+    public ModelStub() {
+        try (InputStream inputStream = getClass().getClassLoader().getResourceAsStream("stubs/model_field_description.stub")) {
+            if (Objects.nonNull(inputStream)) {
+                // 读取文本文件
+                BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8));
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    fieldDescriptionStub += line + "\n";
+                }
+            } else {
+                throw new RuntimeException("stubs/model_field_description.stub not found");
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        try (InputStream inputStream = getClass().getClassLoader().getResourceAsStream("stubs/model_table_field.stub")) {
+            if (Objects.nonNull(inputStream)) {
+                // 读取文本文件
+                BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8));
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    tableFieldStub += line + "\n";
+                }
+            } else {
+                throw new RuntimeException("stubs/model_table_field.stub not found");
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        try (InputStream inputStream = getClass().getClassLoader().getResourceAsStream("stubs/model_table_id.stub")) {
+            if (Objects.nonNull(inputStream)) {
+                // 读取文本文件
+                BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8));
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    tableIdStub += line + "\n";
+                }
+            } else {
+                throw new RuntimeException("stubs/model_table_id.stub not found");
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        try (InputStream inputStream = getClass().getClassLoader().getResourceAsStream("stubs/model_property.stub")) {
+            if (Objects.nonNull(inputStream)) {
+                // 读取文本文件
+                BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8));
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    propertyStub += line + "\n";
+                }
+            } else {
+                throw new RuntimeException("stubs/model_property.stub not found");
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     public String stub() {
-        String tpl = """
-                package %PACKAGE%;
-                                
-                import com.baomidou.mybatisplus.annotation.IdType;
-                import com.baomidou.mybatisplus.annotation.TableField;
-                import com.baomidou.mybatisplus.annotation.TableId;
-                import com.baomidou.mybatisplus.annotation.TableName;
-                import io.dunpju.orm.BaseField;
-                import io.dunpju.orm.BaseModel;
-                import io.dunpju.orm.Join;
-                import lombok.Data;
-                import lombok.EqualsAndHashCode;
-                                
-                import java.io.Serial;
-                %IMPORTS%
-                                
-                @TableName("%TABLE_NAME%")
-                @%MESSAGE%(value = "%TABLE_DESCRIPTION%")
-                @Data
-                @EqualsAndHashCode(callSuper=false)
-                public class %CLASS_NAME% extends BaseModel {
-                    
-                    public enum FIELD implements BaseField {
-                        %FIELD%;
-                    }
-                    
-                    @TableField(select = false)
-                    private final static String _tableName = "%TABLE_NAME%";
-                    
-                    @Serial
-                    @TableField(select = false)
-                    private static final long serialVersionUID = 1L;
-                    
-                    public String tableName() {
-                        return %CLASS_NAME%._tableName;
-                    }
-                    
-                    public static Join AS(String alias) {
-                        Join join = new Join();
-                        join.setTable(%CLASS_NAME%._tableName);
-                        join.AS(alias);
-                        return join;
-                    }
-                    
-                    public static String ON(String first, String operator, String second, String... other) {
-                        Join join = new Join();
-                        join.setTable(%CLASS_NAME%._tableName);
-                        return join.ON(first, operator, second, other);
-                    }
-                                
-                    %PROPERTY%
-                    @Override
-                    public String toString() {
-                        return "%CLASS_NAME%{" +
-                            %TO_STRING%
-                        "}";
-                    }
-                }""";
+        StringBuilder tpl = new StringBuilder();
+        try (InputStream inputStream = getClass().getClassLoader().getResourceAsStream("stubs/model.stub")) {
+            if (Objects.nonNull(inputStream)) {
+                // 读取文本文件
+                BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8));
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    tpl.append(line).append("\n");
+                }
+            } else {
+                throw new RuntimeException("stubs/model.stub not found");
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
         this.processProperty();
-        tpl = tpl.replaceAll("%PACKAGE%", this.outPackage);
-        tpl = tpl.replaceAll("%FIELD%", this.field.toString());
+        tpl = new StringBuilder(tpl.toString().replaceAll("%PACKAGE%", this.outPackage));
+        tpl = new StringBuilder(tpl.toString().replaceAll("%FIELD%", this.field.toString()));
         if (!Objects.equals(this.className, "Message")) {
             this.imports.add("import io.dunpju.annotations.Message;");
-            tpl = tpl.replaceAll("%MESSAGE%", "Message");
+            tpl = new StringBuilder(tpl.toString().replaceAll("%MESSAGE%", "Message"));
         } else {
-            tpl = tpl.replaceAll("%MESSAGE%", "io.dunpju.annotations.Message");
+            tpl = new StringBuilder(tpl.toString().replaceAll("%MESSAGE%", "io.dunpju.annotations.Message"));
         }
-        tpl = tpl.replaceAll("%PROPERTY%", this.property.toString());
-        tpl = tpl.replaceAll("%IMPORTS%", String.join("\n", this.imports));
-        tpl = tpl.replaceAll("%TABLE_NAME%", this.tableName);
-        tpl = tpl.replaceAll("%TABLE_DESCRIPTION%", this.tableDescription.replaceAll("\r|\n", ""));
-        tpl = tpl.replaceAll("%CLASS_NAME%", this.className);
-        tpl = tpl.replaceAll("%TO_STRING%", this.to_str.toString());
-        return tpl;
+        tpl = new StringBuilder(tpl.toString().replaceAll("%PROPERTY%", this.property.toString()));
+        tpl = new StringBuilder(tpl.toString().replaceAll("%IMPORTS%", String.join("\n", this.imports)));
+        tpl = new StringBuilder(tpl.toString().replaceAll("%TABLE_NAME%", this.tableName));
+        tpl = new StringBuilder(tpl.toString().replaceAll("%TABLE_DESCRIPTION%", this.tableDescription));
+        tpl = new StringBuilder(tpl.toString().replaceAll("%CLASS_NAME%", this.className));
+        tpl = new StringBuilder(tpl.toString().replaceAll("%TO_STRING%", this.to_str.toString()));
+        return tpl.toString();
     }
 
     private void processProperty() {

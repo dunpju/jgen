@@ -1,0 +1,1 @@
+    @TableId(value = "`%TABLE_PRIMARY_KEY%`", type = IdType.AUTO)
