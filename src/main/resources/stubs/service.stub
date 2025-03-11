@@ -1,0 +1,8 @@
+package %PACKAGE%;
+
+import com.baomidou.mybatisplus.extension.service.IService;
+%IMPORTS%
+
+public interface %CLASS_NAME% extends IService<%MODEL_NAME%> {
+
+}

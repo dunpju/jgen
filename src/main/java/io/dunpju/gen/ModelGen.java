@@ -89,7 +89,7 @@ public class ModelGen implements IGen {
         String className = StrUtil.upperFirst(CamelizeUtil.toCamelCase(unTablePrefix));
 
         String catalog = StrUtil.upperFirst(CamelizeUtil.toCamelCase(dataSourceConfig.getConn().getCatalog()));
-        if (this.packageName != null && !this.packageName.equals("")) {
+        if (this.packageName != null && !this.packageName.isEmpty()) {
             catalog = this.packageName;
         }
 
@@ -303,7 +303,7 @@ public class ModelGen implements IGen {
             this.tableNames = new HashSet<>();
             while (this.tableResultSet.next()) {
                 String tableName = tableResultSet.getString("TABLE_NAME");
-                if (!this.tablePrefix.equals("")) {
+                if (!this.tablePrefix.isEmpty()) {
                     if (tableName.contains(this.tablePrefix)) {
                         this.tableNames.add(tableName);
                     }
