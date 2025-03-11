@@ -6,5 +6,4 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class %CLASS_NAME% extends ServiceImpl<%MAPPER_NAME%, %MODEL_NAME%> implements %SERVICE_NAME% {
-
 }
