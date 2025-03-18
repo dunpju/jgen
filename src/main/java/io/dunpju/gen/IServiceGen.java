@@ -17,6 +17,8 @@ public class IServiceGen implements IGen {
     private List<String> imports;
     private String className;
     private String modelName;
+    private String primaryKey;
+    private String primaryKeyType;
     private boolean shieldExistedOut;
     @Override
     public void run() throws SQLException {
@@ -25,6 +27,8 @@ public class IServiceGen implements IGen {
         iServiceStub.setImports(this.imports);
         iServiceStub.setClassName(this.className);
         iServiceStub.setModelName(this.modelName);
+        iServiceStub.setPrimaryKey(this.primaryKey);
+        iServiceStub.setPrimaryKeyType(this.primaryKeyType);
         String stub = iServiceStub.stub();
         String outClassFile = this.outDir + ModelGen.separatorChar + className + ".java";
         File file = new File(outClassFile);

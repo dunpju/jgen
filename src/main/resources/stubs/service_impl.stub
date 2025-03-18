@@ -6,4 +6,26 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class %CLASS_NAME% extends ServiceImpl<%MAPPER_NAME%, %MODEL_NAME%> implements %SERVICE_NAME% {
+
+    @Override
+    public %MODEL_NAME% getBy%UPPER_PRIMARY_KEY%(%PRIMARY_KEY_TYPE% %PRIMARY_KEY%) {
+        return lambdaQuery()
+                .eq(%MODEL_NAME%::get%UPPER_PRIMARY_KEY%, %PRIMARY_KEY%)
+                .last("limit 1")
+                .one();
+    }
+
+    @Override
+    public Long add(%MODEL_NAME% entity) {
+        // 插入
+        return baseMapper.insert(entity);
+    }
+
+    @Override
+    public void edit(%MODEL_NAME% entity) {
+        // 编辑
+        lambdaUpdate()
+            .eq(%MODEL_NAME%::get%UPPER_PRIMARY_KEY%, entity.get%PRIMARY_KEY%())
+            .update();
+    }
 }

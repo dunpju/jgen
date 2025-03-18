@@ -253,6 +253,8 @@ public class ModelGen implements IGen {
         iServiceGen.setImports(modelImports);
         iServiceGen.setClassName("I" + className + "Service");
         iServiceGen.setModelName(className);
+        iServiceGen.setPrimaryKey(modelStub.getPrimaryKey());
+        iServiceGen.setPrimaryKeyType(modelStub.getPrimaryKeyType());
         iServiceGen.setShieldExistedOut(this.shieldExistedOut);
         iServiceGen.setOutDir(file.getParentFile() + this.separator + "service" + this.separator + catalog);
         iServiceGen.run();
@@ -279,6 +281,8 @@ public class ModelGen implements IGen {
         serviceImplGen.setClassName(className + "ServiceImpl");
         serviceImplGen.setMapperName(mapperGen.getClassName());
         serviceImplGen.setModelName(className);
+        serviceImplGen.setPrimaryKey(modelStub.getPrimaryKey());
+        serviceImplGen.setPrimaryKeyType(modelStub.getPrimaryKeyType());
         serviceImplGen.setServiceName(iServiceGen.getClassName());
         //serviceImplGen.setVoName(voGen.getClassName());
         //serviceImplGen.setUpperFirstDaoName(daoGen.getClassName());

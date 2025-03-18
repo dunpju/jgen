@@ -4,4 +4,14 @@ import com.baomidou.mybatisplus.extension.service.IService;
 %IMPORTS%
 
 public interface %CLASS_NAME% extends IService<%MODEL_NAME%> {
+
+    %MODEL_NAME% getBy%UPPER_PRIMARY_KEY%(%PRIMARY_KEY_TYPE% %PRIMARY_KEY%);
+    /**
+     * 添加
+     */
+    Long add(%MODEL_NAME% entity);
+    /**
+     * 编辑
+     */
+    void edit(%MODEL_NAME% entity);
 }

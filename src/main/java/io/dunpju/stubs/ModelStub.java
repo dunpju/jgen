@@ -29,6 +29,8 @@ public class ModelStub {
     private String tableFieldStub =  "";
     private String tableIdStub =  "";
     private String propertyStub =  "";
+    private String primaryKey = "";
+    private String primaryKeyType = "";
     private final StringBuffer field = new StringBuffer();
     private final StringBuffer property = new StringBuffer();
     private final StringBuffer to_str = new StringBuffer();
@@ -169,6 +171,8 @@ public class ModelStub {
             }
 
             if (columnsInfo.get(key).isPrimaryKey()) {
+                primaryKey = columnsInfo.get(key).getName();
+                primaryKeyType = iColumnType.getType();
                 this.property.append(this.tableIdStub.replaceAll("%TABLE_PRIMARY_KEY%", columnsInfo.get(key).getName()));
             } else {
                 this.property.append(this.tableFieldStub.replaceAll("%TABLE_FIELD%", columnsInfo.get(key).getName()));
@@ -273,5 +277,13 @@ public class ModelStub {
 
     public void setForceUpdate(boolean forceUpdate) {
         this.isForceUpdate = forceUpdate;
+    }
+
+    public String getPrimaryKey() {
+        return primaryKey;
+    }
+
+    public String getPrimaryKeyType() {
+        return primaryKeyType;
     }
 }

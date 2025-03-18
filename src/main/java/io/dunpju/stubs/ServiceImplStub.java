@@ -1,5 +1,6 @@
 package io.dunpju.stubs;
 
+import io.dunpju.utils.CamelizeUtil;
 import lombok.Data;
 
 import java.io.BufferedReader;
@@ -18,6 +19,8 @@ public class ServiceImplStub {
     private String className;
     private String mapperName;
     private String modelName;
+    private String primaryKey;
+    private String primaryKeyType;
     private String serviceName;
     private String voName;
     private String upperFirstDaoName;
@@ -49,6 +52,9 @@ public class ServiceImplStub {
         tpl = new StringBuilder(tpl.toString().replaceAll("%CLASS_NAME%", this.className));
         tpl = new StringBuilder(tpl.toString().replaceAll("%MAPPER_NAME%", this.mapperName));
         tpl = new StringBuilder(tpl.toString().replaceAll("%MODEL_NAME%", this.modelName));
+        tpl = new StringBuilder(tpl.toString().replaceAll("%UPPER_PRIMARY_KEY%", CamelizeUtil.toCamelCase(this.primaryKey)));
+        tpl = new StringBuilder(tpl.toString().replaceAll("%PRIMARY_KEY%", this.primaryKey));
+        tpl = new StringBuilder(tpl.toString().replaceAll("%PRIMARY_KEY_TYPE%", this.primaryKeyType));
         tpl = new StringBuilder(tpl.toString().replaceAll("%SERVICE_NAME%", this.serviceName));
         //tpl = tpl.replaceAll("%VO_NAME%", this.voName);
         //tpl = tpl.replaceAll("%UPPER_FIRST_DAO_NAME%", this.upperFirstDaoName);

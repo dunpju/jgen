@@ -17,6 +17,8 @@ public class ServiceImplGen implements IGen{
     private List<String> imports;
     private String className;
     private String modelName;
+    private String primaryKey;
+    private String primaryKeyType;
     private String mapperName;
     private String serviceName;
     private String voName;
@@ -35,6 +37,8 @@ public class ServiceImplGen implements IGen{
         serviceImplStub.setImports(this.imports);
         serviceImplStub.setClassName(this.className);
         serviceImplStub.setModelName(this.modelName);
+        serviceImplStub.setPrimaryKey(this.primaryKey);
+        serviceImplStub.setPrimaryKeyType(this.primaryKeyType);
         serviceImplStub.setMapperName(this.mapperName);
         serviceImplStub.setServiceName(this.serviceName);
         serviceImplStub.setVoName(this.voName);
