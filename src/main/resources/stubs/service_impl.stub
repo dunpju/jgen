@@ -16,7 +16,7 @@ public class %CLASS_NAME% extends ServiceImpl<%MAPPER_NAME%, %MODEL_NAME%> imple
     }
 
     @Override
-    public Long add(%MODEL_NAME% entity) {
+    public %PRIMARY_KEY_TYPE% add(%MODEL_NAME% entity) {
         // 插入
         return baseMapper.insert(entity);
     }
@@ -25,7 +25,7 @@ public class %CLASS_NAME% extends ServiceImpl<%MAPPER_NAME%, %MODEL_NAME%> imple
     public void edit(%MODEL_NAME% entity) {
         // 编辑
         lambdaUpdate()
-            .eq(%MODEL_NAME%::get%UPPER_PRIMARY_KEY%, entity.get%PRIMARY_KEY%())
+            .eq(%MODEL_NAME%::get%UPPER_PRIMARY_KEY%, entity.get%UPPER_PRIMARY_KEY%())
             .update();
     }
 }

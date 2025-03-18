@@ -9,7 +9,7 @@ public interface %CLASS_NAME% extends IService<%MODEL_NAME%> {
     /**
      * 添加
      */
-    Long add(%MODEL_NAME% entity);
+    %PRIMARY_KEY_TYPE% add(%MODEL_NAME% entity);
     /**
      * 编辑
      */
