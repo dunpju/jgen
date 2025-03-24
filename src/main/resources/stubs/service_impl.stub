@@ -18,7 +18,8 @@ public class %CLASS_NAME% extends ServiceImpl<%MAPPER_NAME%, %MODEL_NAME%> imple
     @Override
     public %PRIMARY_KEY_TYPE% add(%MODEL_NAME% entity) {
         // 插入
-        return baseMapper.insert(entity);
+        baseMapper.insert(entity);
+        return entity.get%UPPER_PRIMARY_KEY%();
     }
 
     @Override
