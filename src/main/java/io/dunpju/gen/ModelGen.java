@@ -443,16 +443,28 @@ public class ModelGen implements IGen {
         return this;
     }
 
+    /**
+     * 继承的类, 如: com.baomidou.mybatisplus.core.mapper.BaseMapper;
+     * 必须是一个继承com.baomidou.mybatisplus.core.mapper.BaseMapper的类
+     */
     public ModelGen setMapperExtendsClass(String extendsClass) {
         mapperExtendsClass = extendsClass;
         return this;
     }
 
+    /**
+     * 继承的类, 如: com.baomidou.mybatisplus.extension.service.IService;
+     * 必须是一个继承com.baomidou.mybatisplus.extension.service.IService的类
+     */
     public ModelGen setServiceExtendsClass(String extendsClass) {
         serviceExtendsClass = extendsClass;
         return this;
     }
 
+    /**
+     * 继承的类, 如: com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+     * 必须是一个继承com.baomidou.mybatisplus.extension.service.impl.ServiceImpl的类
+     */
     public ModelGen setServiceImplExtendsClass(String extendsClass) {
         serviceImplExtendsClass = extendsClass;
         return this;
