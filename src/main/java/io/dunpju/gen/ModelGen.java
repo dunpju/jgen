@@ -55,13 +55,13 @@ public class ModelGen implements IGen {
     private boolean isForceUpdate = false;
 
     /**
-     * 继承的类, 如: io.dunpju.orm.IMapper;
+     * 继承的类, 如: com.baomidou.mybatisplus.core.mapper.BaseMapper;
      */
-    private String mapperExtendsClass = "org.apache.ibatis.annotations.Mapper";
+    private String mapperExtendsClass = "io.dunpju.orm.IMapper";
     /**
      * 继承的类, 如: com.baomidou.mybatisplus.extension.service.IService;
      */
-    private String serviceExtendsClass = "com.baomidou.mybatisplus.extension.service.IServic";
+    private String serviceExtendsClass = "com.baomidou.mybatisplus.extension.service.IService";
     /**
      * 继承的类, 如: com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
      */
