@@ -19,14 +19,22 @@ public class MapperGen implements IGen {
     private String outDir;
     private String outMapperXmlDir;
     private boolean shieldExistedOut;
+    /**
+     * 继承的类, 如: org.apache.ibatis.annotations.Mapper;
+     */
+    private String extendsClass;
 
     @Override
     public void run() throws SQLException {
+        this.imports.add("import " + String.format("%s", extendsClass) + ";");
         MapperStub mapperStub = new MapperStub();
         mapperStub.setOutPackage(this.outPackage);
         mapperStub.setImports(this.imports);
         mapperStub.setClassName(this.className);
         mapperStub.setModelName(this.modelName);
+        String[] extendsClassSplit = extendsClass.split("\\.");
+        String extendsClassName = extendsClassSplit[extendsClassSplit.length - 1];
+        mapperStub.setExtendsClass(extendsClassName);
         String stub = mapperStub.stub();
         String outClassFile = this.outDir + ModelGen.separatorChar + className + ".java";
         File file = new File(outClassFile);

@@ -1,11 +1,10 @@
 package %PACKAGE%;
 
-import io.dunpju.orm.ServiceImpl;
 import org.springframework.stereotype.Service;
 %IMPORTS%
 
 @Service
-public class %CLASS_NAME% extends ServiceImpl<%MAPPER_NAME%, %MODEL_NAME%> implements %SERVICE_NAME% {
+public class %CLASS_NAME% extends %EXTENDS_CLASS%<%MAPPER_NAME%, %MODEL_NAME%> implements %SERVICE_NAME% {
 
     @Override
     public %MODEL_NAME% getBy%UPPER_PRIMARY_KEY%(%PRIMARY_KEY_TYPE% %PRIMARY_KEY%) {

@@ -31,6 +31,10 @@ public class ServiceImplStub {
     private String entityPrimaryKey;
     private String entityPrimaryKeyType;
     private String upperFirstEntityPrimaryKey;
+    /**
+     * 继承的类, 如: com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+     */
+    private String extendsClass;
 
     public String stub() {
         StringBuilder tpl = new StringBuilder();
@@ -57,6 +61,7 @@ public class ServiceImplStub {
         tpl = new StringBuilder(tpl.toString().replaceAll("%PRIMARY_KEY%", CamelizeUtil.toCamelCase(this.primaryKey)));
         tpl = new StringBuilder(tpl.toString().replaceAll("%PRIMARY_KEY_TYPE%", this.primaryKeyType));
         tpl = new StringBuilder(tpl.toString().replaceAll("%SERVICE_NAME%", this.serviceName));
+        tpl = new StringBuilder(tpl.toString().replaceAll("%EXTENDS_CLASS%", this.extendsClass));
         //tpl = tpl.replaceAll("%VO_NAME%", this.voName);
         //tpl = tpl.replaceAll("%UPPER_FIRST_DAO_NAME%", this.upperFirstDaoName);
         //tpl = tpl.replaceAll("%DAO_NAME%", this.daoName);

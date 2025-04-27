@@ -54,6 +54,19 @@ public class ModelGen implements IGen {
 
     private boolean isForceUpdate = false;
 
+    /**
+     * 继承的类, 如: io.dunpju.orm.IMapper;
+     */
+    private String mapperExtendsClass = "org.apache.ibatis.annotations.Mapper";
+    /**
+     * 继承的类, 如: com.baomidou.mybatisplus.extension.service.IService;
+     */
+    private String serviceExtendsClass = "com.baomidou.mybatisplus.extension.service.IServic";
+    /**
+     * 继承的类, 如: com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+     */
+    private String serviceImplExtendsClass = "com.baomidou.mybatisplus.extension.service.impl.ServiceImpl";
+
     public ModelGen() {
         this.typeConvertMap = new HashMap<>();
         this.iTypeConvertMap = new HashMap<>();
@@ -198,6 +211,7 @@ public class ModelGen implements IGen {
         file = new File(this.baseDir);
         mapperGen.setOutDir(file.getParentFile() + this.separator + "mapper" + this.separator + catalog);
         mapperGen.setShieldExistedOut(shieldExistedOut);
+        mapperGen.setExtendsClass(mapperExtendsClass);
         mapperGen.run();
 
         /*VOGen voGen = new VOGen();
@@ -256,6 +270,7 @@ public class ModelGen implements IGen {
         iServiceGen.setPrimaryKey(modelStub.getPrimaryKey());
         iServiceGen.setPrimaryKeyType(modelStub.getPrimaryKeyType());
         iServiceGen.setShieldExistedOut(this.shieldExistedOut);
+        iServiceGen.setExtendsClass(this.serviceExtendsClass);
         iServiceGen.setOutDir(file.getParentFile() + this.separator + "service" + this.separator + catalog);
         iServiceGen.run();
 
@@ -293,6 +308,7 @@ public class ModelGen implements IGen {
         //serviceImplGen.setEntityPrimaryKeyType(entityGen.getEntityPrimaryKeyType());
         //serviceImplGen.setUpperFirstEntityPrimaryKey(StrUtil.upperFirst(entityGen.getEntityPrimaryKey()));
         serviceImplGen.setShieldExistedOut(this.shieldExistedOut);
+        serviceImplGen.setExtendsClass(this.serviceImplExtendsClass);
         serviceImplGen.setOutDir(iServiceGen.getOutDir() + this.separator + "impl");
         serviceImplGen.run();
     }
@@ -424,6 +440,21 @@ public class ModelGen implements IGen {
 
     public ModelGen setForceUpdate(boolean is) {
         isForceUpdate = is;
+        return this;
+    }
+
+    public ModelGen setMapperExtendsClass(String extendsClass) {
+        mapperExtendsClass = extendsClass;
+        return this;
+    }
+
+    public ModelGen setServiceExtendsClass(String extendsClass) {
+        serviceExtendsClass = extendsClass;
+        return this;
+    }
+
+    public ModelGen setServiceImplExtendsClass(String extendsClass) {
+        serviceImplExtendsClass = extendsClass;
         return this;
     }
 }

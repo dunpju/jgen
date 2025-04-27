@@ -23,6 +23,11 @@ public class IServiceStub {
     private String primaryKey;
     private String primaryKeyType;
 
+    /**
+     * 继承的类, 如: com.baomidou.mybatisplus.extension.service.IService;
+     */
+    private String extendsClass;
+
     public String stub() {
         StringBuilder tpl = new StringBuilder();
         try (InputStream inputStream = getClass().getClassLoader().getResourceAsStream("stubs/service.stub")) {
@@ -46,6 +51,7 @@ public class IServiceStub {
         tpl = new StringBuilder(tpl.toString().replaceAll("%UPPER_PRIMARY_KEY%", StrUtil.upperFirst(CamelizeUtil.toCamelCase(this.primaryKey))));
         tpl = new StringBuilder(tpl.toString().replaceAll("%PRIMARY_KEY%", CamelizeUtil.toCamelCase(this.primaryKey)));
         tpl = new StringBuilder(tpl.toString().replaceAll("%PRIMARY_KEY_TYPE%", this.primaryKeyType));
+        tpl = new StringBuilder(tpl.toString().replaceAll("%EXTENDS_CLASS%", this.extendsClass));
         return tpl.toString();
     }
 }

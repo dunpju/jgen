@@ -11,7 +11,7 @@ import java.sql.SQLException;
 import java.util.List;
 
 @Data
-public class ServiceImplGen implements IGen{
+public class ServiceImplGen implements IGen {
     private String outDir;
     private String outPackage;
     private List<String> imports;
@@ -30,8 +30,14 @@ public class ServiceImplGen implements IGen{
     private String entityPrimaryKeyType;
     private String upperFirstEntityPrimaryKey;
     private boolean shieldExistedOut;
+    /**
+     * 继承的类, 如: com.baomidou.mybatisplus.extension.service.IService;
+     */
+    private String extendsClass;
+
     @Override
     public void run() throws SQLException {
+        this.imports.add("import " + String.format("%s", extendsClass) + ";");
         ServiceImplStub serviceImplStub = new ServiceImplStub();
         serviceImplStub.setOutPackage(this.outPackage);
         serviceImplStub.setImports(this.imports);
@@ -49,6 +55,9 @@ public class ServiceImplGen implements IGen{
         serviceImplStub.setEntityPrimaryKey(this.entityPrimaryKey);
         serviceImplStub.setEntityPrimaryKeyType(this.entityPrimaryKeyType);
         serviceImplStub.setUpperFirstEntityPrimaryKey(this.upperFirstEntityPrimaryKey);
+        String[] extendsClassSplit = extendsClass.split("\\.");
+        String extendsClassName = extendsClassSplit[extendsClassSplit.length - 1];
+        serviceImplStub.setExtendsClass(extendsClassName);
         String stub = serviceImplStub.stub();
         String outClassFile = this.outDir + ModelGen.separatorChar + className + ".java";
         File file = new File(outClassFile);

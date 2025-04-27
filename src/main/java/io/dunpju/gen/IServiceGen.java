@@ -20,8 +20,14 @@ public class IServiceGen implements IGen {
     private String primaryKey;
     private String primaryKeyType;
     private boolean shieldExistedOut;
+    /**
+     * 继承的类, 如: com.baomidou.mybatisplus.extension.service.IService;
+     */
+    private String extendsClass;
+
     @Override
     public void run() throws SQLException {
+        this.imports.add("import " + String.format("%s", extendsClass) + ";");
         IServiceStub iServiceStub = new IServiceStub();
         iServiceStub.setOutPackage(this.outPackage);
         iServiceStub.setImports(this.imports);
@@ -29,6 +35,9 @@ public class IServiceGen implements IGen {
         iServiceStub.setModelName(this.modelName);
         iServiceStub.setPrimaryKey(this.primaryKey);
         iServiceStub.setPrimaryKeyType(this.primaryKeyType);
+        String[] extendsClassSplit = extendsClass.split("\\.");
+        String extendsClassName = extendsClassSplit[extendsClassSplit.length - 1];
+        iServiceStub.setExtendsClass(extendsClassName);
         String stub = iServiceStub.stub();
         String outClassFile = this.outDir + ModelGen.separatorChar + className + ".java";
         File file = new File(outClassFile);

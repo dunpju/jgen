@@ -17,6 +17,10 @@ public class MapperStub {
     private List<String> imports = new ArrayList<>();
     private String className;
     private String modelName;
+    /**
+     * 继承的类, 如: io.dunpju.orm.IMapper;
+     */
+    private String extendsClass;
 
     public String stub() {
         StringBuilder tpl = new StringBuilder();
@@ -38,6 +42,7 @@ public class MapperStub {
         tpl = new StringBuilder(tpl.toString().replaceAll("%IMPORTS%", String.join("\n", this.imports)));
         tpl = new StringBuilder(tpl.toString().replaceAll("%CLASS_NAME%", this.className));
         tpl = new StringBuilder(tpl.toString().replaceAll("%MODEL_NAME%", this.modelName));
+        tpl = new StringBuilder(tpl.toString().replaceAll("%EXTENDS_CLASS%", this.extendsClass));
         return tpl.toString();
     }
 }

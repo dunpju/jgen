@@ -1,9 +1,8 @@
 package %PACKAGE%;
 
-import io.dunpju.orm.IService;
 %IMPORTS%
 
-public interface %CLASS_NAME% extends IService<%MODEL_NAME%> {
+public interface %CLASS_NAME% extends %EXTENDS_CLASS%<%MODEL_NAME%> {
 
     %MODEL_NAME% getBy%UPPER_PRIMARY_KEY%(%PRIMARY_KEY_TYPE% %PRIMARY_KEY%);
     /**

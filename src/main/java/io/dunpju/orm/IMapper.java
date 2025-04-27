@@ -7,15 +7,15 @@ import java.util.Map;
 
 public interface IMapper<T> extends com.baomidou.mybatisplus.core.mapper.BaseMapper<T> {
     @Select("${_sql_}")
-    public Map<String, Object> execute(Map<String, Object> map);
+    Map<String, Object> execute(Map<String, Object> map);
     @Select("${_sql_}")
-    public Map<String, Object> query(Map<String, Object> map);
+    Map<String, Object> query(Map<String, Object> map);
     @Select("${_sql_}")
-    public List<Map<String, Object>> count(Map<String, Object> map);
+    List<Map<String, Object>> count(Map<String, Object> map);
     @Select("${_sql_}")
-    public Map<String, Object> first(Map<String, Object> map);
+    Map<String, Object> first(Map<String, Object> map);
     @Select("${_sql_}")
-    public List<Map<String, Object>> get(Map<String, Object> map);
+    List<Map<String, Object>> get(Map<String, Object> map);
     /**
      * 插入或更具主键更新所有数据
      */

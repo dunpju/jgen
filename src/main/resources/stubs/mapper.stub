@@ -1,9 +1,8 @@
 package %PACKAGE%;
 
-import io.dunpju.orm.IMapper;
 import org.apache.ibatis.annotations.Mapper;
 %IMPORTS%
 
 @Mapper
-public interface %CLASS_NAME% extends IMapper<%MODEL_NAME%> {
+public interface %CLASS_NAME% extends %EXTENDS_CLASS%<%MODEL_NAME%> {
 }
