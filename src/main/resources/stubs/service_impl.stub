@@ -1,6 +1,6 @@
 package %PACKAGE%;
 
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import io.dunpju.orm.ServiceImpl;
 import org.springframework.stereotype.Service;
 %IMPORTS%
 

@@ -16,4 +16,8 @@ public interface IMapper<T> extends com.baomidou.mybatisplus.core.mapper.BaseMap
     public Map<String, Object> first(Map<String, Object> map);
     @Select("${_sql_}")
     public List<Map<String, Object>> get(Map<String, Object> map);
+    /**
+     * 插入或更具主键更新所有数据
+     */
+    Integer insertOrUnionKeyUpdate(List<T> list);
 }
