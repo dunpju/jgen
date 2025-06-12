@@ -8,20 +8,16 @@ import io.dunpju.stubs.ModelStub;
 import io.dunpju.utils.CamelizeUtil;
 import io.dunpju.utils.ClassLoaderUtil;
 import io.dunpju.utils.StrUtil;
-import lombok.extern.log4j.Log4j;
 
-import java.io.*;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.lang.reflect.Field;
-import java.net.URISyntaxException;
-import java.net.URL;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
-import java.util.logging.Logger;
 import java.util.regex.Matcher;
 
 public class ModelGen implements IGen {
