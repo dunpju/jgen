@@ -268,7 +268,7 @@ public class ModelStub {
     }
 
     public void setUpdatedField(List<String> updatedField) {
-        this.updatedField = updatedField;
+        //this.updatedField = updatedField;
     }
 
     public void setAlreadyField(List<String> alreadyField) {
@@ -276,7 +276,7 @@ public class ModelStub {
     }
 
     public void setForceUpdate(boolean forceUpdate) {
-        this.isForceUpdate = forceUpdate;
+        //this.isForceUpdate = forceUpdate;
     }
 
     public String getPrimaryKey() {
